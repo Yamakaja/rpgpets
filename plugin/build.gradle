@@ -1,0 +1,55 @@
+configurations {
+    server {
+        transitive = false
+    }
+    serverPlugin {
+        transitive = false
+    }
+}
+
+dependencies {
+    compileOnly "org.spigotmc:spigot-api:$spigotApiVersion"
+
+    compile project(":api")
+    compile project(":v1_11_R1")
+
+    server "org.spigotmc:spigot:$spigotApiVersion"
+}
+
+jar.baseName = "RPGPets"
+
+processResources {
+    filesMatching("**/plugin.yml") {
+        filter {
+            it.replace('@version@', project.getVersion())
+        }
+    }
+}
+
+task installPlugins(type: Copy) {
+    print("Installing required plugins ... ")
+    from(configurations.serverPlugin)
+    into "$rootDir/testserver/plugins"
+    rename("([^-]*).*\\.jar", '$1.jar')
+    println("Done.")
+}
+
+task installServer(type: Copy) {
+    print("Installing spigot server ... ")
+    from(configurations.server)
+    into "$rootDir/testserver/"
+    rename { 'spigot.jar' }
+    println("Done.")
+    installPlugins.execute()
+}
+
+task install(type: Copy) {
+    from("$rootDir/plugin/build/libs/") {
+        include "**/RPGPets-*.jar"
+    }
+//    from("$rootDir/example-plugin/build/libs/") {
+//        include "**/ExamplePlugin-*.jar"
+//    }
+    rename("([^-]*).*\\.jar", '$1.jar')
+    into "$rootDir/testserver/plugins/"
+}

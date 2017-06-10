@@ -1,0 +1,10 @@
+rootProject.name = 'rpgpets'
+
+include 'api'
+project(":api").projectDir = "$rootDir/api" as File
+
+include 'plugin'
+project(":plugin").projectDir = "$rootDir/plugin" as File
+
+include 'v1_11_R1'
+project(":v1_11_R1").projectDir = "$rootDir/v1_11_R1" as File
