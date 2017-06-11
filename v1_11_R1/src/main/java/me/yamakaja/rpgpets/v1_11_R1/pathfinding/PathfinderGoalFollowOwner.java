@@ -28,7 +28,7 @@ public class PathfinderGoalFollowOwner extends PathfinderGoal {
     @Override
     public boolean a() { // shouldExecute
         double distanceSquared = owner.getLocation().distanceSquared(pet.getBukkitEntity().getLocation());
-        return distanceSquared > 10 * 10 && distanceSquared < 20 * 20;
+        return distanceSquared > 6 * 6 && distanceSquared < 17 * 17;
     }
 
     @Override
@@ -39,12 +39,14 @@ public class PathfinderGoalFollowOwner extends PathfinderGoal {
     @Override
     public void c() { // startExecuting
         if (targetLoc == null)
-            this.targetLoc = WorldUtils.getRandomFreeLocationAround(owner.getLocation(), 5);
+            this.targetLoc = WorldUtils.getFreeLocationAround(owner.getLocation());
         if (this.targetLoc == null)
             this.targetLoc = owner.getLocation();
 
         PathEntity pathEntity = this.pathfinder.a(targetLoc.getX(), targetLoc.getY(), targetLoc.getZ());
-        this.pathfinder.a(pathEntity, 0.2);
+        if (pathEntity == null)
+            System.out.println("PathEntity is null!");
+        this.pathfinder.a(pathEntity, 2.5);
     }
 
     @Override
@@ -55,6 +57,10 @@ public class PathfinderGoalFollowOwner extends PathfinderGoal {
     @Override
     public void e() { // updateTask
         super.e();
+        if (targetLoc.distanceSquared(owner.getLocation()) > 4*4) {
+            targetLoc = null;
+            c();
+        }
     }
 
     @Override

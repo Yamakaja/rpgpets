@@ -11,26 +11,25 @@ public class WorldUtils {
     }
 
     /**
-     * Tries to find a random free location around the given location
+     * Tries to find a free location around the given location
      * This method is performance heavy and should not be overused
      *
      * @param center       The center location to look around
-     * @param squareRadius The radius of the square in which we will try to find a suitable location
      * @return A location with free space, null if none could be found
      */
-    public static Location getRandomFreeLocationAround(Location center, int squareRadius) {
+    public static Location getFreeLocationAround(Location center) {
         double xOffset,
                 zOffset;
-        for (int i = 0; i < 100; i++) {
-            xOffset = Math.random() * squareRadius;
-            zOffset = Math.random() * squareRadius;
+        for (int i = 0; i < 9; i++) {
+            xOffset = i % 3 - 1;
+            zOffset = i / 3 - 1;
 
             Location tempLoc = center.clone().add(xOffset, -2, zOffset);
             for (int y = 0; y < 5; y++) {
                 if (isLocationValid(tempLoc))
                     return tempLoc;
 
-                tempLoc.setY(tempLoc.getY());
+                tempLoc.setY(tempLoc.getY() + 1);
             }
         }
 
@@ -40,7 +39,7 @@ public class WorldUtils {
     private static boolean isLocationValid(Location location) {
         return !location.getBlock().getType().isSolid()
                 && !location.clone().add(0, 1, 0).getBlock().getType().isSolid()
-                && location.clone().add(0, -1, 0).getBlock().getType().isSolid();
+                && !location.clone().add(0, -1, 0).getBlock().getType().isSolid();
     }
 
 }

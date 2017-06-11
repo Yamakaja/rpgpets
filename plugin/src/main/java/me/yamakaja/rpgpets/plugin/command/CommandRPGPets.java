@@ -45,6 +45,7 @@ public class CommandRPGPets implements CommandExecutor, TabCompleter {
             case "summon":
                 if (commandSender instanceof Player)
                     this.plugin.getNMSHandler().summon(PetType.COW, (Player) commandSender);
+                break;
             case "help":
                 if (!commandSender.hasPermission(ConfigPermissions.COMMAND_HELP.get())) {
                     commandSender.sendMessage(ConfigMessages.COMMAND_NOPERM.get());
