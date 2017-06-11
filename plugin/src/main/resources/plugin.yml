@@ -1,0 +1,10 @@
+name: RPGPets
+main: me.yamakaja.rpgpets.plugin.RPGPetsImpl
+version: @version@
+author: Yamakaja
+depend: [ProtocolLib]
+load: STARTUP
+commands:
+  rpgpets:
+    usage: /<command>
+    description: RPGPets main command

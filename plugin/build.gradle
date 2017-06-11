@@ -12,8 +12,18 @@ dependencies {
 
     compile project(":api")
     compile project(":v1_11_R1")
+    compile "com.comphenix.protocol:ProtocolLib-API:$protocolLibVersion"
 
     server "org.spigotmc:spigot:$spigotApiVersion"
+    serverPlugin "com.comphenix.protocol:ProtocolLib:$protocolLibVersion"
+}
+
+jar {
+    from {
+        configurations.compile.collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    }
 }
 
 jar.baseName = "RPGPets"

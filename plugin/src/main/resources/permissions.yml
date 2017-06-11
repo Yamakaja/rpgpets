@@ -1,0 +1,3 @@
+command:
+  help: rpgpets.command.help
+  give: rpgpets.command.give
