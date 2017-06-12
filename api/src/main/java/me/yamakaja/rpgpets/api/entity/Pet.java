@@ -8,23 +8,8 @@ import org.bukkit.entity.Player;
 public interface Pet {
 
     /**
-     * @return The player who owns this pet
+     * @return The {@link PetDescriptor} describing the pet
      */
-    Player getOwner();
-
-    /**
-     * @return The pets level
-     */
-    int getLevel();
-
-    /**
-     * @return The pets experience
-     */
-    float getExperience();
-
-    /**
-     * @return The pets type
-     */
-    PetType getPetType();
+    PetDescriptor getPetDescriptor();
 
 }

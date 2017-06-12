@@ -45,7 +45,7 @@ public class PathfinderGoalFollowOwner extends PathfinderGoal {
 
         PathEntity pathEntity = this.pathfinder.a(targetLoc.getX(), targetLoc.getY(), targetLoc.getZ());
         if (pathEntity == null)
-            System.out.println("PathEntity is null!");
+            System.err.println("PathEntity is null!");
         this.pathfinder.a(pathEntity, 2.5);
     }
 

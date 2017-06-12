@@ -3,6 +3,7 @@ package me.yamakaja.rpgpets.plugin.command;
 import me.yamakaja.rpgpets.api.RPGPets;
 import me.yamakaja.rpgpets.api.config.ConfigMessages;
 import me.yamakaja.rpgpets.api.config.ConfigPermissions;
+import me.yamakaja.rpgpets.api.entity.PetDescriptor;
 import me.yamakaja.rpgpets.api.entity.PetType;
 import me.yamakaja.rpgpets.api.item.RPGPetsItems;
 import org.bukkit.Bukkit;
@@ -44,7 +45,8 @@ public class CommandRPGPets implements CommandExecutor, TabCompleter {
                 break;
             case "summon":
                 if (commandSender instanceof Player)
-                    this.plugin.getNMSHandler().summon(PetType.COW, (Player) commandSender);
+                    this.plugin.getNMSHandler().summon(new PetDescriptor(PetType.COW, (Player) commandSender,
+                            "Rambo", 42, 0.5F, true));
                 break;
             case "help":
                 if (!commandSender.hasPermission(ConfigPermissions.COMMAND_HELP.get())) {

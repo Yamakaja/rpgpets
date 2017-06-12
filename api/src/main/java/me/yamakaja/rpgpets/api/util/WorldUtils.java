@@ -1,5 +1,8 @@
 package me.yamakaja.rpgpets.api.util;
 
+import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+import com.sk89q.worldguard.protection.flags.DefaultFlag;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
 /**
@@ -40,6 +43,11 @@ public class WorldUtils {
         return !location.getBlock().getType().isSolid()
                 && !location.clone().add(0, 1, 0).getBlock().getType().isSolid()
                 && !location.clone().add(0, -1, 0).getBlock().getType().isSolid();
+    }
+
+    // TODO: Worldguard hook
+    private boolean isPvpEnabled(Location loc) {
+        return false;
     }
 
 }

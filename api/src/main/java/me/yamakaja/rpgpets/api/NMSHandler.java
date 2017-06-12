@@ -1,7 +1,9 @@
 package me.yamakaja.rpgpets.api;
 
+import me.yamakaja.rpgpets.api.entity.PetDescriptor;
 import me.yamakaja.rpgpets.api.entity.PetRegistry;
 import me.yamakaja.rpgpets.api.entity.PetType;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
@@ -26,8 +28,13 @@ public interface NMSHandler {
     RPGPets getPlugin();
 
     /**
-     * Summon a pet for a player
+     * Summon a pet
      */
-    void summon(PetType type, Player owner);
+    void summon(PetDescriptor petDescriptor);
+
+    /**
+     * @return The pet descritor of the passed bukkit entity, null if the entity isn't a pet
+     */
+    PetDescriptor getPetDescriptor(Entity entity);
 
 }

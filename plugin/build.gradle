@@ -16,6 +16,8 @@ dependencies {
 
     server "org.spigotmc:spigot:$spigotApiVersion"
     serverPlugin "com.comphenix.protocol:ProtocolLib:$protocolLibVersion"
+    serverPlugin "com.sk89q.worldguard:worldguard:6.2"
+    serverPlugin "com.sk89q.worldedit:worldedit:6.1.5"
 }
 
 jar {

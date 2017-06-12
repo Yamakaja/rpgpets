@@ -1,6 +1,7 @@
 package me.yamakaja.rpgpets.api.config;
 
 import me.yamakaja.rpgpets.api.RPGPets;
+import me.yamakaja.rpgpets.api.entity.PetType;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -20,6 +21,7 @@ public class ConfigManager {
 
         plugin.saveResource("messages.yml", debug);
         plugin.saveResource("permissions.yml", debug);
+        plugin.saveResource("petstats.yml", debug);
     }
 
     /**
@@ -53,7 +55,33 @@ public class ConfigManager {
 
         YamlConfiguration petStats = YamlConfiguration.loadConfiguration(petStatsFile);
 
-        // TODO: Implement pet stat injection
+        for (PetType type : PetType.values()) {
+            String basePath = type.name().toLowerCase() + ".";
+
+            type.initStats(
+                    petStats.getInt(basePath + "maxLevel"),
+                    (float) petStats.getDouble(basePath + "baseExpRequirement"),
+                    (float) petstats.getDouble(basePath + "expRequirementMultiplier"),
+                    (float) petStats.getDouble(basePath + "base.speed"),
+
+                    (float) petStats.getDouble(basePath + "base.attackDamage"),
+                    (float) petStats.getDouble(basePath + "base.knockback"),
+                    (float) petStats.getDouble(basePath + "base.maxHealth"),
+
+                    (float) petStats.getDouble(basePath + "levelup.speed"),
+                    (float) petStats.getDouble(basePath + "levelup.attackDamage"),
+                    (float) petStats.getDouble(basePath + "levelup.knockback"),
+                    (float) petStats.getDouble(basePath + "levelup.maxHealth"),
+
+                    (float) petStats.getDouble(basePath + "baby.speed"),
+                    (float) petStats.getDouble(basePath + "baby.attackDamage"),
+                    (float) petStats.getDouble(basePath + "baby.knockback"),
+                    (float) petStats.getDouble(basePath + "baby.maxHealth"),
+
+                    (float) petStats.getDouble(basePath + "max.level");
+
+            );
+        }
     }
 
 }

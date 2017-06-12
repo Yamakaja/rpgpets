@@ -1,0 +1,17 @@
+# The prefix to use for messages from RPGPets, insert with {prefix}
+prefix: "&8[&bRPGPets&8] "
+
+command:
+  noperm: "&4You don't have permission to use this command!"
+  syntax: "&cCorrect syntax: {0}" # Usage
+  help:
+    hint: "&bSee &6/rpgpets help&b for a list of commands"
+    description: "Shows this message"
+    subcommands: "&bAvailable subcommands:"
+    subcommand: "&e - &6{0}: &f{1}" # 0: Subcommand, 1: Description
+  give:
+    description: "Gives player RPGPets items"
+    syntax: "/rpgpets give <player> <food/egg> [amount]"
+    targetnotfound: "&cInvalid player!"
+    unknown: "&cUnknown item requested!"
+    success: "&aSuccessfully gave {0}x {1} to {2}!" # 0: Amount, 1: of, 2: to

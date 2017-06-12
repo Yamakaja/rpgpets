@@ -2,12 +2,16 @@ package me.yamakaja.rpgpets.v1_11_R1;
 
 import me.yamakaja.rpgpets.api.NMSHandler;
 import me.yamakaja.rpgpets.api.RPGPets;
+import me.yamakaja.rpgpets.api.entity.Pet;
+import me.yamakaja.rpgpets.api.entity.PetDescriptor;
 import me.yamakaja.rpgpets.api.entity.PetRegistry;
 import me.yamakaja.rpgpets.api.entity.PetType;
 import me.yamakaja.rpgpets.v1_11_R1.entity.PetCow;
 import me.yamakaja.rpgpets.v1_11_R1.entity.PetRegistryImpl;
 import net.minecraft.server.v1_11_R1.World;
+import org.bukkit.craftbukkit.v1_11_R1.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_11_R1.entity.CraftPlayer;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 /**
@@ -41,12 +45,23 @@ public class NMSHandler_v1_11_R1 implements NMSHandler {
     }
 
     @Override
-    public void summon(PetType type, Player owner) {
-        World world = ((CraftPlayer) owner).getHandle().getWorld();
-        switch (type) {
+    public void summon(PetDescriptor petDescriptor) {
+        World world = ((CraftPlayer) petDescriptor.getOwner()).getHandle().getWorld();
+        switch (petDescriptor.getPetType()) {
             case COW:
-                world.addEntity(new PetCow(owner));
+                world.addEntity(new PetCow(petDescriptor));
+                break;
         }
     }
 
+    @Override
+    public PetDescriptor getPetDescriptor(Entity entity) {
+        net.minecraft.server.v1_11_R1.Entity nmsEntity = ((CraftEntity) entity).getHandle();
+
+        if (nmsEntity instanceof Pet) {
+            return ((Pet)nmsEntity).getPetDescriptor();
+        }
+
+        return null;
+    }
 }
