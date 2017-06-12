@@ -1,5 +1,7 @@
 package me.yamakaja.rpgpets.api.entity;
 
+import me.yamakaja.rpgpets.api.event.PetLevelUpEvent;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
@@ -51,23 +53,6 @@ public class PetDescriptor {
         this.entity = entity;
     }
 
-    public void setOwner(Player owner) {
-        this.owner = owner;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setLevel(int level) {
-        this.level = level;
-        this.updateStats();
-    }
-
-    public void setExperience(float experience) {
-        this.experience = experience;
-    }
-
     public boolean hasEntity() {
         return this.entity != null;
     }
@@ -80,16 +65,33 @@ public class PetDescriptor {
         return owner;
     }
 
+    public void setOwner(Player owner) {
+        this.owner = owner;
+    }
+
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public int getLevel() {
         return level;
     }
 
+    public void setLevel(int level) {
+        this.level = level;
+        this.updateStats();
+    }
+
     public float getExperience() {
         return experience;
+    }
+
+    public void setExperience(float experience) {
+        this.experience = experience;
     }
 
     public float getSpeed() {
@@ -113,7 +115,7 @@ public class PetDescriptor {
     }
 
     private void updateStats() {
-        this.experienceRequirement = this.petType.getBaseExpRequirement() * Math.pow(this.petType.getExpRequirementModifier(), this.level);
+        this.experienceRequirement = (float) (this.petType.getBaseExpRequirement() * Math.pow(this.petType.getExpRequirementModifier(), this.level));
 
         this.speed = this.petType.getBaseSpeed() + this.petType.getLevelupSpeed() * this.level;
         this.attackDamage = this.petType.getBaseAttackDamage() + this.petType.getLevelupAttackDamage() * this.level;
@@ -123,6 +125,29 @@ public class PetDescriptor {
 
     public boolean canLevelUp() {
         return this.level < this.petType.getMaxLevel();
+    }
+
+    /**
+     * Add experience
+     *
+     * @param exp The amount of experience to add
+     * @return Wether the mob leveled up
+     */
+    public boolean addExperience(float exp) {
+        if (!canLevelUp())
+            return false;
+
+        boolean levelUp = experience + exp > experienceRequirement;
+
+        if (levelUp) {
+            experience = (experience + exp) % experienceRequirement;
+            Bukkit.getServer().getPluginManager().callEvent(new PetLevelUpEvent((Pet) this.entity));
+            level++;
+            updateStats();
+        } else
+            experience += exp;
+
+        return levelUp;
     }
 
 }

@@ -58,7 +58,7 @@ public enum PetType {
         return entityName;
     }
 
-    void initStats(int maxLevel, float baseExpRequirement, float expRequirementModifier, float baseSpeed, float baseAttackDamage, float baseKnockback, float baseMaxHealth, float levelupSpeed, float levelupAttackDamage, float levelupKnockback, float levelupMaxHealth, float babyModifierSpeed, float babyModifierAttackDamage, float babyModifierKnockback, float babyModifierMaxHealth) {
+    public void initStats(int maxLevel, float baseExpRequirement, float expRequirementModifier, float baseSpeed, float baseAttackDamage, float baseKnockback, float baseMaxHealth, float levelupSpeed, float levelupAttackDamage, float levelupKnockback, float levelupMaxHealth, float babyModifierSpeed, float babyModifierAttackDamage, float babyModifierKnockback, float babyModifierMaxHealth) {
         this.maxLevel = maxLevel;
         this.baseExpRequirement = baseExpRequirement;
         this.expRequirementModifier = expRequirementModifier;

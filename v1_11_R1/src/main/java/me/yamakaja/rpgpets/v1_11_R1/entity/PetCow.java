@@ -24,8 +24,7 @@ public class PetCow extends EntityCow implements Pet {
 
     public PetCow(World world) {
         super(world);
-        System.out.println("World Constructor!");
-        NMSUtils.clearGoalsAndTargets(goalSelector, targetSelector);
+        this.die();
     }
 
     public PetCow(PetDescriptor petDescriptor) {
@@ -35,6 +34,8 @@ public class PetCow extends EntityCow implements Pet {
         Location playerLoc = petDescriptor.getOwner().getLocation();
         this.setLocation(playerLoc.getX(), playerLoc.getY(), playerLoc.getZ(), playerLoc.getYaw(), playerLoc.getPitch());
 
+        NMSUtils.clearGoalsAndTargets(goalSelector, targetSelector);
+
         this.goalSelector.a(0, new PathfinderGoalFollowOwner(this, petDescriptor.getOwner()));
 
         this.goalSelector.a(1, new PathfinderGoalMeleeAttack(this, 2.5, true));
@@ -42,20 +43,32 @@ public class PetCow extends EntityCow implements Pet {
 
         this.setCustomNameVisible(true);
 
+
+    }
+
+    @Override
+    protected void initAttributes() {
+        super.initAttributes();
         this.getAttributeInstance(GenericAttributes.maxHealth).setValue(100);
+        this.getAttributeInstance(GenericAttributes.FOLLOW_RANGE).setValue(30);
     }
 
     @Override
     public boolean B(Entity entity) { // onAttack
-        final float damage = 5f;
-        final int knockback = 2;
+        final float damage = this.petDescriptor.getAttackDamage();
+        final float knockback = this.petDescriptor.getKnockback();
         boolean flag = entity.damageEntity(DamageSource.mobAttack(this), damage);
         if(flag) {
             if (entity instanceof EntityLiving) {
                 ((EntityLiving) entity).a(this, (float) knockback * 0.5F, (double) MathHelper.sin(this.yaw * 0.017453292F), (double) (-MathHelper.cos(this.yaw * 0.017453292F))); // Deal knockback
                 this.motX *= 0.6D;
                 this.motZ *= 0.6D;
+
+                this.petDescriptor.addExperience(damage);
+                if (!entity.isAlive())
+                    this.petDescriptor.addExperience(((EntityLiving) entity).getMaxHealth());
             }
+
         }
         return flag;
     }

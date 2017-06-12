@@ -1,6 +1,8 @@
 package me.yamakaja.rpgpets.api.entity;
 
 import me.yamakaja.rpgpets.api.RPGPets;
+import me.yamakaja.rpgpets.api.config.ConfigMessages;
+import me.yamakaja.rpgpets.api.event.PetLevelUpEvent;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
@@ -44,7 +46,7 @@ public class PetManager implements Listener {
         if (stack.getType() != Material.SKULL_ITEM)
             return;
 
-        SkullMeta meta = (SkullMeta) stack.getMeta();
+        SkullMeta meta = (SkullMeta) stack.getItemMeta();
 
         Set<ItemFlag> itemFlags = meta.getItemFlags();
         if (!itemFlags.contains(ItemFlag.HIDE_ENCHANTS) ||
@@ -54,14 +56,22 @@ public class PetManager implements Listener {
         if (!meta.hasLore())
             return;
 
-        PetDescriptor petDescriptor = readLore(meta.getDisplayName(), lore);
+        PetDescriptor petDescriptor = readLore(meta.getDisplayName(), meta.getLore());
 
-
+        // TODO: Parse pet items
 
     }
 
     private PetDescriptor readLore(String name, List<String> lore) {
+        // TODO: Parse pet item lore
+        return null;
+    }
 
+    @EventHandler
+    public void onPetLevelup(PetLevelUpEvent e) {
+        PetDescriptor descriptor = e.getPet().getPetDescriptor();
+        descriptor.getOwner().sendMessage(ConfigMessages.GENERAL_LEVELUP.get(descriptor.getName(),
+                Integer.toString(descriptor.getLevel())));
     }
 
     @EventHandler
@@ -72,12 +82,14 @@ public class PetManager implements Listener {
             if (petDescriptor == null)
                 continue;
 
+            despawnPet(petDescriptor);
+
             entity.remove();
         }
     }
 
     private void despawnPet(PetDescriptor petDescriptor) {
-
+        // TODO: Despawn pet
     }
 
 }
