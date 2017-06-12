@@ -4,13 +4,13 @@ cow:                              # Pet type
   expRequirementMultiplier: 1.5   # The multiplier for the base exp requirement at further levelups
                                   # Required exp to levelup: baseExpRequirement * expRequirementMultiplier ^ level
   base:                           # The stats at level 0 (If pets were grown up at level 0)
-    speed: 0.2                    # The base movement speed
+    speed: 1                      # The base movement speed
     attackDamage: 1               # Damage dealt to enemies at level 0
     knockback: 0.5                # Knockback dealt to enemies at level 0
     maxHealth: 10                 # The maximum health of the entity (Players: 20)
   levelup:                        # What will be added to the base stats upon a levelup
                                   # Generally: grownUp_stat(level) = baseValue + level * levelupMod_stat
-    speed: 0.01                   # How much speed should be gained from levelup
+    speed: 0.1                    # How much speed should be gained from levelup
     attackDamage: 0.5             # ...
     knockback: 0.05
     maxHealth: 5

@@ -1,6 +1,7 @@
 package me.yamakaja.rpgpets.api;
 
 import me.yamakaja.rpgpets.api.config.ConfigManager;
+import me.yamakaja.rpgpets.api.entity.PetManager;
 import org.bukkit.plugin.Plugin;
 
 /**
@@ -21,5 +22,12 @@ public interface RPGPets extends Plugin {
      * @return The {@link ConfigManager}
      */
     ConfigManager getConfigManager();
+
+    /**
+     * Gets the {@link PetManager} which manages spawned pets on the server
+     *
+     * @return The {@link PetManager}
+     */
+    PetManager getPetManager();
 
 }

@@ -20,7 +20,7 @@ public enum ConfigMessages {
     COMMAND_GIVE_SUCCESS,
 
 
-    GENERAL_LEVELUP;
+    GENERAL_LEVELUP, ITEM_FOOD_NAME, ITEM_EGG_NAME, GENERAL_PETNAME, ITEM_EGG_REMAINING;
 
     private String message;
 
@@ -31,7 +31,7 @@ public enum ConfigMessages {
     public String get(String... replacements) {
         String tmp = message;
         for (int i = 0; i < replacements.length; i++)
-            tmp = tmp.replace("{" + i + "}", replacements[0]);
+            tmp = tmp.replace("{" + i + "}", replacements[i]);
 
         return tmp;
     }

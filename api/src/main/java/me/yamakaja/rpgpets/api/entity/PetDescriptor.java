@@ -141,8 +141,8 @@ public class PetDescriptor {
 
         if (levelUp) {
             experience = (experience + exp) % experienceRequirement;
-            Bukkit.getServer().getPluginManager().callEvent(new PetLevelUpEvent((Pet) this.entity));
             level++;
+            Bukkit.getServer().getPluginManager().callEvent(new PetLevelUpEvent(this));
             updateStats();
         } else
             experience += exp;

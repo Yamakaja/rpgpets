@@ -7,6 +7,8 @@ import org.bukkit.entity.Player;
  */
 public interface Pet {
 
+    void updateAttributes();
+
     /**
      * @return The {@link PetDescriptor} describing the pet
      */

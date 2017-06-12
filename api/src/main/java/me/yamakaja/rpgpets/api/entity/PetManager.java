@@ -3,7 +3,6 @@ package me.yamakaja.rpgpets.api.entity;
 import me.yamakaja.rpgpets.api.RPGPets;
 import me.yamakaja.rpgpets.api.config.ConfigMessages;
 import me.yamakaja.rpgpets.api.event.PetLevelUpEvent;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -11,11 +10,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.HashMap;
@@ -37,13 +36,28 @@ public class PetManager implements Listener {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
+    /**
+     * Attempts to summon a pet using the {@link PetDescriptor}
+     *
+     * @param petDescriptor The {@link PetDescriptor} describing the summoning job
+     * @return Whether or not the pet has been spawned, this may be false when the player already has a pet active
+     */
+    public boolean summon(PetDescriptor petDescriptor) {
+        if (this.spawnedPets.containsKey(petDescriptor.getOwner()))
+            return false;
+
+        this.plugin.getNMSHandler().summon(petDescriptor);
+
+        return true;
+    }
+
     @EventHandler
     public void onInteract(PlayerInteractEvent event) {
         if (!(event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK))
             return;
 
         ItemStack stack = event.getItem();
-        if (stack.getType() != Material.SKULL_ITEM)
+        if (stack == null || stack.getType() != Material.SKULL_ITEM)
             return;
 
         SkullMeta meta = (SkullMeta) stack.getItemMeta();
@@ -69,9 +83,19 @@ public class PetManager implements Listener {
 
     @EventHandler
     public void onPetLevelup(PetLevelUpEvent e) {
-        PetDescriptor descriptor = e.getPet().getPetDescriptor();
+        PetDescriptor descriptor = e.getPetDescriptor();
         descriptor.getOwner().sendMessage(ConfigMessages.GENERAL_LEVELUP.get(descriptor.getName(),
                 Integer.toString(descriptor.getLevel())));
+    }
+
+    @EventHandler
+    public void onEntityDeath(EntityDeathEvent e) {
+        PetDescriptor petDescriptor = this.plugin.getNMSHandler().getPetDescriptor(e.getEntity());
+
+        if (petDescriptor == null)
+            return;
+
+        spawnedPets.remove(petDescriptor.getOwner());
     }
 
     @EventHandler

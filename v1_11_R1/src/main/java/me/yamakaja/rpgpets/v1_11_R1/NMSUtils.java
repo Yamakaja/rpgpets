@@ -1,5 +1,6 @@
 package me.yamakaja.rpgpets.v1_11_R1;
 
+import net.minecraft.server.v1_11_R1.PathfinderGoalMeleeAttack;
 import net.minecraft.server.v1_11_R1.PathfinderGoalSelector;
 
 import java.lang.reflect.Field;
@@ -13,6 +14,7 @@ public class NMSUtils {
 
     private static Field pathfinderB = getPrivateField("b", PathfinderGoalSelector.class);
     private static Field pathfinderC = getPrivateField("c", PathfinderGoalSelector.class);
+    private static Field pathGoalMeleeD = getPrivateField("d", PathfinderGoalMeleeAttack.class);
 
     private NMSUtils() {
     }
@@ -29,6 +31,14 @@ public class NMSUtils {
             ((Set) pathfinderC.get(goalSelector)).clear();
             ((Set) pathfinderB.get(targetSelector)).clear();
             ((Set) pathfinderC.get(targetSelector)).clear();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void setSpeed(PathfinderGoalMeleeAttack meleeGoal, double speed) {
+        try {
+            pathGoalMeleeD.set(meleeGoal, speed);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }

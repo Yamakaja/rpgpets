@@ -4,6 +4,7 @@ import com.comphenix.protocol.ProtocolLibrary;
 import me.yamakaja.rpgpets.api.NMSHandler;
 import me.yamakaja.rpgpets.api.RPGPets;
 import me.yamakaja.rpgpets.api.config.ConfigManager;
+import me.yamakaja.rpgpets.api.entity.PetManager;
 import me.yamakaja.rpgpets.api.entity.PetType;
 import me.yamakaja.rpgpets.plugin.command.CommandRPGPets;
 import me.yamakaja.rpgpets.plugin.protocol.EntitySpawnPacketTranslator;
@@ -22,6 +23,7 @@ public class RPGPetsImpl extends JavaPlugin implements RPGPets {
 
     private NMSHandler nmsHandler;
     private ConfigManager configManager;
+    private PetManager petManager;
 
     @Override
     public void onEnable() {
@@ -42,6 +44,8 @@ public class RPGPetsImpl extends JavaPlugin implements RPGPets {
         this.configManager = new ConfigManager(this);
         this.configManager.injectConfigs();
         this.getLogger().info("Configs loaded!");
+
+        this.petManager = new PetManager(this);
 
         this.getLogger().info("Successfully enabled RPGPets!");
     }
@@ -86,6 +90,11 @@ public class RPGPetsImpl extends JavaPlugin implements RPGPets {
     @Override
     public ConfigManager getConfigManager() {
         return configManager;
+    }
+
+    @Override
+    public PetManager getPetManager() {
+        return petManager;
     }
 
 }

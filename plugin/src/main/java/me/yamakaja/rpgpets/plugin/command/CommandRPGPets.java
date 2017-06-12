@@ -5,7 +5,7 @@ import me.yamakaja.rpgpets.api.config.ConfigMessages;
 import me.yamakaja.rpgpets.api.config.ConfigPermissions;
 import me.yamakaja.rpgpets.api.entity.PetDescriptor;
 import me.yamakaja.rpgpets.api.entity.PetType;
-import me.yamakaja.rpgpets.api.item.RPGPetsItems;
+import me.yamakaja.rpgpets.api.item.RPGPetsItem;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -45,8 +45,8 @@ public class CommandRPGPets implements CommandExecutor, TabCompleter {
                 break;
             case "summon":
                 if (commandSender instanceof Player)
-                    this.plugin.getNMSHandler().summon(new PetDescriptor(PetType.COW, (Player) commandSender,
-                            "Rambo", 42, 0.5F, true));
+                    this.plugin.getPetManager().summon(new PetDescriptor(PetType.COW, (Player) commandSender,
+                            "Rambo", 1, 0F, true));
                 break;
             case "help":
                 if (!commandSender.hasPermission(ConfigPermissions.COMMAND_HELP.get())) {
@@ -79,9 +79,9 @@ public class CommandRPGPets implements CommandExecutor, TabCompleter {
             return;
         }
 
-        RPGPetsItems item;
+        RPGPetsItem item;
         try {
-            item = RPGPetsItems.valueOf(args[2].toLowerCase());
+            item = RPGPetsItem.valueOf(args[2].toUpperCase());
         } catch (IllegalArgumentException e) {
             sender.sendMessage(ConfigMessages.COMMAND_GIVE_UNKNOWN.get());
             return;

@@ -1,5 +1,6 @@
 package me.yamakaja.rpgpets.v1_11_R1.pathfinding;
 
+import me.yamakaja.rpgpets.api.entity.PetDescriptor;
 import me.yamakaja.rpgpets.api.util.WorldUtils;
 import net.minecraft.server.v1_11_R1.EntityCreature;
 import net.minecraft.server.v1_11_R1.NavigationAbstract;
@@ -17,10 +18,12 @@ public class PathfinderGoalFollowOwner extends PathfinderGoal {
     private Player owner;
     private NavigationAbstract pathfinder;
     private Location targetLoc;
+    private PetDescriptor petDescriptor;
 
-    public PathfinderGoalFollowOwner(EntityCreature pet, Player owner) {
+    public PathfinderGoalFollowOwner(EntityCreature pet, PetDescriptor petDescriptor) {
         this.pet = pet;
-        this.owner = owner;
+        this.owner = petDescriptor.getOwner();
+        this.petDescriptor = petDescriptor;
 
         this.pathfinder = pet.getNavigation();
     }
@@ -28,7 +31,7 @@ public class PathfinderGoalFollowOwner extends PathfinderGoal {
     @Override
     public boolean a() { // shouldExecute
         double distanceSquared = owner.getLocation().distanceSquared(pet.getBukkitEntity().getLocation());
-        return distanceSquared > 6 * 6 && distanceSquared < 17 * 17;
+        return distanceSquared > 6 * 6 && distanceSquared < 30 * 30;
     }
 
     @Override
@@ -46,7 +49,7 @@ public class PathfinderGoalFollowOwner extends PathfinderGoal {
         PathEntity pathEntity = this.pathfinder.a(targetLoc.getX(), targetLoc.getY(), targetLoc.getZ());
         if (pathEntity == null)
             System.err.println("PathEntity is null!");
-        this.pathfinder.a(pathEntity, 2.5);
+        this.pathfinder.a(pathEntity, petDescriptor.getSpeed());
     }
 
     @Override
