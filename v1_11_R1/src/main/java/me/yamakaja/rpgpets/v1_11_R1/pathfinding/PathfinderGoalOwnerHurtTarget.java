@@ -8,7 +8,7 @@ import org.bukkit.craftbukkit.v1_11_R1.entity.CraftPlayer;
 import org.bukkit.event.entity.EntityTargetEvent;
 
 /**
- * Created by david on 12.06.17.
+ * Created by Yamakaja on 12.06.17.
  */
 public class PathfinderGoalOwnerHurtTarget extends PathfinderGoalTarget {
 

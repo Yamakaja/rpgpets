@@ -2,10 +2,8 @@ package me.yamakaja.rpgpets.api;
 
 import me.yamakaja.rpgpets.api.entity.PetDescriptor;
 import me.yamakaja.rpgpets.api.entity.PetRegistry;
-import me.yamakaja.rpgpets.api.entity.PetType;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
+import org.bukkit.inventory.meta.SkullMeta;
 
 /**
  * Created by Yamakaja on 10.06.17.
@@ -37,4 +35,7 @@ public interface NMSHandler {
      */
     PetDescriptor getPetDescriptor(Entity entity);
 
+    SkullMeta fillSkullMeta(SkullMeta meta);
+
+    void preloadSkins();
 }

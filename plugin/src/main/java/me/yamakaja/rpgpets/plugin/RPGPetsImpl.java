@@ -6,11 +6,14 @@ import me.yamakaja.rpgpets.api.RPGPets;
 import me.yamakaja.rpgpets.api.config.ConfigManager;
 import me.yamakaja.rpgpets.api.entity.PetManager;
 import me.yamakaja.rpgpets.api.entity.PetType;
+import me.yamakaja.rpgpets.api.item.EggManager;
+import me.yamakaja.rpgpets.api.item.RPGPetsItem;
 import me.yamakaja.rpgpets.plugin.command.CommandRPGPets;
 import me.yamakaja.rpgpets.plugin.protocol.EntitySpawnPacketTranslator;
 import me.yamakaja.rpgpets.v1_11_R1.NMSHandler_v1_11_R1;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.logging.Level;
 import java.util.regex.Pattern;
@@ -23,7 +26,9 @@ public class RPGPetsImpl extends JavaPlugin implements RPGPets {
 
     private NMSHandler nmsHandler;
     private ConfigManager configManager;
+
     private PetManager petManager;
+    private EggManager eggManager;
 
     @Override
     public void onEnable() {
@@ -38,6 +43,8 @@ public class RPGPetsImpl extends JavaPlugin implements RPGPets {
 
         ProtocolLibrary.getProtocolManager().addPacketListener(new EntitySpawnPacketTranslator(this));
 
+        RPGPetsItem.initialize(this);
+
         this.registerPets();
         this.getLogger().info("Registered pet entities!");
 
@@ -46,8 +53,21 @@ public class RPGPetsImpl extends JavaPlugin implements RPGPets {
         this.getLogger().info("Configs loaded!");
 
         this.petManager = new PetManager(this);
+        this.eggManager = new EggManager(this);
+        Bukkit.getOnlinePlayers().forEach(p -> this.eggManager.update(p));
+
+        this.getLogger().info("Pre-loading skins ... this could take a bit");
+        this.getLogger().info("Finished loading skins!");
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                getNMSHandler().preloadSkins();
+            }
+        }.runTaskTimerAsynchronously(RPGPetsImpl.this, 0, 20 * 60 * 60);
 
         this.getLogger().info("Successfully enabled RPGPets!");
+
     }
 
     private void registerPets() {

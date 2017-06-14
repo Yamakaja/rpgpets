@@ -2,6 +2,13 @@ cow:                              # Pet type
   maxLevel: 20                    # The maximum level a pet can reach
   baseExpRequirement: 10          # The exp requirement to level up at level 0
   expRequirementMultiplier: 1.5   # The multiplier for the base exp requirement at further levelups
+  randomWeight: 10                # The weight in the random selection of a pet
+                                  # More information about the weight system:
+                                  # The probability for a mob to be selected is the fraction of its weight by the sum of all weights
+                                  # This means if were only two pets and both had the same value, the chance would be 50% for both of them
+                                  # But if one had a weight of one and the other one a weight of three, the chance for the first one to be
+                                  # selected would be 1/4 while the chance for the second one would be 3/4 (Since the sum of weights = 4)
+                                  # TL;DR: Higher weight, higher chance to be selected
                                   # Required exp to levelup: baseExpRequirement * expRequirementMultiplier ^ level
   base:                           # The stats at level 0 (If pets were grown up at level 0)
     speed: 1                      # The base movement speed
@@ -20,3 +27,23 @@ cow:                              # Pet type
     attackDamage: 0.5             # ...
     knockback: 0.25
     maxHealth: 0.5
+pig:
+  maxLevel: 20
+  baseExpRequirement: 10
+  expRequirementMultiplier: 1.5
+  randomWeight: 10
+  base:
+    speed: 1
+    attackDamage: 1
+    knockback: 0.5
+    maxHealth: 5
+  levelup:
+    speed: 0.1
+    attackDamage: 0.5
+    knockback: 0.05
+    maxHealth: 2
+  babymodifier:
+  speed: 1.5
+  attackDamage: 0.5
+  knockback: 0.25
+  maxHealth: 1

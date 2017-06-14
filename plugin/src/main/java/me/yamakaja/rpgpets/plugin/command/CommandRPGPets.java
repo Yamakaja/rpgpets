@@ -91,17 +91,18 @@ public class CommandRPGPets implements CommandExecutor, TabCompleter {
 
         if (args.length >= 4) {
             try {
-                stack.setAmount(Integer.parseInt(args[3]));
+                stack.setAmount(Math.min(64, Integer.parseInt(args[3])));
             } catch (NumberFormatException e) {
             }
         }
 
         if (player.getInventory().firstEmpty() == -1)
-            player.getWorld().dropItem(player.getLocation(), item.get());
+            player.getWorld().dropItem(player.getLocation(), stack);
         else
-            player.getInventory().addItem(item.get());
+            player.getInventory().addItem(stack);
 
-        sender.sendMessage(ConfigMessages.COMMAND_GIVE_SUCCESS.get(Integer.toString(stack.getAmount()), item.name(), player.getName()));
+        sender.sendMessage(ConfigMessages.COMMAND_GIVE_SUCCESS.get(Integer.toString(stack.getAmount()),
+                stack.hasItemMeta() && stack.getItemMeta().hasDisplayName() ? stack.getItemMeta().getDisplayName() : item.name(), player.getName()));
 
     }
 

@@ -19,6 +19,7 @@ public class ConfigManager {
 
         boolean debug = System.getProperty("me.yamakaja.debug") != null;
 
+        plugin.saveResource("config.yml", debug);
         plugin.saveResource("messages.yml", debug);
         plugin.saveResource("permissions.yml", debug);
         plugin.saveResource("petstats.yml", debug);
@@ -29,6 +30,12 @@ public class ConfigManager {
      */
     public void injectConfigs() {
         File dataDir = plugin.getDataFolder();
+
+        // General
+        File generalConfigFile = new File(dataDir, "config.yml");
+
+        YamlConfiguration generalConfig = YamlConfiguration.loadConfiguration(generalConfigFile);
+        ConfigGeneral.initialize(generalConfig);
 
         // Messages
         File messagesConfigFile = new File(dataDir, "messages.yml");
@@ -62,6 +69,7 @@ public class ConfigManager {
                     petStats.getInt(basePath + "maxLevel"),
                     (float) petStats.getDouble(basePath + "baseExpRequirement"),
                     (float) petStats.getDouble(basePath + "expRequirementMultiplier"),
+                    petStats.getInt(basePath + "randomWeight"),
 
                     (float) petStats.getDouble(basePath + "base.speed"),
                     (float) petStats.getDouble(basePath + "base.attackDamage"),
@@ -77,9 +85,9 @@ public class ConfigManager {
                     (float) petStats.getDouble(basePath + "baby.attackDamage"),
                     (float) petStats.getDouble(basePath + "baby.knockback"),
                     (float) petStats.getDouble(basePath + "baby.maxHealth"));
-
-
         }
+
+        PetType.initWeightMap();
     }
 
 }

@@ -1,3 +1,9 @@
+##############################################
+#                                            #
+#              RPGPets Messages              #
+#                                            #
+##############################################
+
 # The prefix to use for messages from RPGPets, insert with {prefix}
 prefix: "&8[&bRPGPets&8] "
 
@@ -14,7 +20,7 @@ command:
     syntax: "/rpgpets give <player> <food/egg> [amount]"
     targetnotfound: "&cInvalid player!"
     unknown: "&cUnknown item requested!"
-    success: "&aSuccessfully gave {0}x {1} to {2}!" # 0: Amount, 1: of, 2: to
+    success: "&aSuccessfully gave {0}x {1}&a to {2}!" # 0: Amount, 1: of, 2: to
 
 general:
   levelup: "&6{0}&b just leveled up to level &6{1}&b!"
@@ -26,3 +32,4 @@ item:
   egg:
     name: "&1Mystery Egg"
     remaining: "&b{0}m &8to go until the egg cracks!"
+    hatch: "&aYour egg has hatched!"
