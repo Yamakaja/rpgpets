@@ -43,7 +43,7 @@ pig:
     knockback: 0.05
     maxHealth: 2
   babymodifier:
-  speed: 1.5
-  attackDamage: 0.5
-  knockback: 0.25
-  maxHealth: 1
+    speed: 1.5
+    attackDamage: 0.5
+    knockback: 0.25
+    maxHealth: 1

@@ -64,7 +64,7 @@ public class RPGPetsImpl extends JavaPlugin implements RPGPets {
             public void run() {
                 getNMSHandler().preloadSkins();
             }
-        }.runTaskTimerAsynchronously(RPGPetsImpl.this, 0, 20 * 60 * 60);
+        }.runTaskTimerAsynchronously(RPGPetsImpl.this, 0, 20 * 60 * (60 - 1));
 
         this.getLogger().info("Successfully enabled RPGPets!");
 

@@ -81,10 +81,10 @@ public class ConfigManager {
                     (float) petStats.getDouble(basePath + "levelup.knockback"),
                     (float) petStats.getDouble(basePath + "levelup.maxHealth"),
 
-                    (float) petStats.getDouble(basePath + "baby.speed"),
-                    (float) petStats.getDouble(basePath + "baby.attackDamage"),
-                    (float) petStats.getDouble(basePath + "baby.knockback"),
-                    (float) petStats.getDouble(basePath + "baby.maxHealth"));
+                    (float) petStats.getDouble(basePath + "babymodifier.speed"),
+                    (float) petStats.getDouble(basePath + "babymodifier.attackDamage"),
+                    (float) petStats.getDouble(basePath + "babymodifier.knockback"),
+                    (float) petStats.getDouble(basePath + "babymodifier.maxHealth"));
         }
 
         PetType.initWeightMap();

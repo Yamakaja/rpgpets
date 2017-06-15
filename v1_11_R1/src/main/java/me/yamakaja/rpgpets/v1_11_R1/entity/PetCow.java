@@ -28,7 +28,6 @@ public class PetCow extends EntityCow implements Pet {
         super(((CraftPlayer) petDescriptor.getOwner()).getHandle().getWorld());
 
         this.petDescriptor = petDescriptor;
-        this.petDescriptor.setEntity((LivingEntity) this.getBukkitEntity());
 
         Location playerLoc = petDescriptor.getOwner().getLocation();
         this.setLocation(playerLoc.getX(), playerLoc.getY(), playerLoc.getZ(), playerLoc.getYaw(), playerLoc.getPitch());
@@ -107,6 +106,9 @@ public class PetCow extends EntityCow implements Pet {
 
         if (this.petDescriptor.getOwner().getLocation().distanceSquared(this.getBukkitEntity().getLocation()) > 30 * 30)
             this.getBukkitEntity().teleport(this.petDescriptor.getOwner());
+
+        if (this.ticksLived % 80 == 0 && this.getHealth() < this.getMaxHealth())
+            this.setHealth(this.getHealth() + 1);
     }
 
     @Override

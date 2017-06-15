@@ -46,7 +46,7 @@ public class CommandRPGPets implements CommandExecutor, TabCompleter {
             case "summon":
                 if (commandSender instanceof Player)
                     this.plugin.getPetManager().summon(new PetDescriptor(PetType.COW, (Player) commandSender,
-                            "Rambo", 1, 0F, true));
+                            "Rambo", 1, 0F, true), 0);
                 break;
             case "help":
                 if (!commandSender.hasPermission(ConfigPermissions.COMMAND_HELP.get())) {

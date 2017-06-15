@@ -9,7 +9,9 @@ import java.util.List;
  */
 public enum ConfigGeneral {
 
-    HATCH_DISTANCE("distance_to_hatch");
+    HATCH_DISTANCE("distance_to_hatch"),
+    GROWUP_START("growup_start"),
+    GROWUP_END("growup_end");
 
     private static YamlConfiguration configuration;
     private String path;

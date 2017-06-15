@@ -6,3 +6,8 @@
 
 # The distance in m (or blocks) a player has to move for an egg to hatch
 distance_to_hatch: 50
+
+# The start and end of the area where pets grow up to be adults (Start: Inclusive, End: Exclusive)
+# This means that if they reach the growup_end level, they are guaranteed to be adults
+growup_start: 5
+growup_end: 10

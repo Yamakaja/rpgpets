@@ -78,7 +78,7 @@ public class EggManager implements Listener, Runnable {
             }
 
             this.carryingPlayers.put(player, totalDistance);
-            lore.set(0, ConfigMessages.ITEM_EGG_REMAINING.get(Integer.toString(distanceToGo / 100)));
+            lore.set(0, ConfigMessages.ITEM_EGG_LORE_REMAINING.get(Integer.toString(distanceToGo / 100)));
             lore.set(1, ChatColor.BLACK.toString() + ChatColor.MAGIC + Integer.toString(distanceToGo) + ":"
                     + Double.toString(Math.random()).substring(2));
 

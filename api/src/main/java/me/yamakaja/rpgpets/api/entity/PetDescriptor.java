@@ -1,8 +1,8 @@
 package me.yamakaja.rpgpets.api.entity;
 
+import me.yamakaja.rpgpets.api.config.ConfigGeneral;
 import me.yamakaja.rpgpets.api.event.PetLevelUpEvent;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
 /**
@@ -15,11 +15,12 @@ public class PetDescriptor {
     private String name;
     private int level;
 
+    private int entityId;
+
     private float experience;
     private float experienceRequirement;
 
     private boolean grownUp;
-    private LivingEntity entity;
 
     private float speed;
     private float attackDamage;
@@ -37,24 +38,24 @@ public class PetDescriptor {
         this.updateStats();
     }
 
+    public int getEntityId() {
+        return entityId;
+    }
+
+    public void setEntityId(int entityId) {
+        this.entityId = entityId;
+    }
+
+    public boolean hasEntityId() {
+        return entityId != 0;
+    }
+
     public boolean isGrownUp() {
         return grownUp;
     }
 
     public void setGrownUp(boolean grownUp) {
         this.grownUp = grownUp;
-    }
-
-    public LivingEntity getEntity() {
-        return entity;
-    }
-
-    public void setEntity(LivingEntity entity) {
-        this.entity = entity;
-    }
-
-    public boolean hasEntity() {
-        return this.entity != null;
     }
 
     public PetType getPetType() {
@@ -121,17 +122,40 @@ public class PetDescriptor {
         this.attackDamage = this.petType.getBaseAttackDamage() + this.petType.getLevelupAttackDamage() * this.level;
         this.knockback = this.petType.getBaseKnockback() + this.petType.getLevelupKnockback() * this.level;
         this.maxHealth = this.petType.getBaseMaxHealth() + this.petType.getLevelupMaxHealth() * this.level;
+
+        if (!this.isGrownUp()) {
+            this.speed = this.speed * this.petType.getBabyModifierSpeed();
+            this.attackDamage = this.attackDamage * this.petType.getBabyModifierAttackDamage();
+            this.knockback = this.knockback * this.petType.getBabyModifierKnockback();
+            this.maxHealth = this.maxHealth * this.petType.getBabyModifierMaxHealth();
+        }
     }
 
     public boolean canLevelUp() {
         return this.level < this.petType.getMaxLevel();
     }
 
+    private void updateGrownUpStatus() {
+        if (grownUp)
+            return;
+
+        int start = ConfigGeneral.GROWUP_START.getAsInt();
+        int end = ConfigGeneral.GROWUP_END.getAsInt();
+
+        int levels = end - start;
+        double probability = (this.level - start) / (double) levels;
+
+        if (Math.random() < probability)
+            this.setGrownUp(true);
+
+    }
+
     /**
      * Add experience
+     * Will make the pet level up if it gains enough experience
      *
      * @param exp The amount of experience to add
-     * @return Wether the mob leveled up
+     * @return Whether the mob leveled up
      */
     public boolean addExperience(float exp) {
         if (!canLevelUp())
@@ -142,6 +166,9 @@ public class PetDescriptor {
         if (levelUp) {
             experience = (experience + exp) % experienceRequirement;
             level++;
+
+            updateGrownUpStatus();
+
             Bukkit.getServer().getPluginManager().callEvent(new PetLevelUpEvent(this));
             updateStats();
         } else

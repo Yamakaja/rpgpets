@@ -8,13 +8,14 @@ import me.yamakaja.rpgpets.api.entity.PetRegistry;
 import me.yamakaja.rpgpets.api.entity.PetType;
 import me.yamakaja.rpgpets.v1_11_R1.entity.PetCow;
 import me.yamakaja.rpgpets.v1_11_R1.entity.PetRegistryImpl;
+import net.minecraft.server.v1_11_R1.EntityLiving;
 import net.minecraft.server.v1_11_R1.TileEntitySkull;
 import net.minecraft.server.v1_11_R1.World;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_11_R1.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_11_R1.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_11_R1.inventory.CraftItemFactory;
-import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import java.lang.reflect.Field;
@@ -62,17 +63,25 @@ public class NMSHandler_v1_11_R1 implements NMSHandler {
     }
 
     @Override
-    public void summon(PetDescriptor petDescriptor) {
+    public LivingEntity summon(PetDescriptor petDescriptor) {
         World world = ((CraftPlayer) petDescriptor.getOwner()).getHandle().getWorld();
+        EntityLiving entity = null;
         switch (petDescriptor.getPetType()) {
             case COW:
-                world.addEntity(new PetCow(petDescriptor));
+                world.addEntity(entity = new PetCow(petDescriptor));
                 break;
         }
+
+        if (entity != null) {
+            petDescriptor.setEntityId(entity.getId());
+            return (LivingEntity) entity.getBukkitEntity();
+        }
+
+        return null;
     }
 
     @Override
-    public PetDescriptor getPetDescriptor(Entity entity) {
+    public PetDescriptor getPetDescriptor(LivingEntity entity) {
         net.minecraft.server.v1_11_R1.Entity nmsEntity = ((CraftEntity) entity).getHandle();
 
         if (nmsEntity instanceof Pet) {

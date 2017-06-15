@@ -23,13 +23,27 @@ command:
     success: "&aSuccessfully gave {0}x {1}&a to {2}!" # 0: Amount, 1: of, 2: to
 
 general:
-  levelup: "&6{0}&b just leveled up to level &6{1}&b!"
-  petname: "&8[&b{0}&8] &6{1} &c{2}\u2764"
+  levelup: "&6{0}&b just leveled up to level &6{1}&b!" # 0: Name of pet that leveled up, 1: New level
+  petname: "&8[&b{0}&8] &6{1} &c{2}\u2764" # 0: Level, 1: Pet name, 2: Health in hearts (HP/2)
+  pethealth: "&cYour pet has to be at full health to be picked up!"
 
 item:
   food:
     name: "&6Pet Food"
   egg:
     name: "&1Mystery Egg"
-    remaining: "&b{0}m &8to go until the egg cracks!"
+    lore:
+      remaining: "&b{0}m &8to go until the egg cracks!" # 0: Remaining distance in meters/blocks
     hatch: "&aYour egg has hatched!"
+  pet:
+    defaultname: "&8Unnamed Pet"
+    lore:
+      type: "&8Type: &6{0}"
+      level: "&8Level: &6{0}"
+      exp: "&8Experience progress: &6{0}%"
+      maxlevel: "&6At max level!"
+      spawned: "&a&lCurrently active!"
+      age: "&8Age: {0}"
+      baby: "&6Baby"
+      adult: "&6Adult"
+
