@@ -6,17 +6,15 @@ import me.yamakaja.rpgpets.api.entity.Pet;
 import me.yamakaja.rpgpets.api.entity.PetDescriptor;
 import me.yamakaja.rpgpets.api.entity.PetRegistry;
 import me.yamakaja.rpgpets.api.entity.PetType;
-import me.yamakaja.rpgpets.v1_11_R1.entity.PetCow;
-import me.yamakaja.rpgpets.v1_11_R1.entity.PetRegistryImpl;
-import net.minecraft.server.v1_11_R1.Entity;
-import net.minecraft.server.v1_11_R1.EntityLiving;
-import net.minecraft.server.v1_11_R1.TileEntitySkull;
-import net.minecraft.server.v1_11_R1.World;
+import me.yamakaja.rpgpets.v1_11_R1.entity.*;
+import net.minecraft.server.v1_11_R1.*;
 import org.bukkit.Material;
+import org.bukkit.craftbukkit.v1_11_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_11_R1.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_11_R1.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_11_R1.inventory.CraftItemFactory;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.PolarBear;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import java.lang.reflect.Field;
@@ -45,7 +43,17 @@ public class NMSHandler_v1_11_R1 implements NMSHandler {
         this.plugin = plugin;
         this.petRegistry = new PetRegistryImpl();
 
+        PetType.CHICKEN.setEntityClass(PetChicken.class);
         PetType.COW.setEntityClass(PetCow.class);
+        PetType.LLAMA.setEntityClass(PetLlama.class);
+        PetType.MUSHROOM_COW.setEntityClass(PetMushroomCow.class);
+        PetType.PIG.setEntityClass(PetPig.class);
+        PetType.PIG_ZOMBIE.setEntityClass(PetPigZombie.class);
+        PetType.POLAR_BEAR.setEntityClass(PetPolarBear.class);
+        PetType.RABBIT.setEntityClass(PetRabbit.class);
+        PetType.SHEEP.setEntityClass(PetSheep.class);
+        PetType.SKELETON.setEntityClass(PetSkeleton.class);
+        PetType.ZOMBIE.setEntityClass(PetZombie.class);
     }
 
     @Override
@@ -64,21 +72,9 @@ public class NMSHandler_v1_11_R1 implements NMSHandler {
     }
 
     @Override
-    public LivingEntity summon(PetDescriptor petDescriptor) {
-        World world = ((CraftPlayer) petDescriptor.getOwner()).getHandle().getWorld();
-        EntityLiving entity = null;
-        switch (petDescriptor.getPetType()) {
-            case COW:
-                world.addEntity(entity = new PetCow(petDescriptor));
-                break;
-        }
-
-        if (entity != null) {
-            petDescriptor.setEntityId(entity.getId());
-            return (LivingEntity) entity.getBukkitEntity();
-        }
-
-        return null;
+    public LivingEntity addToWorld(Pet entity, org.bukkit.World world) {
+        ((CraftWorld) world).getHandle().addEntity((Entity) entity);
+        return (LivingEntity) ((Entity) entity).getBukkitEntity();
     }
 
     @Override

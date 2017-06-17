@@ -2,20 +2,32 @@ package me.yamakaja.rpgpets.api.entity;
 
 import org.bukkit.entity.EntityType;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 /**
  * Created by Yamakaja on 10.06.17.
  */
 public enum PetType {
+    CHICKEN(EntityType.CHICKEN, "chicken", "PetChicken", "MHF_Chicken"),
     COW(EntityType.COW, "cow", "PetCow", "MHF_Cow"),
-    PIG(EntityType.PIG, "pig", "PetPig", "MHF_Pig");
+    LLAMA(EntityType.LLAMA, "llama", "PetLlama", "MHF_Llama"),
+    MUSHROOM_COW(EntityType.MUSHROOM_COW, "mushroom_cow", "PetMushroomCow", "MHF_Mooshroom"),
+    PIG(EntityType.PIG, "pig", "PetPig", "MHF_Pig"),
+    PIG_ZOMBIE(EntityType.PIG_ZOMBIE, "pig_zombie", "PetPigZombie", "MHF_Pigzombie"),
+    POLAR_BEAR(EntityType.POLAR_BEAR, "polar_bear", "PetPolarBear", "MHF_PolarBear"),
+    RABBIT(EntityType.RABBIT, "rabbit", "PetRabbit", "MHF_Rabbit"),
+    SHEEP(EntityType.SHEEP, "sheep", "PetSheep", "MHF_Sheep"),
+    SKELETON(EntityType.SKELETON, "skeleton", "PetSkeleton", "MHF_Skeleton"),
+    ZOMBIE(EntityType.ZOMBIE, "zombie", "PetZombie", "MHF_Zombie");
 
     private static Map<Double, PetType> weightDistributionMap = new LinkedHashMap<>();
     private static List<Double> sortedWeightList = new LinkedList<>();
 
     private EntityType baseType;
     private Class<?> entityClass;
+    private Constructor<?> constructor;
     private String entityId;
     private String entityName;
     private int randomWeight;
@@ -82,6 +94,21 @@ public enum PetType {
 
     public void setEntityClass(Class<?> entityClass) {
         this.entityClass = entityClass;
+
+        try {
+            this.constructor = entityClass.getConstructor(PetDescriptor.class);
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public Pet summon(PetDescriptor descriptor) {
+        try {
+            return (Pet) this.constructor.newInstance(descriptor);
+        } catch (IllegalAccessException | InstantiationException | InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public EntityType getBaseType() {

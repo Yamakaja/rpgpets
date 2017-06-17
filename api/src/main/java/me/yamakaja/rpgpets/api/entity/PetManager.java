@@ -53,7 +53,8 @@ public class PetManager implements Listener {
         if (this.spawnedPets.containsKey(petDescriptor.getOwner().getName()))
             return null;
 
-        LivingEntity entity = this.plugin.getNMSHandler().summon(petDescriptor);
+        LivingEntity entity = this.plugin.getNMSHandler().addToWorld(petDescriptor.getPetType().summon(petDescriptor),
+                petDescriptor.getOwner().getWorld());
 
         entity.setVelocity(petDescriptor.getOwner().getLocation().getDirection());
 

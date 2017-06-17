@@ -1,7 +1,9 @@
 package me.yamakaja.rpgpets.api;
 
+import me.yamakaja.rpgpets.api.entity.Pet;
 import me.yamakaja.rpgpets.api.entity.PetDescriptor;
 import me.yamakaja.rpgpets.api.entity.PetRegistry;
+import org.bukkit.World;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.meta.SkullMeta;
 
@@ -26,9 +28,11 @@ public interface NMSHandler {
     RPGPets getPlugin();
 
     /**
-     * Summon a pet
+     * Ads an NMS entity to a world
+     *  @param entity The entity to add
+     * @param world  The world to add the entity to
      */
-    LivingEntity summon(PetDescriptor petDescriptor);
+    LivingEntity addToWorld(Pet entity, World world);
 
     /**
      * @return The pet descritor of the passed bukkit entity, null if the entity isn't a pet
