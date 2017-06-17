@@ -3,6 +3,7 @@ package me.yamakaja.rpgpets.v1_11_R1.entity;
 import me.yamakaja.rpgpets.api.config.ConfigMessages;
 import me.yamakaja.rpgpets.api.entity.Pet;
 import me.yamakaja.rpgpets.api.entity.PetDescriptor;
+import me.yamakaja.rpgpets.api.util.WorldUtils;
 import me.yamakaja.rpgpets.v1_11_R1.NMSUtils;
 import me.yamakaja.rpgpets.v1_11_R1.pathfinding.PathfinderGoalFollowOwner;
 import me.yamakaja.rpgpets.v1_11_R1.pathfinding.PathfinderGoalOwnerHurtTarget;
@@ -19,6 +20,7 @@ public class PetCow extends EntityCow implements Pet {
     private PetDescriptor petDescriptor;
     private PathfinderGoalMeleeAttack meleeAttackGoal;
 
+    @SuppressWarnings("unused") // Called and required my Minecraft code
     public PetCow(World world) {
         super(world);
         this.die();
@@ -29,7 +31,7 @@ public class PetCow extends EntityCow implements Pet {
 
         this.petDescriptor = petDescriptor;
 
-        Location playerLoc = petDescriptor.getOwner().getLocation();
+        Location playerLoc = petDescriptor.getOwner().getEyeLocation();
         this.setLocation(playerLoc.getX(), playerLoc.getY(), playerLoc.getZ(), playerLoc.getYaw(), playerLoc.getPitch());
 
         NMSUtils.clearGoalsAndTargets(goalSelector, targetSelector);
@@ -69,6 +71,9 @@ public class PetCow extends EntityCow implements Pet {
 
     @Override
     public boolean B(Entity entity) { // onAttack
+        if (/*entity instanceof EntityPlayer && */!WorldUtils.isPvpEnabled(this.petDescriptor.getOwner(), this.getBukkitEntity().getLocation()))
+            return false;
+
         final float damage = this.petDescriptor.getAttackDamage();
         final float knockback = this.petDescriptor.getKnockback();
         boolean flag = entity.damageEntity(DamageSource.mobAttack(this), damage);
@@ -107,7 +112,7 @@ public class PetCow extends EntityCow implements Pet {
         if (this.petDescriptor.getOwner().getLocation().distanceSquared(this.getBukkitEntity().getLocation()) > 30 * 30)
             this.getBukkitEntity().teleport(this.petDescriptor.getOwner());
 
-        if (this.ticksLived % 80 == 0 && this.getHealth() < this.getMaxHealth())
+        if (this.isAlive() && this.ticksLived % 80 == 0 && this.getHealth() < this.getMaxHealth())
             this.setHealth(this.getHealth() + 1);
     }
 

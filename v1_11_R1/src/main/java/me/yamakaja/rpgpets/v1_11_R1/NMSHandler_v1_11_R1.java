@@ -8,6 +8,7 @@ import me.yamakaja.rpgpets.api.entity.PetRegistry;
 import me.yamakaja.rpgpets.api.entity.PetType;
 import me.yamakaja.rpgpets.v1_11_R1.entity.PetCow;
 import me.yamakaja.rpgpets.v1_11_R1.entity.PetRegistryImpl;
+import net.minecraft.server.v1_11_R1.Entity;
 import net.minecraft.server.v1_11_R1.EntityLiving;
 import net.minecraft.server.v1_11_R1.TileEntitySkull;
 import net.minecraft.server.v1_11_R1.World;
@@ -82,7 +83,7 @@ public class NMSHandler_v1_11_R1 implements NMSHandler {
 
     @Override
     public PetDescriptor getPetDescriptor(LivingEntity entity) {
-        net.minecraft.server.v1_11_R1.Entity nmsEntity = ((CraftEntity) entity).getHandle();
+        Entity nmsEntity = ((CraftEntity) entity).getHandle();
 
         if (nmsEntity instanceof Pet) {
             return ((Pet) nmsEntity).getPetDescriptor();

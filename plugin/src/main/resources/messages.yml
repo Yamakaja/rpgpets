@@ -7,6 +7,13 @@
 # The prefix to use for messages from RPGPets, insert with {prefix}
 prefix: "&8[&bRPGPets&8] "
 
+general:
+  levelup: "&6{0}&b just leveled up to level &6{1}&b!" # 0: Name of pet that leveled up, 1: New level
+  petname: "&8[&b{0}&8] &6{1} &c{2}\u2764" # 0: Level, 1: Pet name, 2: Health in hearts (HP/2)
+  pethealth: "&cYour pet has to be at full health to be picked up!"
+  status: "&cThis pet is not ready to be spawned!"
+  nameonce: "&cPets can only be named once!"
+
 command:
   noperm: "&4You don't have permission to use this command!"
   syntax: "&cCorrect syntax: {0}" # Usage
@@ -22,28 +29,29 @@ command:
     unknown: "&cUnknown item requested!"
     success: "&aSuccessfully gave {0}x {1}&a to {2}!" # 0: Amount, 1: of, 2: to
 
-general:
-  levelup: "&6{0}&b just leveled up to level &6{1}&b!" # 0: Name of pet that leveled up, 1: New level
-  petname: "&8[&b{0}&8] &6{1} &c{2}\u2764" # 0: Level, 1: Pet name, 2: Health in hearts (HP/2)
-  pethealth: "&cYour pet has to be at full health to be picked up!"
-
 item:
   food:
     name: "&6Pet Food"
+    tooltip: "&8Place into the crafting window\n&8together with an exhausted pet"
   egg:
     name: "&1Mystery Egg"
     lore:
       remaining: "&b{0}m &8to go until the egg cracks!" # 0: Remaining distance in meters/blocks
     hatch: "&aYour egg has hatched!"
   pet:
-    defaultname: "&8Unnamed Pet"
+    defaultname: "Unnamed Pet" # WARNING: May not contain colors!
     lore:
       type: "&8Type: &6{0}"
       level: "&8Level: &6{0}"
       exp: "&8Experience progress: &6{0}%"
       maxlevel: "&6At max level!"
-      spawned: "&a&lCurrently active!"
-      age: "&8Age: {0}"
-      baby: "&6Baby"
-      adult: "&6Adult"
+      age: "&8Age: &6{0}"
+      baby: "Baby"
+      adult: "Adult"
+      status: "&8Status: {0}"
+      spawned: "&aActive"
+      ready: "&6Inactive"
+      dead: "&4Exhausted" # The state in which the pet has to be fed to be reactivated
+
+
 

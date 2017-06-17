@@ -2,13 +2,17 @@ package me.yamakaja.rpgpets.api.util;
 
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.flags.DefaultFlag;
+import com.sk89q.worldguard.protection.flags.StateFlag;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 
 /**
  * Created by Yamakaja on 10.06.17.
  */
 public class WorldUtils {
+
+    private static WorldGuardPlugin plugin = WorldGuardPlugin.inst();;
 
     private WorldUtils() {
     }
@@ -45,9 +49,9 @@ public class WorldUtils {
                 && !location.clone().add(0, -1, 0).getBlock().getType().isSolid();
     }
 
-    // TODO: Worldguard hook
-    private boolean isPvpEnabled(Location loc) {
-        return false;
+    public static boolean isPvpEnabled(Player owner, Location loc) {
+        StateFlag.State state = WorldUtils.plugin.getRegionManager(loc.getWorld()).getApplicableRegions(loc).queryState(plugin.wrapPlayer(owner), DefaultFlag.PVP);
+        return state == StateFlag.State.ALLOW || state == null;
     }
 
 }

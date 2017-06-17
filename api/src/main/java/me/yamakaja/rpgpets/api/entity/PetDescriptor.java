@@ -15,6 +15,8 @@ public class PetDescriptor {
     private String name;
     private int level;
 
+    private PetState state;
+
     private int entityId;
 
     private float experience;
@@ -35,7 +37,17 @@ public class PetDescriptor {
         this.experience = experience;
         this.grownUp = grownUp;
 
+        this.state = PetState.READY;
+
         this.updateStats();
+    }
+
+    public PetState getState() {
+        return state;
+    }
+
+    public void setState(PetState state) {
+        this.state = state;
     }
 
     public int getEntityId() {
@@ -59,7 +71,7 @@ public class PetDescriptor {
     }
 
     public PetType getPetType() {
-        return petType;
+         return petType;
     }
 
     public Player getOwner() {

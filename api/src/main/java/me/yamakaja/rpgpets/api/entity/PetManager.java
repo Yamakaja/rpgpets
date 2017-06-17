@@ -4,6 +4,9 @@ import me.yamakaja.rpgpets.api.RPGPets;
 import me.yamakaja.rpgpets.api.config.ConfigMessages;
 import me.yamakaja.rpgpets.api.event.PetLevelUpEvent;
 import me.yamakaja.rpgpets.api.item.RPGPetsItem;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -12,9 +15,10 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.*;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.EquipmentSlot;
@@ -42,17 +46,21 @@ public class PetManager implements Listener {
      * Attempts to summon a pet using the {@link PetDescriptor}
      *
      * @param petDescriptor The {@link PetDescriptor} describing the summoning job
-     * @param slot
+     * @param slot          The slot to save
      * @return Whether or not the pet has been spawned, this may be false when the player already has a pet active
      */
-    public boolean summon(PetDescriptor petDescriptor, int slot) {
+    public LivingEntity summon(PetDescriptor petDescriptor, int slot) {
         if (this.spawnedPets.containsKey(petDescriptor.getOwner().getName()))
-            return false;
+            return null;
 
-        this.spawnedPets.put(petDescriptor.getOwner().getName(), this.plugin.getNMSHandler().summon(petDescriptor));
+        LivingEntity entity = this.plugin.getNMSHandler().summon(petDescriptor);
+
+        entity.setVelocity(petDescriptor.getOwner().getLocation().getDirection());
+
+        this.spawnedPets.put(petDescriptor.getOwner().getName(), entity);
         this.petSlots.put(petDescriptor.getOwner().getName(), slot);
 
-        return true;
+        return entity;
     }
 
     @EventHandler
@@ -84,9 +92,9 @@ public class PetManager implements Listener {
             }
 
             if (event.getHand() == EquipmentSlot.HAND)
-                event.getPlayer().getInventory().setItemInMainHand(RPGPetsItem.removeSpawned(stack));
+                event.getPlayer().getInventory().setItemInMainHand(RPGPetsItem.resetPet(stack));
             else
-                event.getPlayer().getInventory().setItemInOffHand(RPGPetsItem.removeSpawned(stack));
+                event.getPlayer().getInventory().setItemInOffHand(RPGPetsItem.resetPet(stack));
 
             if (entity.getEntityId() != petDescriptor.getEntityId())
                 return;
@@ -96,9 +104,13 @@ public class PetManager implements Listener {
             return;
         }
 
-        this.summon(petDescriptor, event.getPlayer().getInventory().getHeldItemSlot());
+        if (petDescriptor.getState() != PetState.READY) {
+            event.getPlayer().sendMessage(ConfigMessages.GENERAL_STATUS.get());
+            return;
+        }
 
-        LivingEntity entity = this.spawnedPets.get(event.getPlayer().getName());
+        LivingEntity entity = this.summon(petDescriptor, event.getHand() == EquipmentSlot.HAND
+                ? event.getPlayer().getInventory().getHeldItemSlot() : 40);
 
         ItemStack itemStack = RPGPetsItem.encodeSpawned(event.getItem(), entity.getEntityId());
 
@@ -106,6 +118,51 @@ public class PetManager implements Listener {
             event.getPlayer().getInventory().setItemInMainHand(itemStack);
         else
             event.getPlayer().getInventory().setItemInOffHand(itemStack);
+    }
+
+    @EventHandler
+    public void onPlayerDeath(PlayerDeathEvent e) {
+        if (!this.spawnedPets.containsKey(e.getEntity().getName()))
+            return;
+
+        int slot = this.petSlots.get(e.getEntity().getName());
+
+        ItemStack itemStackInInventory = e.getEntity().getInventory().getItem(slot);
+        int dropsSlot = -1;
+        for (int i = 0; i < e.getDrops().size(); i++)
+            if (e.getDrops().get(i).isSimilar(itemStackInInventory)) {
+                dropsSlot = i;
+                break;
+            }
+
+        if (dropsSlot == -1)
+            throw new RuntimeException("Logic error! Cannot find inventory item in drops!");
+
+        LivingEntity entity = this.spawnedPets.get(e.getEntity().getName());
+        PetDescriptor petDescriptor = this.plugin.getNMSHandler().getPetDescriptor(entity);
+        petDescriptor.setState(PetState.DEAD);
+
+        entity.remove();
+        this.spawnedPets.remove(e.getEntity().getName());
+
+        e.getDrops().set(dropsSlot, RPGPetsItem.getPetCarrier(petDescriptor));
+    }
+
+    @EventHandler
+    public void onPlayerQuit(PlayerQuitEvent e) {
+        if (!this.spawnedPets.containsKey(e.getPlayer().getName()))
+            return;
+
+        int slot = this.petSlots.get(e.getPlayer().getName());
+
+        LivingEntity entity = this.spawnedPets.get(e.getPlayer().getName());
+        PetDescriptor petDescriptor = this.plugin.getNMSHandler().getPetDescriptor(entity);
+
+        entity.remove();
+        this.spawnedPets.remove(e.getPlayer().getName());
+
+        petDescriptor.setState(entity.getHealth() == entity.getMaxHealth() ? PetState.READY : PetState.DEAD);
+        e.getPlayer().getInventory().setItem(slot, RPGPetsItem.getPetCarrier(petDescriptor));
     }
 
     @EventHandler
@@ -128,7 +185,17 @@ public class PetManager implements Listener {
         if (!this.spawnedPets.containsKey(e.getWhoClicked().getName()))
             return;
 
-        if (e.getSlot() == this.petSlots.get(e.getWhoClicked().getName()))
+        int slot = this.petSlots.get(e.getWhoClicked().getName());
+
+        if (e.getClickedInventory() == null)
+            return;
+
+        if (e.getHotbarButton() == slot) {
+            e.setCancelled(true);
+            return;
+        }
+
+        if (e.getClickedInventory().getType() == InventoryType.PLAYER && e.getSlot() == slot)
             e.setCancelled(true);
     }
 
@@ -154,7 +221,8 @@ public class PetManager implements Listener {
         e.setDroppedExp(0);
         e.getDrops().clear();
 
-        unregisterFromPlayer(petDescriptor.getOwner());
+        petDescriptor.setState(PetState.DEAD);
+        this.unregisterFromPlayer(petDescriptor.getOwner());
     }
 
     @EventHandler
@@ -169,21 +237,119 @@ public class PetManager implements Listener {
                 continue;
 
             unregisterFromPlayer(petDescriptor.getOwner());
-
             entity.remove();
         }
     }
 
+    /**
+     * Gets the {@link PetDescriptor} from the players pet and saves it to their inventory.
+     * This does <b>NOT</b> de-spawn the pet.
+     * Neither does this method check whether the player actually has a pet spawned
+     *
+     * @param player The player which has the pet spawned
+     */
     private void unregisterFromPlayer(Player player) {
-        PetDescriptor petDescriptor = this.plugin.getNMSHandler().getPetDescriptor(this.spawnedPets.get(player.getName()));
-        String ownerName = player.getName();
-        this.spawnedPets.remove(ownerName);
+        String name = player.getName();
+        PetDescriptor petDescriptor = this.plugin.getNMSHandler().getPetDescriptor(this.spawnedPets.get(name));
 
-        player.getInventory().setItem(petSlots.get(ownerName), RPGPetsItem.getPetCarrier(petDescriptor.getPetType(),
-                petDescriptor.getName(), petDescriptor.getLevel(), petDescriptor.getExperience(),
-                petDescriptor.getExperienceRequirement(), petDescriptor.isGrownUp()));
+        player.getInventory().setItem(petSlots.get(name), RPGPetsItem.getPetCarrier(petDescriptor));
 
-        this.petSlots.remove(ownerName);
+        this.spawnedPets.remove(name);
+        this.petSlots.remove(name);
+    }
+
+    /**
+     * Same as {@link PetManager#unregisterFromPlayer(Player)}
+     */
+    private void unregisterFromPlayer(String playerName) {
+        PetDescriptor petDescriptor = this.plugin.getNMSHandler().getPetDescriptor(this.spawnedPets.get(playerName));
+
+        Bukkit.getPlayer(playerName).getInventory().setItem(petSlots.get(playerName), RPGPetsItem.getPetCarrier(petDescriptor));
+
+        this.spawnedPets.remove(playerName);
+        this.petSlots.remove(playerName);
+    }
+
+    /**
+     * Clean up all players pets
+     */
+    public void cleanup() {
+        this.spawnedPets.forEach((playerName, entity) -> {
+
+            PetDescriptor petDescriptor = this.plugin.getNMSHandler().getPetDescriptor(this.spawnedPets.get(playerName));
+
+            if (petDescriptor == null)
+                return;
+
+            petDescriptor.setState(PetState.READY);
+            Bukkit.getPlayer(playerName).getInventory().setItem(petSlots.get(playerName), RPGPetsItem.getPetCarrier(petDescriptor));
+
+            entity.remove();
+        });
+
+        this.spawnedPets.clear();
+        this.petSlots.clear();
+    }
+
+    @EventHandler
+    public void onAnvilPrepare(PrepareAnvilEvent event) {
+        ItemStack item = event.getInventory().getItem(0);
+        PetDescriptor petDescriptor = RPGPetsItem.decode(item, null);
+
+        if (event.getInventory().getItem(1) != null)
+            return;
+
+        if (petDescriptor == null)
+            return;
+
+        event.getInventory().setRepairCost(30);
+        petDescriptor.setName(ChatColor.GOLD + ChatColor.stripColor(event.getInventory().getRenameText()).replace("§", ""));
+        event.setResult(RPGPetsItem.getPetCarrier(petDescriptor));
+    }
+
+    @EventHandler
+    public void onAnvilClick(InventoryClickEvent event) {
+        if (event.getClickedInventory() == null || event.getClickedInventory().getType() != InventoryType.ANVIL)
+            return;
+
+        if (event.getSlot() != 0 && event.getSlot() != 1)
+            return;
+
+        ItemStack stack = event.getCursor();
+
+        if (event.getAction() == InventoryAction.HOTBAR_MOVE_AND_READD || event.getAction() == InventoryAction.HOTBAR_SWAP) {
+            stack = event.getWhoClicked().getInventory().getItem(event.getHotbarButton());
+        }
+
+        if (stack.getType() == Material.AIR)
+            return;
+
+        PetDescriptor petDescriptor = RPGPetsItem.decode(stack, null);
+
+        if (petDescriptor == null)
+            return;
+
+        if (!petDescriptor.getName().equals(ConfigMessages.ITEM_PET_DEFAULTNAME.get())) {
+            event.getWhoClicked().sendMessage(ConfigMessages.GENERAL_NAMEONCE.get());
+            event.setCancelled(true);
+            ((Player) event.getWhoClicked()).updateInventory();
+        }
+    }
+
+    @EventHandler
+    public void onAnvilDrag(InventoryDragEvent event) {
+        if (event.getInventory().getType() != InventoryType.ANVIL)
+            return;
+
+        PetDescriptor petDescriptor = RPGPetsItem.decode(event.getOldCursor(), null);
+        if (petDescriptor == null)
+            return;
+
+        if (event.getRawSlots().contains(0) || event.getRawSlots().contains(1)) {
+            event.setCancelled(true);
+            event.getWhoClicked().sendMessage(ConfigMessages.GENERAL_NAMEONCE.get());
+        }
+
     }
 
 }

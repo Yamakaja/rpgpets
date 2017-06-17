@@ -8,6 +8,7 @@ import me.yamakaja.rpgpets.api.entity.PetManager;
 import me.yamakaja.rpgpets.api.entity.PetType;
 import me.yamakaja.rpgpets.api.item.EggManager;
 import me.yamakaja.rpgpets.api.item.RPGPetsItem;
+import me.yamakaja.rpgpets.api.item.RecipeManager;
 import me.yamakaja.rpgpets.plugin.command.CommandRPGPets;
 import me.yamakaja.rpgpets.plugin.protocol.EntitySpawnPacketTranslator;
 import me.yamakaja.rpgpets.v1_11_R1.NMSHandler_v1_11_R1;
@@ -29,6 +30,7 @@ public class RPGPetsImpl extends JavaPlugin implements RPGPets {
 
     private PetManager petManager;
     private EggManager eggManager;
+    private RecipeManager recipeManager;
 
     @Override
     public void onEnable() {
@@ -54,6 +56,7 @@ public class RPGPetsImpl extends JavaPlugin implements RPGPets {
 
         this.petManager = new PetManager(this);
         this.eggManager = new EggManager(this);
+        this.recipeManager = new RecipeManager(this);
         Bukkit.getOnlinePlayers().forEach(p -> this.eggManager.update(p));
 
         this.getLogger().info("Pre-loading skins ... this could take a bit");
@@ -68,6 +71,11 @@ public class RPGPetsImpl extends JavaPlugin implements RPGPets {
 
         this.getLogger().info("Successfully enabled RPGPets!");
 
+    }
+
+    @Override
+    public void onDisable() {
+        this.getPetManager().cleanup();
     }
 
     private void registerPets() {
@@ -117,4 +125,8 @@ public class RPGPetsImpl extends JavaPlugin implements RPGPets {
         return petManager;
     }
 
+    @Override
+    public RecipeManager getRecipeManager() {
+        return recipeManager;
+    }
 }
