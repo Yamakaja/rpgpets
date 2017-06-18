@@ -19,7 +19,6 @@ public enum PetType {
     POLAR_BEAR(EntityType.POLAR_BEAR, "polar_bear", "PetPolarBear", "MHF_PolarBear"),
     RABBIT(EntityType.RABBIT, "rabbit", "PetRabbit", "MHF_Rabbit"),
     SHEEP(EntityType.SHEEP, "sheep", "PetSheep", "MHF_Sheep"),
-    SKELETON(EntityType.SKELETON, "skeleton", "PetSkeleton", "MHF_Skeleton"),
     ZOMBIE(EntityType.ZOMBIE, "zombie", "PetZombie", "MHF_Zombie");
 
     private static Map<Double, PetType> weightDistributionMap = new LinkedHashMap<>();

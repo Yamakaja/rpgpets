@@ -10,7 +10,6 @@ import me.yamakaja.rpgpets.v1_11_R1.pathfinding.PathfinderGoalOwnerHurtTarget;
 import net.minecraft.server.v1_11_R1.*;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_11_R1.entity.CraftPlayer;
-import org.bukkit.entity.LivingEntity;
 
 /**
  * Created by Yamakaja on 10.06.17.
@@ -123,6 +122,6 @@ public class PetRabbit extends EntityRabbit implements Pet {
 
     @Override
     public int getAge() {
-        return this.petDescriptor.isGrownUp() ? 1 : Integer.MIN_VALUE;
+        return this.petDescriptor.isAdult() ? 1 : Integer.MIN_VALUE;
     }
 }

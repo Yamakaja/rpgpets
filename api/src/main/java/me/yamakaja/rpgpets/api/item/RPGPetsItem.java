@@ -16,7 +16,6 @@ import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.inventory.meta.SpawnEggMeta;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Supplier;
@@ -175,7 +174,7 @@ public enum RPGPetsItem {
      */
     public static ItemStack getPetCarrier(PetDescriptor petDescriptor) {
         return RPGPetsItem.getPetCarrier(petDescriptor.getPetType(), petDescriptor.getName(), petDescriptor.getLevel(),
-                petDescriptor.getExperience(), petDescriptor.getExperienceRequirement(), petDescriptor.isGrownUp(), petDescriptor.getState());
+                petDescriptor.getExperience(), petDescriptor.getExperienceRequirement(), petDescriptor.isAdult(), petDescriptor.getState());
     }
 
     public ItemStack get() {

@@ -62,7 +62,7 @@ public class PetDescriptor {
         return entityId != 0;
     }
 
-    public boolean isGrownUp() {
+    public boolean isAdult() {
         return grownUp;
     }
 
@@ -135,7 +135,7 @@ public class PetDescriptor {
         this.knockback = this.petType.getBaseKnockback() + this.petType.getLevelupKnockback() * this.level;
         this.maxHealth = this.petType.getBaseMaxHealth() + this.petType.getLevelupMaxHealth() * this.level;
 
-        if (!this.isGrownUp()) {
+        if (!this.isAdult()) {
             this.speed = this.speed * this.petType.getBabyModifierSpeed();
             this.attackDamage = this.attackDamage * this.petType.getBabyModifierAttackDamage();
             this.knockback = this.knockback * this.petType.getBabyModifierKnockback();

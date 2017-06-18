@@ -10,7 +10,6 @@ import me.yamakaja.rpgpets.v1_11_R1.pathfinding.PathfinderGoalOwnerHurtTarget;
 import net.minecraft.server.v1_11_R1.*;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_11_R1.entity.CraftPlayer;
-import org.bukkit.entity.LivingEntity;
 
 /**
  * Created by Yamakaja on 10.06.17.
@@ -48,6 +47,7 @@ public class PetPigZombie extends EntityPigZombie implements Pet {
 
         this.updateCustomName();
         this.setCustomNameVisible(true);
+        this.setBaby(!this.petDescriptor.isAdult());
     }
 
     @Override
@@ -88,12 +88,14 @@ public class PetPigZombie extends EntityPigZombie implements Pet {
                 if (!entity.isAlive())
                     levelup = levelup || this.petDescriptor.addExperience(((EntityLiving) entity).getMaxHealth());
 
-                if (levelup)
-                    updateAttributes();
+                if (levelup) {
+                    this.updateAttributes();
+                    this.setBaby(!this.petDescriptor.isAdult());
+                }
             }
 
         }
-        updateCustomName();
+        this.updateCustomName();
         return flag;
     }
 
@@ -120,11 +122,6 @@ public class PetPigZombie extends EntityPigZombie implements Pet {
     @Override
     public PetDescriptor getPetDescriptor() {
         return petDescriptor;
-    }
-
-    @Override
-    public boolean isBaby() {
-        return !this.petDescriptor.isGrownUp();
     }
 
 }
