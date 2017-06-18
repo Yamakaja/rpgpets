@@ -13,6 +13,7 @@ general:
   pethealth: "&cYour pet has to be at full health to be picked up!"
   status: "&cThis pet is not ready to be spawned!"
   nameonce: "&cPets can only be named once!"
+  feedcooldown: "&cYou can only feed pets once per minute!"
 
 command:
   noperm: "&4You don't have permission to use this command!"
@@ -52,6 +53,3 @@ item:
       spawned: "&aActive"
       ready: "&6Inactive"
       dead: "&4Exhausted" # The state in which the pet has to be fed to be reactivated
-
-
-

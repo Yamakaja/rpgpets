@@ -1,24 +1,34 @@
 package me.yamakaja.rpgpets.api.item;
 
 import me.yamakaja.rpgpets.api.RPGPets;
+import me.yamakaja.rpgpets.api.config.ConfigGeneral;
 import me.yamakaja.rpgpets.api.config.ConfigMessages;
 import me.yamakaja.rpgpets.api.entity.PetDescriptor;
 import me.yamakaja.rpgpets.api.entity.PetState;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
+import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapelessRecipe;
 import org.bukkit.material.MaterialData;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by Yamakaja on 17.06.17.
  */
-public class RecipeManager implements Listener {
+public class RecipeManager implements Listener, Runnable {
 
     private RPGPets plugin;
     private ShapelessRecipe recipe;
+
+    private Map<String, Long> cooldown = new HashMap<>();
 
     public RecipeManager(RPGPets plugin) {
         this.plugin = plugin;
@@ -30,6 +40,8 @@ public class RecipeManager implements Listener {
 
         this.plugin.getServer().addRecipe(recipe);
         this.plugin.getServer().getPluginManager().registerEvents(this, plugin);
+
+        plugin.getServer().getScheduler().runTaskTimer(plugin, this, 60 * 60 * 20, 60 * 60 * 20);
     }
 
     @EventHandler
@@ -68,6 +80,41 @@ public class RecipeManager implements Listener {
 
         pet.setState(PetState.READY);
         event.getInventory().setResult(RPGPetsItem.getPetCarrier(pet));
+    }
+
+    @EventHandler
+    public void onInventoryClick(InventoryClickEvent e) {
+        if (e.getClickedInventory() == null || (e.getClickedInventory().getType() != InventoryType.CRAFTING &&
+                e.getClickedInventory().getType() != InventoryType.WORKBENCH) || e.getSlot() != 0)
+            return;
+
+        CraftingInventory inventory = (CraftingInventory) e.getClickedInventory();
+
+        if (inventory.getRecipe() == null || inventory.getResult() == null)
+            return;
+
+        MaterialData resultData = inventory.getRecipe().getResult().getData();
+
+        if (resultData.getItemType() != Material.SKULL_ITEM || resultData.getData() != (byte) 3)
+            return;
+
+        long cd = this.cooldown.getOrDefault(e.getWhoClicked().getName(), 0L);
+
+        if (System.currentTimeMillis() < cd + ConfigGeneral.FEED_COOLDOWN.getAsInt() * 1000) {
+            e.setCancelled(true);
+            ((Player) e.getWhoClicked()).updateInventory();
+            e.getWhoClicked().sendMessage(ConfigMessages.GENERAL_FEEDCOOLDOWN.get());
+            return;
+        }
+
+        this.cooldown.put(e.getWhoClicked().getName(), System.currentTimeMillis());
+    }
+
+    @Override
+    public void run() {
+        long cd = ConfigGeneral.FEED_COOLDOWN.getAsInt() * 1000;
+        long currentTime = System.currentTimeMillis();
+        this.cooldown.entrySet().removeIf(entry -> currentTime > entry.getValue() + cd);
     }
 
 }

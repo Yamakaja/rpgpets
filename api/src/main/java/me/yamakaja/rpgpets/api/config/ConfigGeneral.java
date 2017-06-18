@@ -11,7 +11,8 @@ public enum ConfigGeneral {
 
     HATCH_DISTANCE("distance_to_hatch"),
     GROWUP_START("growup_start"),
-    GROWUP_END("growup_end");
+    GROWUP_END("growup_end"),
+    FEED_COOLDOWN("feed_cooldown");
 
     private static YamlConfiguration configuration;
     private String path;

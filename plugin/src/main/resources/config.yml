@@ -11,3 +11,6 @@ distance_to_hatch: 50
 # This means that if they reach the growup_end level, they are guaranteed to be adults
 growup_start: 5
 growup_end: 10
+
+# Pet feed cooldown (The amount of seconds the player has to wait until they can feed again)
+feed_cooldown: 60
