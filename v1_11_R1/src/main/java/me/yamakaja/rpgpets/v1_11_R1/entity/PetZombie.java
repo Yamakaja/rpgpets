@@ -5,8 +5,9 @@ import me.yamakaja.rpgpets.api.entity.Pet;
 import me.yamakaja.rpgpets.api.entity.PetDescriptor;
 import me.yamakaja.rpgpets.api.util.WorldUtils;
 import me.yamakaja.rpgpets.v1_11_R1.NMSUtils;
-import me.yamakaja.rpgpets.v1_11_R1.pathfinding.PathfinderGoalFollowOwner;
-import me.yamakaja.rpgpets.v1_11_R1.pathfinding.PathfinderGoalOwnerHurtTarget;
+import me.yamakaja.rpgpets.v1_11_R1.pathfinding.PetPathfinderGoalFollowOwner;
+import me.yamakaja.rpgpets.v1_11_R1.pathfinding.PetPathfinderGoalHurtByTarget;
+import me.yamakaja.rpgpets.v1_11_R1.pathfinding.PetPathfinderGoalOwnerHurtTarget;
 import net.minecraft.server.v1_11_R1.*;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_11_R1.entity.CraftPlayer;
@@ -35,12 +36,13 @@ public class PetZombie extends EntityZombie implements Pet {
 
         NMSUtils.clearGoalsAndTargets(goalSelector, targetSelector);
 
-        this.goalSelector.a(0, new PathfinderGoalFollowOwner(this, this.petDescriptor));
-        meleeAttackGoal = new PathfinderGoalMeleeAttack(this, this.petDescriptor.getSpeed(), true);
-        this.goalSelector.a(1, meleeAttackGoal); // flag: hasToSeeTarget
+        this.goalSelector.a(0, new PetPathfinderGoalFollowOwner(this, this.petDescriptor));
+        this.goalSelector.a(1, meleeAttackGoal = new PathfinderGoalMeleeAttack(this, this.petDescriptor.getSpeed(), true)); // flag: hasToSeeTarget
+        this.goalSelector.a(2, new PathfinderGoalRandomLookaround(this));
 
         this.targetSelector.a(0, new PathfinderGoalNearestAttackableTarget<>(this, EntityMonster.class, false)); // flag: Calls for help
-        this.targetSelector.a(1, new PathfinderGoalOwnerHurtTarget(this));
+        this.targetSelector.a(1, new PetPathfinderGoalOwnerHurtTarget(this));
+        this.targetSelector.a(2, new PetPathfinderGoalHurtByTarget(this));
 
         this.getAttributeInstance(GenericAttributes.maxHealth).setValue(this.petDescriptor.getMaxHealth());
         this.setHealth(this.petDescriptor.getMaxHealth());
@@ -123,4 +125,7 @@ public class PetZombie extends EntityZombie implements Pet {
         return petDescriptor;
     }
 
+    @Override
+    public void setOnFire(int i) {
+    }
 }

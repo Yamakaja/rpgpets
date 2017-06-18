@@ -12,7 +12,7 @@ import org.bukkit.entity.Player;
 /**
  * Created by Yamakaja on 11.06.17.
  */
-public class PathfinderGoalFollowOwner extends PathfinderGoal {
+public class PetPathfinderGoalFollowOwner extends PathfinderGoal {
 
     private EntityCreature pet;
     private Player owner;
@@ -20,7 +20,7 @@ public class PathfinderGoalFollowOwner extends PathfinderGoal {
     private Location targetLoc;
     private PetDescriptor petDescriptor;
 
-    public PathfinderGoalFollowOwner(EntityCreature pet, PetDescriptor petDescriptor) {
+    public PetPathfinderGoalFollowOwner(EntityCreature pet, PetDescriptor petDescriptor) {
         this.pet = pet;
         this.owner = petDescriptor.getOwner();
         this.petDescriptor = petDescriptor;

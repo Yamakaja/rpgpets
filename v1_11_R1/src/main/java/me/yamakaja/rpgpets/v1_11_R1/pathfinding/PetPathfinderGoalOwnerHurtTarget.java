@@ -10,13 +10,13 @@ import org.bukkit.event.entity.EntityTargetEvent;
 /**
  * Created by Yamakaja on 12.06.17.
  */
-public class PathfinderGoalOwnerHurtTarget extends PathfinderGoalTarget {
+public class PetPathfinderGoalOwnerHurtTarget extends PathfinderGoalTarget {
 
     private Pet entity;
     private EntityLiving target;
     private int c;
 
-    public PathfinderGoalOwnerHurtTarget(Pet pet) {
+    public PetPathfinderGoalOwnerHurtTarget(Pet pet) {
         super((EntityCreature) pet, false);
         this.entity = pet;
         this.a(1); // Target mutex bits
