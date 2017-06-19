@@ -12,12 +12,12 @@ import java.util.*;
 public enum PetType {
     CHICKEN(EntityType.CHICKEN, "chicken", "PetChicken", "MHF_Chicken"),
     COW(EntityType.COW, "cow", "PetCow", "MHF_Cow"),
-    LLAMA(EntityType.LLAMA, "llama", "PetLlama", "MHF_Llama"),
     MUSHROOM_COW(EntityType.MUSHROOM_COW, "mushroom_cow", "PetMushroomCow", "MHF_Mooshroom"),
     PIG(EntityType.PIG, "pig", "PetPig", "MHF_Pig"),
     PIG_ZOMBIE(EntityType.PIG_ZOMBIE, "pig_zombie", "PetPigZombie", "MHF_Pigzombie"),
-    POLAR_BEAR(EntityType.POLAR_BEAR, "polar_bear", "PetPolarBear", "MHF_PolarBear"),
+    POLAR_BEAR(EntityType.POLAR_BEAR, "polar_bear", "PetPolarBear", "MHF_Golem"),
     RABBIT(EntityType.RABBIT, "rabbit", "PetRabbit", "MHF_Rabbit"),
+    LLAMA(EntityType.LLAMA, "llama", "PetLlama", "MHF_Ghast"),
     SHEEP(EntityType.SHEEP, "sheep", "PetSheep", "MHF_Sheep"),
     ZOMBIE(EntityType.ZOMBIE, "zombie", "PetZombie", "MHF_Zombie");
 

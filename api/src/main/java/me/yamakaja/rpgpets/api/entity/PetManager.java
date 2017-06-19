@@ -4,15 +4,18 @@ import me.yamakaja.rpgpets.api.RPGPets;
 import me.yamakaja.rpgpets.api.config.ConfigMessages;
 import me.yamakaja.rpgpets.api.event.PetLevelUpEvent;
 import me.yamakaja.rpgpets.api.item.RPGPetsItem;
+import me.yamakaja.rpgpets.api.util.PartiesHook;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.*;
@@ -350,6 +353,43 @@ public class PetManager implements Listener {
             event.setCancelled(true);
             event.getWhoClicked().sendMessage(ConfigMessages.GENERAL_NAMEONCE.get());
         }
+
+    }
+
+    @EventHandler
+    public void onEntityDamageByEntity(EntityDamageByEntityEvent e) {
+        if (!(e.getEntity() instanceof LivingEntity) || !(e.getDamager() instanceof LivingEntity))
+            return;
+
+        if (e.getDamager().getType() == EntityType.PLAYER) {
+            PetDescriptor petDescriptor = this.plugin.getNMSHandler().getPetDescriptor((LivingEntity) e.getEntity());
+            if (petDescriptor == null)
+                return;
+
+            if (PartiesHook.areInSameParty((Player) e.getDamager(), petDescriptor.getOwner()))
+                e.setCancelled(true);
+            return;
+        }
+
+        if (e.getEntity().getType() == EntityType.PLAYER) {
+            PetDescriptor petDescriptor = this.plugin.getNMSHandler().getPetDescriptor((LivingEntity) e.getDamager());
+            if (petDescriptor == null)
+                return;
+
+            if (PartiesHook.areInSameParty((Player) e.getEntity(), petDescriptor.getOwner()))
+                e.setCancelled(true);
+
+            return;
+        }
+
+        PetDescriptor damager = this.plugin.getNMSHandler().getPetDescriptor((LivingEntity) e.getDamager());
+        PetDescriptor entity = this.plugin.getNMSHandler().getPetDescriptor((LivingEntity) e.getEntity());
+
+        if (damager == null || entity == null)
+            return;
+
+        if (PartiesHook.areInSameParty(damager.getOwner(), entity.getOwner()))
+            e.setCancelled(true);
 
     }
 

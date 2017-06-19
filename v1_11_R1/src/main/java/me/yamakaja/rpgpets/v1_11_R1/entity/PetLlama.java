@@ -66,7 +66,7 @@ public class PetLlama extends EntityLlama implements Pet {
     @Override
     public boolean damageEntity(DamageSource damagesource, float f) {
         boolean flag = super.damageEntity(damagesource, f);
-        updateCustomName();
+        this.updateCustomName();
         return flag;
     }
 
@@ -90,11 +90,11 @@ public class PetLlama extends EntityLlama implements Pet {
                     levelup = levelup || this.petDescriptor.addExperience(((EntityLiving) entity).getMaxHealth());
 
                 if (levelup)
-                    updateAttributes();
+                    this.updateAttributes();
             }
 
         }
-        updateCustomName();
+        this.updateCustomName();
         return flag;
     }
 

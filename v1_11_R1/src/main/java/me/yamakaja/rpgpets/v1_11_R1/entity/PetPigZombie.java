@@ -67,13 +67,13 @@ public class PetPigZombie extends EntityPigZombie implements Pet {
     @Override
     public boolean damageEntity(DamageSource damagesource, float f) {
         boolean flag = super.damageEntity(damagesource, f);
-        updateCustomName();
+        this.updateCustomName();
         return flag;
     }
 
     @Override
     public boolean B(Entity entity) { // onAttack
-        if (/*entity instanceof EntityPlayer && */!WorldUtils.isPvpEnabled(this.petDescriptor.getOwner(), this.getBukkitEntity().getLocation()))
+        if ((entity instanceof EntityPlayer || entity instanceof Pet) && !WorldUtils.isPvpEnabled(this.petDescriptor.getOwner(), this.getBukkitEntity().getLocation()))
             return false;
 
         final float damage = this.petDescriptor.getAttackDamage();

@@ -3,7 +3,6 @@ package me.yamakaja.rpgpets.api.util;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.flags.DefaultFlag;
 import com.sk89q.worldguard.protection.flags.StateFlag;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -12,7 +11,7 @@ import org.bukkit.entity.Player;
  */
 public class WorldUtils {
 
-    private static WorldGuardPlugin plugin = WorldGuardPlugin.inst();;
+    private static WorldGuardPlugin plugin = WorldGuardPlugin.inst();
 
     private WorldUtils() {
     }
@@ -21,7 +20,7 @@ public class WorldUtils {
      * Tries to find a free location around the given location
      * This method is performance heavy and should not be overused
      *
-     * @param center       The center location to look around
+     * @param center The center location to look around
      * @return A location with free space, null if none could be found
      */
     public static Location getFreeLocationAround(Location center) {

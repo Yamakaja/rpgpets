@@ -9,6 +9,7 @@ import me.yamakaja.rpgpets.api.entity.PetType;
 import me.yamakaja.rpgpets.api.item.EggManager;
 import me.yamakaja.rpgpets.api.item.RPGPetsItem;
 import me.yamakaja.rpgpets.api.item.RecipeManager;
+import me.yamakaja.rpgpets.api.util.PartiesHook;
 import me.yamakaja.rpgpets.plugin.command.CommandRPGPets;
 import me.yamakaja.rpgpets.plugin.protocol.EntitySpawnPacketTranslator;
 import me.yamakaja.rpgpets.v1_11_R1.NMSHandler_v1_11_R1;
@@ -39,6 +40,11 @@ public class RPGPetsImpl extends JavaPlugin implements RPGPets {
         if (!this.loadNMSHandler()) {
             this.getPluginLoader().disablePlugin(this);
             return;
+        }
+
+        if (Bukkit.getPluginManager().getPlugin("Parties") != null) {
+            this.getLogger().info("Parties detected! Enabling hook!");
+            PartiesHook.initialize();
         }
 
         this.getLogger().info("Loaded for NMS version " + this.getNMSHandler().getNMSVersion() + "!");

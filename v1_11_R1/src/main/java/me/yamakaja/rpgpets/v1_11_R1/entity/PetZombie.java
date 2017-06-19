@@ -67,7 +67,7 @@ public class PetZombie extends EntityZombie implements Pet {
     @Override
     public boolean damageEntity(DamageSource damagesource, float f) {
         boolean flag = super.damageEntity(damagesource, f);
-        updateCustomName();
+        this.updateCustomName();
         return flag;
     }
 

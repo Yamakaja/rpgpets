@@ -13,7 +13,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
-import org.bukkit.inventory.meta.SpawnEggMeta;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -26,7 +25,7 @@ import java.util.function.Supplier;
 public enum RPGPetsItem {
     FOOD(() -> new ItemBuilder(Material.SLIME_BALL).setDisplayName(ConfigMessages.ITEM_FOOD_NAME.get())
             .setLore(Arrays.asList(ConfigMessages.ITEM_FOOD_TOOLTIP.get().split("\n")))),
-    EGG(() -> new ItemBuilder(Material.MONSTER_EGG).modifyMeta(meta -> ((SpawnEggMeta) meta).setSpawnedType(null))
+    EGG(() -> new ItemBuilder(Material.MONSTER_EGG)
             .setDisplayName(ConfigMessages.ITEM_EGG_NAME.get()).setLore(Arrays.asList(
                     ConfigMessages.ITEM_EGG_LORE_REMAINING.get(Integer.toString(ConfigGeneral.HATCH_DISTANCE.getAsInt())),
                     ChatColor.BLACK.toString() + ChatColor.MAGIC + Integer.toString(ConfigGeneral.HATCH_DISTANCE.getAsInt() * 100) + ":" + Double.toString(Math.random()).substring(2)
