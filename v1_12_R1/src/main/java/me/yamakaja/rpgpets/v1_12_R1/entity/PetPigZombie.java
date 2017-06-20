@@ -1,32 +1,32 @@
-package me.yamakaja.rpgpets.v1_11_R1.entity;
+package me.yamakaja.rpgpets.v1_12_R1.entity;
 
 import me.yamakaja.rpgpets.api.config.ConfigMessages;
 import me.yamakaja.rpgpets.api.entity.Pet;
 import me.yamakaja.rpgpets.api.entity.PetDescriptor;
 import me.yamakaja.rpgpets.api.util.WorldUtils;
-import me.yamakaja.rpgpets.v1_11_R1.NMSUtils;
-import me.yamakaja.rpgpets.v1_11_R1.pathfinding.PetPathfinderGoalFollowOwner;
-import me.yamakaja.rpgpets.v1_11_R1.pathfinding.PetPathfinderGoalHurtByTarget;
-import me.yamakaja.rpgpets.v1_11_R1.pathfinding.PetPathfinderGoalOwnerHurtTarget;
-import net.minecraft.server.v1_11_R1.*;
+import me.yamakaja.rpgpets.v1_12_R1.NMSUtils;
+import me.yamakaja.rpgpets.v1_12_R1.pathfinding.PetPathfinderGoalFollowOwner;
+import me.yamakaja.rpgpets.v1_12_R1.pathfinding.PetPathfinderGoalHurtByTarget;
+import me.yamakaja.rpgpets.v1_12_R1.pathfinding.PetPathfinderGoalOwnerHurtTarget;
+import net.minecraft.server.v1_12_R1.*;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_11_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 
 /**
  * Created by Yamakaja on 10.06.17.
  */
-public class PetZombie extends EntityZombie implements Pet {
+public class PetPigZombie extends EntityPigZombie implements Pet {
 
     private PetDescriptor petDescriptor;
     private PathfinderGoalMeleeAttack meleeAttackGoal;
 
     @SuppressWarnings("unused") // Called and required my Minecraft code
-    public PetZombie(World world) {
+    public PetPigZombie(World world) {
         super(world);
         this.die();
     }
 
-    public PetZombie(PetDescriptor petDescriptor) {
+    public PetPigZombie(PetDescriptor petDescriptor) {
         super(((CraftPlayer) petDescriptor.getOwner()).getHandle().getWorld());
 
         this.petDescriptor = petDescriptor;
@@ -107,8 +107,8 @@ public class PetZombie extends EntityZombie implements Pet {
     }
 
     @Override
-    public void A_() { // onUpdate
-        super.A_();
+    public void B_() { // onUpdate
+        super.B_();
 
         if (this.ticksLived % 10 == 0)
             this.updateCustomName();
@@ -118,6 +118,7 @@ public class PetZombie extends EntityZombie implements Pet {
 
         if (this.isAlive() && this.ticksLived % 80 == 0 && this.getHealth() < this.getMaxHealth())
             this.setHealth(this.getHealth() + 1);
+
     }
 
     @Override
@@ -125,7 +126,4 @@ public class PetZombie extends EntityZombie implements Pet {
         return petDescriptor;
     }
 
-    @Override
-    public void setOnFire(int i) {
-    }
 }

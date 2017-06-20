@@ -1,16 +1,16 @@
-package me.yamakaja.rpgpets.v1_11_R1.entity;
+package me.yamakaja.rpgpets.v1_12_R1.entity;
 
 import me.yamakaja.rpgpets.api.config.ConfigMessages;
 import me.yamakaja.rpgpets.api.entity.Pet;
 import me.yamakaja.rpgpets.api.entity.PetDescriptor;
 import me.yamakaja.rpgpets.api.util.WorldUtils;
-import me.yamakaja.rpgpets.v1_11_R1.NMSUtils;
-import me.yamakaja.rpgpets.v1_11_R1.pathfinding.PetPathfinderGoalFollowOwner;
-import me.yamakaja.rpgpets.v1_11_R1.pathfinding.PetPathfinderGoalHurtByTarget;
-import me.yamakaja.rpgpets.v1_11_R1.pathfinding.PetPathfinderGoalOwnerHurtTarget;
-import net.minecraft.server.v1_11_R1.*;
+import me.yamakaja.rpgpets.v1_12_R1.NMSUtils;
+import me.yamakaja.rpgpets.v1_12_R1.pathfinding.PetPathfinderGoalFollowOwner;
+import me.yamakaja.rpgpets.v1_12_R1.pathfinding.PetPathfinderGoalHurtByTarget;
+import me.yamakaja.rpgpets.v1_12_R1.pathfinding.PetPathfinderGoalOwnerHurtTarget;
+import net.minecraft.server.v1_12_R1.*;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_11_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 
 /**
  * Created by Yamakaja on 10.06.17.
@@ -107,8 +107,8 @@ public class PetZombie extends EntityZombie implements Pet {
     }
 
     @Override
-    public void A_() { // onUpdate
-        super.A_();
+    public void B_() { // onUpdate
+        super.B_();
 
         if (this.ticksLived % 10 == 0)
             this.updateCustomName();

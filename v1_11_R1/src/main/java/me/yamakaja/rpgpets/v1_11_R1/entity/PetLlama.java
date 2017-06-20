@@ -71,7 +71,7 @@ public class PetLlama extends EntityLlama implements Pet {
     }
 
     @Override
-    public boolean B(Entity entity) { // onAttack
+    public boolean B(Entity entity) { // attackEntityAsMob
         if (/*entity instanceof EntityPlayer && */!WorldUtils.isPvpEnabled(this.petDescriptor.getOwner(), this.getBukkitEntity().getLocation()))
             return false;
 

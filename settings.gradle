@@ -8,3 +8,6 @@ project(":plugin").projectDir = "$rootDir/plugin" as File
 
 include 'v1_11_R1'
 project(":v1_11_R1").projectDir = "$rootDir/v1_11_R1" as File
+
+include 'v1_12_R1'
+project(":v1_12_R1").projectDir = "$rootDir/v1_12_R1" as File

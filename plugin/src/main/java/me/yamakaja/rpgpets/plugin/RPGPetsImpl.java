@@ -13,6 +13,7 @@ import me.yamakaja.rpgpets.api.util.PartiesHook;
 import me.yamakaja.rpgpets.plugin.command.CommandRPGPets;
 import me.yamakaja.rpgpets.plugin.protocol.EntitySpawnPacketTranslator;
 import me.yamakaja.rpgpets.v1_11_R1.NMSHandler_v1_11_R1;
+import me.yamakaja.rpgpets.v1_12_R1.NMSHandler_v1_12_R1;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -106,6 +107,9 @@ public class RPGPetsImpl extends JavaPlugin implements RPGPets {
         switch (nmsVersion) {
             case "v1_11_R1":
                 nmsHandler = new NMSHandler_v1_11_R1(this);
+                break;
+            case "v1_12_R1":
+                nmsHandler = new NMSHandler_v1_12_R1(this);
                 break;
             default:
                 this.getLogger().severe("*****************************************************");

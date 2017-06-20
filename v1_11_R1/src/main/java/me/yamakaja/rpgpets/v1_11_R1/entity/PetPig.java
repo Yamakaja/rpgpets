@@ -71,7 +71,7 @@ public class PetPig extends EntityPig implements Pet {
     }
 
     @Override
-    public boolean B(Entity entity) { // onAttack
+    public boolean B(Entity entity) { // attackEntityAsMob
         if ((entity instanceof EntityPlayer || entity instanceof Pet) && !WorldUtils.isPvpEnabled(this.petDescriptor.getOwner(), this.getBukkitEntity().getLocation()))
             return false;
 

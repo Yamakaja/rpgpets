@@ -46,6 +46,9 @@ public class RecipeManager implements Listener, Runnable {
 
     @EventHandler
     public void onPrepareCraft(PrepareItemCraftEvent event) {
+        if (event.getRecipe() == null || event.getRecipe().getResult() == null)
+            return;
+
         MaterialData data = event.getRecipe().getResult().getData();
 
         if (data.getItemType() != Material.SKULL_ITEM || data.getData() != 3)
