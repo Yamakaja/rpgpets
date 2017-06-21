@@ -10,16 +10,16 @@ import java.util.*;
  * Created by Yamakaja on 10.06.17.
  */
 public enum PetType {
-    CHICKEN(EntityType.CHICKEN, "chicken", "PetChicken", "MHF_Chicken"),
-    COW(EntityType.COW, "cow", "PetCow", "MHF_Cow"),
-    MUSHROOM_COW(EntityType.MUSHROOM_COW, "mushroom_cow", "PetMushroomCow", "MHF_Mooshroom"),
-    PIG(EntityType.PIG, "pig", "PetPig", "MHF_Pig"),
-    PIG_ZOMBIE(EntityType.PIG_ZOMBIE, "pig_zombie", "PetPigZombie", "MHF_Pigzombie"),
-    POLAR_BEAR(EntityType.POLAR_BEAR, "polar_bear", "PetPolarBear", "MHF_Golem"),
-    RABBIT(EntityType.RABBIT, "rabbit", "PetRabbit", "MHF_Rabbit"),
-    LLAMA(EntityType.LLAMA, "llama", "PetLlama", "MHF_Ghast"),
-    SHEEP(EntityType.SHEEP, "sheep", "PetSheep", "MHF_Sheep"),
-    ZOMBIE(EntityType.ZOMBIE, "zombie", "PetZombie", "MHF_Zombie");
+    CHICKEN(EntityType.CHICKEN, "chicken", "PetChicken", PetHead.CHICKEN),
+    COW(EntityType.COW, "cow", "PetCow", PetHead.COW),
+    MUSHROOM_COW(EntityType.MUSHROOM_COW, "mushroom_cow", "PetMushroomCow", PetHead.MUSHROOM_COW),
+    PIG(EntityType.PIG, "pig", "PetPig", PetHead.PIG),
+    PIG_ZOMBIE(EntityType.PIG_ZOMBIE, "pig_zombie", "PetPigZombie", PetHead.PIG_ZOMBIE),
+    POLAR_BEAR(EntityType.POLAR_BEAR, "polar_bear", "PetPolarBear", PetHead.POLAR_BEAR),
+    RABBIT(EntityType.RABBIT, "rabbit", "PetRabbit", PetHead.RABBIT),
+    LLAMA(EntityType.LLAMA, "llama", "PetLlama", PetHead.LLAMA),
+    SHEEP(EntityType.SHEEP, "sheep", "PetSheep", PetHead.SHEEP),
+    ZOMBIE(EntityType.ZOMBIE, "zombie", "PetZombie", PetHead.ZOMBIE);
 
     private static Map<Double, PetType> weightDistributionMap = new LinkedHashMap<>();
     private static List<Double> sortedWeightList = new LinkedList<>();
@@ -30,7 +30,7 @@ public enum PetType {
     private String entityId;
     private String entityName;
     private int randomWeight;
-    private String mhfName;
+    private PetHead mhfName;
     private int maxLevel;
 
     private float baseExpRequirement;
@@ -52,7 +52,7 @@ public enum PetType {
     private float babyModifierKnockback;
     private float babyModifierMaxHealth;
 
-    PetType(EntityType baseType, String entityId, String entityName, String mhfName) {
+    PetType(EntityType baseType, String entityId, String entityName, PetHead mhfName) {
         this.baseType = baseType;
         this.entityId = "rpgpets:" + entityId;
         this.entityName = entityName;
@@ -211,7 +211,7 @@ public enum PetType {
     /**
      * @return The name for skulls to display the correct skin
      */
-    public String getMhfName() {
+    public PetHead getHead() {
         return mhfName;
     }
 

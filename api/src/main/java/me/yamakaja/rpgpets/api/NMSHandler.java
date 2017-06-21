@@ -2,6 +2,7 @@ package me.yamakaja.rpgpets.api;
 
 import me.yamakaja.rpgpets.api.entity.Pet;
 import me.yamakaja.rpgpets.api.entity.PetDescriptor;
+import me.yamakaja.rpgpets.api.entity.PetHead;
 import me.yamakaja.rpgpets.api.entity.PetRegistry;
 import org.bukkit.World;
 import org.bukkit.entity.LivingEntity;
@@ -40,7 +41,5 @@ public interface NMSHandler {
      */
     PetDescriptor getPetDescriptor(LivingEntity entity);
 
-    SkullMeta fillSkullMeta(SkullMeta meta);
-
-    void preloadSkins();
+    void setHeadSkin(SkullMeta meta, PetHead head);
 }

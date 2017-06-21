@@ -31,7 +31,7 @@ public class PetPathfinderGoalFollowOwner extends PathfinderGoal {
     @Override
     public boolean a() { // shouldExecute
         double distanceSquared = owner.getLocation().distanceSquared(pet.getBukkitEntity().getLocation());
-        return distanceSquared > 6 * 6 && distanceSquared < 30 * 30;
+        return distanceSquared > 10 * 10 && distanceSquared < 30 * 30;
     }
 
     @Override

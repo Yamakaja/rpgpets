@@ -6,7 +6,7 @@ cow:                              # Pet type
   randomWeight: 10                # The weight in the random selection of a pet
                                   # More information about the weight system:
                                   # The probability for a mob to be selected is the fraction of its weight by the sum of all weights
-                                  # This means if were only two pets and both had the same value, the chance would be 50% for both of them
+                                  # This means if there were only two pets and both had the same value, the chance would be 50% for both of them
                                   # But if one had a weight of one and the other one a weight of three, the chance for the first one to be
                                   # selected would be 1/4 while the chance for the second one would be 3/4 (Since the sum of weights = 4)
                                   # TL;DR: Higher weight, higher chance to be selected

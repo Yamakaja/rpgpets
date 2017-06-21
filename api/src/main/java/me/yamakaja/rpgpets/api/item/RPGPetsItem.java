@@ -32,12 +32,13 @@ public enum RPGPetsItem {
             ))),
     PET(() -> RPGPetsItem.getPetCarrier(PetType.getRandomPetType(), ConfigMessages.ITEM_PET_DEFAULTNAME.get(), 0, 0, 1, false, PetState.READY));
 
-    private static RPGPets plugin;
     private Supplier<ItemStack> itemStackSupplier;
 
     RPGPetsItem(Supplier<ItemStack> itemStackSupplier) {
         this.itemStackSupplier = itemStackSupplier;
     }
+
+    private static RPGPets plugin;
 
     public static void initialize(RPGPets plugin) {
         RPGPetsItem.plugin = plugin;
@@ -58,14 +59,14 @@ public enum RPGPetsItem {
         ItemStack head = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
 
         SkullMeta meta = (SkullMeta) head.getItemMeta();
-        meta.setOwner(type.getMhfName());
+        RPGPetsItem.plugin.getNMSHandler().setHeadSkin(meta, type.getHead());
 
         meta.setDisplayName(name);
 
         List<String> lore = new LinkedList<>();
 
         lore.add(ConfigMessages.ITEM_PET_LORE_TYPE.get(type.name()));
-        lore.add(ConfigMessages.ITEM_PET_LORE_LEVEL.get(Integer.toString(level)));
+        lore.add(ConfigMessages.ITEM_PET_LORE_LEVEL.get(Integer.toString(level)) + (type.getMaxLevel() == level ? " " + ConfigMessages.ITEM_PET_LORE_MAXLEVEL.get() : ""));
         lore.add(ConfigMessages.ITEM_PET_LORE_EXP.get(Float.toString((int) (100 * exp / requiredExp))));
         lore.add(ConfigMessages.ITEM_PET_LORE_AGE.get((grownUp ? ConfigMessages.ITEM_PET_LORE_ADULT : ConfigMessages.ITEM_PET_LORE_BABY).get()));
         lore.add(ConfigMessages.ITEM_PET_LORE_STATUS.get(petState == PetState.DEAD ? ConfigMessages.ITEM_PET_LORE_DEAD.get()

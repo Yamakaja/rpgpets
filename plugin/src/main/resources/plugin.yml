@@ -2,8 +2,8 @@ name: RPGPets
 main: me.yamakaja.rpgpets.plugin.RPGPetsImpl
 version: @version@
 author: Yamakaja
-depend: [ProtocolLib, WorldGuard]
-softdepend: [Parties]
+depend: [ProtocolLib]
+softdepend: [Parties, WorldGuard]
 load: STARTUP
 commands:
   rpgpets:

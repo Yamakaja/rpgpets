@@ -3,7 +3,7 @@ package me.yamakaja.rpgpets.v1_12_R1.entity;
 import me.yamakaja.rpgpets.api.config.ConfigMessages;
 import me.yamakaja.rpgpets.api.entity.Pet;
 import me.yamakaja.rpgpets.api.entity.PetDescriptor;
-import me.yamakaja.rpgpets.api.util.WorldUtils;
+import me.yamakaja.rpgpets.api.util.WorldGuardHook;
 import me.yamakaja.rpgpets.v1_12_R1.NMSUtils;
 import me.yamakaja.rpgpets.v1_12_R1.pathfinding.PetPathfinderGoalFollowOwner;
 import me.yamakaja.rpgpets.v1_12_R1.pathfinding.PetPathfinderGoalHurtByTarget;
@@ -55,7 +55,7 @@ public class PetZombie extends EntityZombie implements Pet {
     @Override
     protected void initAttributes() {
         super.initAttributes();
-        this.getAttributeInstance(GenericAttributes.FOLLOW_RANGE).setValue(30);
+        this.getAttributeInstance(GenericAttributes.FOLLOW_RANGE).setValue(15);
     }
 
     @Override
@@ -73,7 +73,7 @@ public class PetZombie extends EntityZombie implements Pet {
 
     @Override
     public boolean B(Entity entity) { // attackEntityAsMob
-        if ((entity instanceof EntityPlayer || entity instanceof Pet) && !WorldUtils.isPvpEnabled(this.petDescriptor.getOwner(), this.getBukkitEntity().getLocation()))
+        if ((entity instanceof EntityPlayer || entity instanceof Pet) && !WorldGuardHook.isPvpEnabled(this.petDescriptor.getOwner(), this.getBukkitEntity().getLocation()))
             return false;
 
         final float damage = this.petDescriptor.getAttackDamage();

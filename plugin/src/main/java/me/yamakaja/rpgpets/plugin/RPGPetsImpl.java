@@ -10,6 +10,7 @@ import me.yamakaja.rpgpets.api.item.EggManager;
 import me.yamakaja.rpgpets.api.item.RPGPetsItem;
 import me.yamakaja.rpgpets.api.item.RecipeManager;
 import me.yamakaja.rpgpets.api.util.PartiesHook;
+import me.yamakaja.rpgpets.api.util.WorldGuardHook;
 import me.yamakaja.rpgpets.plugin.command.CommandRPGPets;
 import me.yamakaja.rpgpets.plugin.protocol.EntitySpawnPacketTranslator;
 import me.yamakaja.rpgpets.v1_11_R1.NMSHandler_v1_11_R1;
@@ -48,11 +49,16 @@ public class RPGPetsImpl extends JavaPlugin implements RPGPets {
             PartiesHook.initialize();
         }
 
+        if (Bukkit.getPluginManager().getPlugin("WorldGuard") != null) {
+            this.getLogger().info("WorldGuard detected! Enabling hook!");
+            WorldGuardHook.initialize();
+        }
+
+        RPGPetsItem.initialize(this);
+
         this.getLogger().info("Loaded for NMS version " + this.getNMSHandler().getNMSVersion() + "!");
 
         ProtocolLibrary.getProtocolManager().addPacketListener(new EntitySpawnPacketTranslator(this));
-
-        RPGPetsItem.initialize(this);
 
         this.registerPets();
         this.getLogger().info("Registered pet entities!");
@@ -65,16 +71,6 @@ public class RPGPetsImpl extends JavaPlugin implements RPGPets {
         this.eggManager = new EggManager(this);
         this.recipeManager = new RecipeManager(this);
         Bukkit.getOnlinePlayers().forEach(p -> this.eggManager.update(p));
-
-        this.getLogger().info("Pre-loading skins ... this could take a bit");
-        this.getLogger().info("Finished loading skins!");
-
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                getNMSHandler().preloadSkins();
-            }
-        }.runTaskTimerAsynchronously(RPGPetsImpl.this, 0, 20 * 60 * (60 - 1));
 
         this.getLogger().info("Successfully enabled RPGPets!");
 

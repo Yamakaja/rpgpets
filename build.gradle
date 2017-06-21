@@ -1,10 +1,10 @@
 allprojects {
     group 'me.yamakaja.rpgpets'
-    version '0.0.1-SNAPSHOT'
+    version '1.0.0'
 
     ext {
         spigotApiVersion = "1.11.2-R0.1-SNAPSHOT"
-        spigotServerVersion = "1.12-R0.1-SNAPSHOT"
+        spigotServerVersion = "1.11.2-R0.1-SNAPSHOT"
         protocolLibVersion = "4.3.0"
     }
 }
