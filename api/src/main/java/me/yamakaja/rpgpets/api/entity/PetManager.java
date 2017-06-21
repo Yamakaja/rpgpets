@@ -105,6 +105,13 @@ public class PetManager implements Listener {
             return;
         }
 
+        ItemStack itemStack = event.getItem();
+
+        if (petDescriptor.hasEntityId()) {
+            petDescriptor.setEntityId(0);
+            RPGPetsItem.fixData(itemStack);
+        }
+
         if (petDescriptor.getState() != PetState.READY) {
             event.getPlayer().sendMessage(ConfigMessages.GENERAL_STATUS.get());
             return;
@@ -113,7 +120,7 @@ public class PetManager implements Listener {
         LivingEntity entity = this.summon(petDescriptor, event.getHand() == EquipmentSlot.HAND
                 ? event.getPlayer().getInventory().getHeldItemSlot() : 40);
 
-        ItemStack itemStack = RPGPetsItem.encodeSpawned(event.getItem(), entity.getEntityId());
+        itemStack = RPGPetsItem.encodeSpawned(itemStack, entity.getEntityId());
 
         if (event.getHand() == EquipmentSlot.HAND)
             event.getPlayer().getInventory().setItemInMainHand(itemStack);

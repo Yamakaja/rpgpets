@@ -170,6 +170,23 @@ public enum RPGPetsItem {
     }
 
     /**
+     * Removes the entity id from the data string
+     *
+     * @param item The item to fix
+     */
+    public static void fixData(ItemStack item) {
+        ItemMeta meta = item.getItemMeta();
+        List<String> lore = meta.getLore();
+
+        int lastIndex = lore.size() - 1;
+        String lastLine = lore.get(lastIndex);
+        lore.set(lastIndex, lastLine.substring(0, lastLine.lastIndexOf(':')));
+
+        meta.setLore(lore);
+        item.setItemMeta(meta);
+    }
+
+    /**
      * Wrapper for {@link RPGPetsItem#getPetCarrier(PetType, String, int, float, float, boolean, PetState)}
      */
     public static ItemStack getPetCarrier(PetDescriptor petDescriptor) {
