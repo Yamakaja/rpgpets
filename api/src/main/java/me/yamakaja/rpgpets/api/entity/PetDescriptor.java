@@ -189,4 +189,23 @@ public class PetDescriptor {
         return levelUp;
     }
 
+    @Override
+    public String toString() {
+        return "PetDescriptor{" +
+                "petType=" + petType.name() +
+                ", owner=" + (owner != null ? owner.getName() : "null") +
+                ", name='" + name + '\'' +
+                ", level=" + level +
+                ", state=" + state +
+                ", entityId=" + entityId +
+                ", experience=" + experience +
+                ", experienceRequirement=" + experienceRequirement +
+                ", grownUp=" + grownUp +
+                ", speed=" + speed +
+                ", attackDamage=" + attackDamage +
+                ", knockback=" + knockback +
+                ", maxHealth=" + maxHealth +
+                '}';
+    }
+
 }

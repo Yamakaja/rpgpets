@@ -1,5 +1,7 @@
 package me.yamakaja.rpgpets.plugin.command;
 
+import com.getsentry.raven.event.Breadcrumb;
+import com.getsentry.raven.event.BreadcrumbBuilder;
 import me.yamakaja.rpgpets.api.RPGPets;
 import me.yamakaja.rpgpets.api.config.ConfigMessages;
 import me.yamakaja.rpgpets.api.config.ConfigPermissions;
@@ -13,6 +15,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,6 +34,11 @@ public class CommandRPGPets implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String alias, String[] args) {
+        this.plugin.getSentryManager().recordBreadcrumb(
+                new BreadcrumbBuilder().setMessage("Command executed").setCategory("Command").setLevel(Breadcrumb.Level.DEBUG)
+                        .setData(Collections.singletonMap("args", String.join(" ", args))).build()
+        );
+
         if (args.length == 0) {
             commandSender.sendMessage(ConfigMessages.COMMAND_HELP_HINT.get());
             return true;

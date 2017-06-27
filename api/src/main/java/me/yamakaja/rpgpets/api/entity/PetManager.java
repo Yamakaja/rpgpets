@@ -1,5 +1,7 @@
 package me.yamakaja.rpgpets.api.entity;
 
+import com.getsentry.raven.event.Breadcrumb;
+import com.getsentry.raven.event.BreadcrumbBuilder;
 import me.yamakaja.rpgpets.api.RPGPets;
 import me.yamakaja.rpgpets.api.config.ConfigMessages;
 import me.yamakaja.rpgpets.api.event.PetLevelUpEvent;
@@ -24,6 +26,7 @@ import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -50,6 +53,9 @@ public class PetManager implements Listener {
      * @return Whether or not the pet has been spawned, this may be false when the player already has a pet active
      */
     public LivingEntity summon(PetDescriptor petDescriptor, int slot) {
+        this.plugin.getSentryManager().recordBreadcrumb(new BreadcrumbBuilder().setMessage("Summoning Pet").setLevel(Breadcrumb.Level.DEBUG)
+        .setCategory("RUNTIME").setData(Collections.singletonMap("petDescriptor", petDescriptor.toString())).build());
+
         if (this.spawnedPets.containsKey(petDescriptor.getOwner().getName()))
             return null;
 
@@ -318,7 +324,7 @@ public class PetManager implements Listener {
     @EventHandler
     public void onTeleport(PlayerTeleportEvent e) {
         if (e.getFrom().getWorld() == e.getTo().getWorld() && e.getFrom().distanceSquared(e.getTo()) < 30 * 30)
-                return;
+            return;
 
         if (!this.spawnedPets.containsKey(e.getPlayer().getName()))
             return;

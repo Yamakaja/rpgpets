@@ -12,7 +12,9 @@ public enum ConfigGeneral {
     HATCH_DISTANCE("distance_to_hatch"),
     GROWUP_START("growup_start"),
     GROWUP_END("growup_end"),
-    FEED_COOLDOWN("feed_cooldown");
+    FEED_COOLDOWN("feed_cooldown"),
+    ENABLE_SENTRY("sentry"),
+    ENABLE_METRICS("metrics");
 
     private static YamlConfiguration configuration;
     private String path;

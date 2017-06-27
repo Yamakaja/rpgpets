@@ -1,6 +1,5 @@
 package me.yamakaja.rpgpets.api.event;
 
-import me.yamakaja.rpgpets.api.entity.Pet;
 import me.yamakaja.rpgpets.api.entity.PetDescriptor;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;

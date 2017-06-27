@@ -3,6 +3,7 @@ package me.yamakaja.rpgpets.api;
 import me.yamakaja.rpgpets.api.config.ConfigManager;
 import me.yamakaja.rpgpets.api.entity.PetManager;
 import me.yamakaja.rpgpets.api.item.RecipeManager;
+import me.yamakaja.rpgpets.api.logging.SentryManager;
 import org.bukkit.plugin.Plugin;
 
 /**
@@ -32,4 +33,6 @@ public interface RPGPets extends Plugin {
     PetManager getPetManager();
 
     RecipeManager getRecipeManager();
+
+    SentryManager getSentryManager();
 }

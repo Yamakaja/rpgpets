@@ -1,0 +1,81 @@
+package me.yamakaja.rpgpets.api.logging;
+
+import com.getsentry.raven.Raven;
+import com.getsentry.raven.RavenFactory;
+import com.getsentry.raven.event.Breadcrumb;
+import com.getsentry.raven.event.BreadcrumbBuilder;
+import me.yamakaja.rpgpets.api.RPGPets;
+import me.yamakaja.rpgpets.api.config.ConfigGeneral;
+
+/**
+ * Created by Yamakaja on 23.06.17.
+ */
+public class SentryManager {
+
+    private Raven raven;
+    private boolean active = false;
+
+    public SentryManager(RPGPets plugin, String user) {
+        if (!ConfigGeneral.ENABLE_SENTRY.getAsBoolean())
+            return;
+
+        try {
+            this.raven = RavenFactory.ravenInstance("https://ebbb5b6c46d04f6180bb841084ed7bec:acf0480726aa4db99ad45d4c083b76af@sentry.io/182971");
+            this.active = true;
+        } catch (Exception e) {
+            plugin.getLogger().severe("Failed to enable automatic error reporting!");
+            return;
+        }
+
+        this.raven.addBuilderHelper(eventBuilder -> {
+            eventBuilder.withTag("client", user.equals("%%__USER__%%") ? "-1" : user);
+            eventBuilder.withTag("version", plugin.getDescription().getVersion());
+        });
+    }
+
+    public void logException(Throwable e) {
+        if (active)
+            raven.sendException(e);
+    }
+
+    /**
+     * Records a breadcrumb
+     *
+     * @param breadcrumb The breadcrumb to record
+     */
+    public void recordBreadcrumb(Breadcrumb breadcrumb) {
+        if (active)
+            this.raven.getContext().recordBreadcrumb(breadcrumb);
+    }
+
+    /**
+     * Records an initialization phase breadcrumb (Level: DEBUG, Category: INIT)
+     *
+     * @param message The message
+     */
+    public void recordInitializationCrumb(String message) {
+        this.recordBreadcrumb(new BreadcrumbBuilder().setLevel(Breadcrumb.Level.DEBUG).setCategory("Initialization").setMessage(message).build());
+    }
+
+    /**
+     * Records a shutdown phase breadcrumb (Level: DEBUG, Category: SHUTDOWN)
+     *
+     * @param message The message
+     */
+    public void recordShutdownCrumb(String message) {
+        this.recordBreadcrumb(new BreadcrumbBuilder().setLevel(Breadcrumb.Level.DEBUG).setCategory("Shutdown").setMessage(message).build());
+    }
+
+    /**
+     * Clears breadcrumbs
+     */
+    public void clearContext() {
+        if (active)
+            this.raven.getContext().clear();
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+}

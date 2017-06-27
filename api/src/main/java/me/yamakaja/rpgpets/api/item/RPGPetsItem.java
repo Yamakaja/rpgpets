@@ -1,5 +1,7 @@
 package me.yamakaja.rpgpets.api.item;
 
+import com.getsentry.raven.event.Breadcrumb;
+import com.getsentry.raven.event.BreadcrumbBuilder;
 import me.yamakaja.rpgpets.api.RPGPets;
 import me.yamakaja.rpgpets.api.config.ConfigGeneral;
 import me.yamakaja.rpgpets.api.config.ConfigMessages;
@@ -15,6 +17,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Supplier;
@@ -110,6 +113,11 @@ public enum RPGPetsItem {
         if (lore.size() != 6 || !lore.get(5).startsWith(ChatColor.BLACK.toString() + ChatColor.MAGIC))
             return null;
 
+        plugin.getSentryManager().recordBreadcrumb(
+                new BreadcrumbBuilder().setMessage("Decoding item").setLevel(Breadcrumb.Level.DEBUG).setCategory("RUNTIME")
+                        .setData(Collections.singletonMap("line", lore.get(lore.size() - 1))).build()
+        );
+
         String[] split = lore.get(lore.size() - 1).split(":");
 
         if (split.length != 6 && split.length != 7)
@@ -126,6 +134,9 @@ public enum RPGPetsItem {
 
         if (split.length == 7)
             petDescriptor.setEntityId(Integer.parseInt(split[6]));
+
+        plugin.getSentryManager().recordBreadcrumb(new BreadcrumbBuilder().setMessage("Decoded item").setLevel(Breadcrumb.Level.DEBUG)
+        .setCategory("RUNTIME").setData(Collections.singletonMap("petDescriptor", petDescriptor.toString())).build());
 
         return petDescriptor;
     }

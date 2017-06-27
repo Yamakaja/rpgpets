@@ -1,6 +1,6 @@
 allprojects {
     group 'me.yamakaja.rpgpets'
-    version '1.0.0'
+    version '1.1.0'
 
     ext {
         spigotApiVersion = "1.11.2-R0.1-SNAPSHOT"
@@ -23,6 +23,7 @@ subprojects {
         mavenCentral()
         mavenLocal()
         maven { url "http://repo.dmulloy2.net/nexus/repository/public/" }
+        maven { url "http://repo.bstats.org/content/repositories/releases/" }
     }
 
 }

@@ -14,3 +14,10 @@ growup_end: 10
 
 # Pet feed cooldown (The amount of seconds the player has to wait until they can feed again)
 feed_cooldown: 60
+
+# Enable automatic error reporting! (Errors will be sent to my - Yamakaja's - sentry instance)
+# More info on https://sentry.io
+sentry: true
+
+# Enable metrics reporting to bstats
+metrics: true

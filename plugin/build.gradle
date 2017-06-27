@@ -7,6 +7,22 @@ configurations {
     }
 }
 
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.0'
+    }
+}
+
+apply plugin: 'com.github.johnrengelman.shadow'
+
+shadowJar {
+    baseName = 'RPGPets'
+    relocate 'org.bstats', 'me.rpgpets.lib.bstats'
+}
+
 dependencies {
     compileOnly "org.spigotmc:spigot-api:$spigotApiVersion"
 
@@ -14,6 +30,10 @@ dependencies {
     compile project(":v1_11_R1")
     compile project(":v1_12_R1")
     compileOnly "com.comphenix.protocol:ProtocolLib-API:$protocolLibVersion"
+
+    compile 'com.getsentry.raven:raven:8.0.3'
+
+    compile "org.bstats:bstats-bukkit:1.1"
 
     server "org.spigotmc:spigot:$spigotServerVersion"
 
