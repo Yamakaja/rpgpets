@@ -61,6 +61,11 @@ public enum RPGPetsItem {
     public static ItemStack getPetCarrier(PetType type, String name, int level, float exp, float requiredExp, boolean grownUp, PetState petState) {
         ItemStack head = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
 
+        PetDescriptor petDescriptor = new PetDescriptor(type, null, name, level, exp, grownUp);
+        petDescriptor.setState(petState);
+
+        plugin.getNMSHandler().writePetDescriptor(head, petDescriptor);
+
         SkullMeta meta = (SkullMeta) head.getItemMeta();
         RPGPetsItem.plugin.getNMSHandler().setHeadSkin(meta, type.getHead());
 
@@ -74,25 +79,10 @@ public enum RPGPetsItem {
         lore.add(ConfigMessages.ITEM_PET_LORE_AGE.get((grownUp ? ConfigMessages.ITEM_PET_LORE_ADULT : ConfigMessages.ITEM_PET_LORE_BABY).get()));
         lore.add(ConfigMessages.ITEM_PET_LORE_STATUS.get(petState == PetState.DEAD ? ConfigMessages.ITEM_PET_LORE_DEAD.get()
                 : (petState == PetState.READY ? ConfigMessages.ITEM_PET_LORE_READY.get() : ConfigMessages.ITEM_PET_LORE_SPAWNED.get())));
-        lore.add(RPGPetsItem.encode(type, level, exp, grownUp, petState));
         meta.setLore(lore);
 
         head.setItemMeta(meta);
         return head;
-    }
-
-    /**
-     * Encodes pet data into the hidden lore string
-     *
-     * @param type    The type of the pet
-     * @param level   The pets level
-     * @param exp     Its experience
-     * @param grownUp Whether the pet is an adult
-     * @return The encoded string
-     */
-    public static String encode(PetType type, int level, float exp, boolean grownUp, PetState state) {
-        return ChatColor.BLACK.toString() + ChatColor.MAGIC + Double.toString(Math.random()).substring(2, 5)
-                + ":" + type.name() + ":" + level + ":" + exp + ":" + (grownUp ? 1 : 0) + ":" + state.ordinal();
     }
 
     /**
@@ -107,38 +97,8 @@ public enum RPGPetsItem {
                 || !itemStack.getItemMeta().hasLore())
             return null;
 
-        ItemMeta meta = itemStack.getItemMeta();
-        List<String> lore = meta.getLore();
+        return plugin.getNMSHandler().readPetDescriptor(itemStack);
 
-        if (lore.size() != 6 || !lore.get(5).startsWith(ChatColor.BLACK.toString() + ChatColor.MAGIC))
-            return null;
-
-        plugin.getSentryManager().recordBreadcrumb(
-                new BreadcrumbBuilder().setMessage("Decoding item").setLevel(Breadcrumb.Level.DEBUG).setCategory("RUNTIME")
-                        .setData(Collections.singletonMap("line", lore.get(lore.size() - 1))).build()
-        );
-
-        String[] split = lore.get(lore.size() - 1).split(":");
-
-        if (split.length != 6 && split.length != 7)
-            return null;
-
-        PetType type = PetType.valueOf(split[1]);
-        int level = Integer.parseInt(split[2]);
-        float exp = Float.parseFloat(split[3]);
-        boolean adult = split[4].charAt(0) > '0';
-        PetState state = PetState.values()[Integer.parseInt(split[5])];
-
-        PetDescriptor petDescriptor = new PetDescriptor(type, owner, meta.getDisplayName(), level, exp, adult);
-        petDescriptor.setState(state);
-
-        if (split.length == 7)
-            petDescriptor.setEntityId(Integer.parseInt(split[6]));
-
-        plugin.getSentryManager().recordBreadcrumb(new BreadcrumbBuilder().setMessage("Decoded item").setLevel(Breadcrumb.Level.DEBUG)
-        .setCategory("RUNTIME").setData(Collections.singletonMap("petDescriptor", petDescriptor.toString())).build());
-
-        return petDescriptor;
     }
 
     /**
@@ -157,10 +117,11 @@ public enum RPGPetsItem {
         lore.set(2, ConfigMessages.ITEM_PET_LORE_EXP.get("?"));
         lore.set(3, ConfigMessages.ITEM_PET_LORE_AGE.get("?"));
         lore.set(4, ConfigMessages.ITEM_PET_LORE_STATUS.get(ConfigMessages.ITEM_PET_LORE_SPAWNED.get()));
-        lore.set(5, (lore.get(lore.size() - 1) + ":" + entityId));
 
         meta.setLore(lore);
         itemStack.setItemMeta(meta);
+
+        plugin.getNMSHandler().writeEntityId(itemStack, entityId);
 
         return itemStack;
     }
@@ -178,23 +139,6 @@ public enum RPGPetsItem {
         petDescriptor.setState(PetState.DEAD);
 
         return RPGPetsItem.getPetCarrier(petDescriptor);
-    }
-
-    /**
-     * Removes the entity id from the data string
-     *
-     * @param item The item to fix
-     */
-    public static void fixData(ItemStack item) {
-        ItemMeta meta = item.getItemMeta();
-        List<String> lore = meta.getLore();
-
-        int lastIndex = lore.size() - 1;
-        String lastLine = lore.get(lastIndex);
-        lore.set(lastIndex, lastLine.substring(0, lastLine.lastIndexOf(':')));
-
-        meta.setLore(lore);
-        item.setItemMeta(meta);
     }
 
     /**

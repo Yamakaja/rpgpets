@@ -12,6 +12,7 @@ import me.yamakaja.rpgpets.api.item.RPGPetsItem;
 import me.yamakaja.rpgpets.api.item.RecipeManager;
 import me.yamakaja.rpgpets.api.logging.ErrorLogHandler;
 import me.yamakaja.rpgpets.api.logging.SentryManager;
+import me.yamakaja.rpgpets.api.util.Hooks;
 import me.yamakaja.rpgpets.api.util.PartiesHook;
 import me.yamakaja.rpgpets.api.util.WorldGuardHook;
 import me.yamakaja.rpgpets.plugin.command.CommandRPGPets;
@@ -69,12 +70,14 @@ public class RPGPetsImpl extends JavaPlugin implements RPGPets {
         if (Bukkit.getPluginManager().getPlugin("Parties") != null) {
             this.getLogger().info("Parties detected! Enabling hook!");
             this.sentryManager.recordInitializationCrumb("Initializing Parties hook");
+            Hooks.PARTIES.enable();
             PartiesHook.initialize();
         }
 
         if (Bukkit.getPluginManager().getPlugin("WorldGuard") != null) {
             this.getLogger().info("WorldGuard detected! Enabling hook!");
             this.sentryManager.recordInitializationCrumb("Initializing WorldGuard hook");
+            Hooks.WORLDGUARD.enable();
             WorldGuardHook.initialize();
         }
 

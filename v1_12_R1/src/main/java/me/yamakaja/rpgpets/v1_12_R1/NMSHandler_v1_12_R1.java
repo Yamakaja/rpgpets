@@ -7,21 +7,28 @@ import me.yamakaja.rpgpets.api.RPGPets;
 import me.yamakaja.rpgpets.api.entity.*;
 import me.yamakaja.rpgpets.v1_12_R1.entity.*;
 import net.minecraft.server.v1_12_R1.Entity;
+import net.minecraft.server.v1_12_R1.NBTTagCompound;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_12_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemFactory;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import java.lang.reflect.Field;
+import java.util.UUID;
 
 /**
  * Created by Yamakaja on 10.06.17.
  */
+@SuppressWarnings("Duplicates")
 public class NMSHandler_v1_12_R1 implements NMSHandler {
 
     private static Field skullGameProfile;
+    private static final String NBT_KEY = "rpgpets";
 
     static {
         try {
@@ -93,6 +100,61 @@ public class NMSHandler_v1_12_R1 implements NMSHandler {
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void writePetDescriptor(ItemStack item, PetDescriptor petDescriptor) {
+        ItemMeta itemMeta = item.getItemMeta();
+
+        NBTTagCompound petTag = new NBTTagCompound();
+        petTag.setString("type", petDescriptor.getPetType().name());
+        petTag.setInt("level", petDescriptor.getLevel());
+        petTag.setFloat("exp", petDescriptor.getExperience());
+        petTag.setInt("entityId", petDescriptor.getEntityId());
+        petTag.setBoolean("adult", petDescriptor.isAdult());
+        petTag.setString("state", petDescriptor.getState().name());
+        petTag.setDouble("random", Math.random());
+
+
+        NMSUtils.setUnhandledTag(itemMeta, NBT_KEY, petTag);
+        item.setItemMeta(itemMeta);
+    }
+
+    @Override
+    public PetDescriptor readPetDescriptor(ItemStack item) {
+        ItemMeta meta = item.getItemMeta();
+        NBTTagCompound tag = (NBTTagCompound) NMSUtils.getUnhandledTag(meta, NBT_KEY);
+
+        if (tag == null)
+            return null;
+
+        PetDescriptor petDescriptor = new PetDescriptor(
+                PetType.valueOf(tag.getString("type")),
+                tag.hasKey("ownerMost") ? Bukkit.getPlayer(new UUID(tag.getLong("ownerMost"), tag.getLong("ownerLeast"))) : null,
+                meta.getDisplayName(),
+                tag.getInt("level"),
+                tag.getFloat("exp"),
+                tag.getBoolean("adult"));
+
+        petDescriptor.setEntityId(tag.getInt("entityId"));
+        petDescriptor.setState(PetState.valueOf(tag.getString("state")));
+
+        petDescriptor.setName(meta.getDisplayName());
+
+        return petDescriptor;
+    }
+
+    @Override
+    public void writeEntityId(ItemStack stack, int entityId) {
+        ItemMeta meta = stack.getItemMeta();
+        NBTTagCompound nbtTag = (NBTTagCompound) NMSUtils.getUnhandledTag(meta, NBT_KEY);
+
+        if (nbtTag == null)
+            return;
+
+        nbtTag.setInt("entityId", entityId);
+        stack.setItemMeta(meta);
+
     }
 
 }

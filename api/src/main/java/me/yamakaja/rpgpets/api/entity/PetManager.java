@@ -113,16 +113,11 @@ public class PetManager implements Listener {
 
         ItemStack itemStack = event.getItem();
 
-        if (petDescriptor.hasEntityId()) {
-            petDescriptor.setEntityId(0);
-            RPGPetsItem.fixData(itemStack);
-        }
-
         if (petDescriptor.getState() != PetState.READY) {
             event.getPlayer().sendMessage(ConfigMessages.GENERAL_STATUS.get());
             return;
         }
-
+        petDescriptor.setOwner(event.getPlayer());
         LivingEntity entity = this.summon(petDescriptor, event.getHand() == EquipmentSlot.HAND
                 ? event.getPlayer().getInventory().getHeldItemSlot() : 40);
 

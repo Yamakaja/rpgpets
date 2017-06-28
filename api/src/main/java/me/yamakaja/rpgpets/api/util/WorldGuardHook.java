@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
  */
 public class WorldGuardHook {
 
-    static WorldGuardPlugin plugin;
+    private static Object plugin;
 
     private WorldGuardHook() {
     }
@@ -21,10 +21,7 @@ public class WorldGuardHook {
     }
 
     public static boolean isPvpEnabled(Player owner, Location loc) {
-        if (plugin == null)
-            return true;
-
-        StateFlag.State state = plugin.getRegionManager(loc.getWorld()).getApplicableRegions(loc).queryState(plugin.wrapPlayer(owner), DefaultFlag.PVP);
+        StateFlag.State state = ((WorldGuardPlugin)plugin).getRegionManager(loc.getWorld()).getApplicableRegions(loc).queryState(((WorldGuardPlugin)plugin).wrapPlayer(owner), DefaultFlag.PVP);
         return state == StateFlag.State.ALLOW || state == null;
     }
 

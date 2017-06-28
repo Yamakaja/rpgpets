@@ -6,6 +6,7 @@ import me.yamakaja.rpgpets.api.entity.PetHead;
 import me.yamakaja.rpgpets.api.entity.PetRegistry;
 import org.bukkit.World;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 
 /**
@@ -42,4 +43,16 @@ public interface NMSHandler {
     PetDescriptor getPetDescriptor(LivingEntity entity);
 
     void setHeadSkin(SkullMeta meta, PetHead head);
+
+    void writePetDescriptor(ItemStack item, PetDescriptor petDescriptor);
+
+    PetDescriptor readPetDescriptor(ItemStack item);
+
+    /**
+     * Writes the entity id into a pet item
+     *
+     * @param stack    The stack to modify
+     * @param entityId The EntityId
+     */
+    void writeEntityId(ItemStack stack, int entityId);
 }
