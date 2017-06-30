@@ -9,6 +9,7 @@ import me.yamakaja.rpgpets.api.item.RPGPetsItem;
 import me.yamakaja.rpgpets.api.util.PartiesHook;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -71,11 +72,27 @@ public class PetManager implements Listener {
     }
 
     @EventHandler
+    public void onGameModeChange(PlayerGameModeChangeEvent event) {
+        if (event.getNewGameMode() != GameMode.CREATIVE && event.getNewGameMode() != GameMode.SPECTATOR)
+            return;
+
+        if (!this.spawnedPets.containsKey(event.getPlayer().getName()))
+            return;
+
+        LivingEntity entity = this.spawnedPets.get(event.getPlayer().getName());
+        this.unregisterFromPlayer(event.getPlayer());
+        entity.remove();
+    }
+
+    @EventHandler
     public void onInteract(PlayerInteractEvent event) {
         if (!(event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK))
             return;
 
         if (!event.hasItem())
+            return;
+
+        if (event.getPlayer().getGameMode() == GameMode.CREATIVE)
             return;
 
         PetDescriptor petDescriptor = RPGPetsItem.decode(event.getItem(), event.getPlayer());
@@ -232,6 +249,7 @@ public class PetManager implements Listener {
 
         petDescriptor.setState(PetState.DEAD);
         this.unregisterFromPlayer(petDescriptor.getOwner());
+        petDescriptor.getOwner().sendMessage(ConfigMessages.GENERAL_PETDEATH.get());
     }
 
     @EventHandler

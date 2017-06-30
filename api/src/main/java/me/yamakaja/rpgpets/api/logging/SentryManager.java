@@ -14,6 +14,7 @@ public class SentryManager {
 
     private Raven raven;
     private boolean active = false;
+    private String userId;
 
     public SentryManager(RPGPets plugin, String user) {
         if (!ConfigGeneral.ENABLE_SENTRY.getAsBoolean())
@@ -27,8 +28,10 @@ public class SentryManager {
             return;
         }
 
+        userId = user.equals(new String(new char[]{'%', '%', '_', '_', 'U', 'S', 'E', 'R', '_', '_', '%', '%'})) ? "-1" : user;
+
         this.raven.addBuilderHelper(eventBuilder -> {
-            eventBuilder.withTag("client", user.equals("%%__USER__%%") ? "-1" : user);
+            eventBuilder.withTag("client", userId);
             eventBuilder.withTag("version", plugin.getDescription().getVersion());
         });
     }

@@ -28,6 +28,7 @@ public enum RPGPetsItem {
     EGG(() -> new ItemBuilder(Material.MONSTER_EGG)
             .setDisplayName(ConfigMessages.ITEM_EGG_NAME.get()).setLore(Arrays.asList(
                     ConfigMessages.ITEM_EGG_LORE_REMAINING.get(Integer.toString(ConfigGeneral.HATCH_DISTANCE.getAsInt())),
+                    ConfigMessages.ITEM_EGG_LORE_HAND.get(),
                     ChatColor.BLACK.toString() + ChatColor.MAGIC + Integer.toString(ConfigGeneral.HATCH_DISTANCE.getAsInt() * 100) + ":" + Double.toString(Math.random()).substring(2)
             ))),
     PET(() -> RPGPetsItem.getPetCarrier(PetType.getRandomPetType(), ConfigMessages.ITEM_PET_DEFAULTNAME.get(), 0, 0, 1, false, PetState.READY));

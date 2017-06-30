@@ -49,7 +49,7 @@ public class EggManager implements Listener, Runnable {
         ItemMeta meta = itemStack.getItemMeta();
 
         return meta.hasDisplayName() && meta.getDisplayName().equals(ConfigMessages.ITEM_EGG_NAME.get())
-                && meta.hasLore() && meta.getLore().size() == 2 && meta.getLore().get(1).startsWith(ChatColor.BLACK.toString() +
+                && meta.hasLore() && meta.getLore().size() == 3 && meta.getLore().get(2).startsWith(ChatColor.BLACK.toString() +
                 ChatColor.MAGIC);
     }
 
@@ -66,7 +66,7 @@ public class EggManager implements Listener, Runnable {
             ItemMeta meta = eggStack.getItemMeta();
             List<String> lore = meta.getLore();
 
-            int distanceToGo = Integer.parseInt(ChatColor.stripColor(lore.get(1)).split(":")[0]);
+            int distanceToGo = Integer.parseInt(ChatColor.stripColor(lore.get(2)).split(":")[0]);
             int totalDistance = getDistanceMoved(player);
             distanceToGo -= totalDistance - this.carryingPlayers.get(player);
 
@@ -79,7 +79,7 @@ public class EggManager implements Listener, Runnable {
 
             this.carryingPlayers.put(player, totalDistance);
             lore.set(0, ConfigMessages.ITEM_EGG_LORE_REMAINING.get(Integer.toString(distanceToGo / 100)));
-            lore.set(1, ChatColor.BLACK.toString() + ChatColor.MAGIC + Integer.toString(distanceToGo) + ":"
+            lore.set(2, ChatColor.BLACK.toString() + ChatColor.MAGIC + Integer.toString(distanceToGo) + ":"
                     + Double.toString(Math.random()).substring(2));
 
             meta.setLore(lore);

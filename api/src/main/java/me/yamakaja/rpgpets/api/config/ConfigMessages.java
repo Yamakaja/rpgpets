@@ -22,6 +22,7 @@ public enum ConfigMessages {
     GENERAL_LEVELUP,
     GENERAL_PETNAME,
     GENERAL_PETHEALTH,
+    GENERAL_PETDEATH,
     GENERAL_STATUS,
 
     ITEM_FOOD_NAME,
@@ -29,6 +30,7 @@ public enum ConfigMessages {
 
     ITEM_EGG_NAME,
     ITEM_EGG_LORE_REMAINING,
+    ITEM_EGG_LORE_HAND,
     ITEM_EGG_HATCH,
 
     ITEM_PET_DEFAULTNAME,

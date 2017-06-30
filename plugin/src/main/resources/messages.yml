@@ -11,6 +11,7 @@ general:
   levelup: "&6{0}&b just leveled up to level &6{1}&b!" # 0: Name of pet that leveled up, 1: New level
   petname: "&8[&b{0}&8] &6{1} &c{2}\u2764" # 0: Level, 1: Pet name, 2: Health in hearts (HP/2)
   pethealth: "&cYour pet has to be at full health to be picked up!"
+  petdeath: "&cYour pet has died and needs to be revived using pet food!"
   status: "&cThis pet is not ready to be spawned!"
   nameonce: "&cPets can only be named once!"
   feedcooldown: "&cYou can only feed pets once per minute!"
@@ -38,7 +39,8 @@ item:
     name: "&1Mystery Egg"
     lore:
       remaining: "&b{0}m &8to go until the egg cracks!" # 0: Remaining distance in meters/blocks
-    hatch: "&aYour egg has hatched!"
+      hand: "&8Note, eggs have to be carried in your secondary hand!"
+    hatch: "&aYour egg has hatched!\n&8You can now give it a name in an anvil\nand start to train it by fighting mobs!"
   pet:
     defaultname: "Unnamed Pet" # WARNING: May not contain colors!
     lore:
