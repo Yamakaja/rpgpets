@@ -1,7 +1,5 @@
 package me.yamakaja.rpgpets.api.item;
 
-import com.getsentry.raven.event.Breadcrumb;
-import com.getsentry.raven.event.BreadcrumbBuilder;
 import me.yamakaja.rpgpets.api.RPGPets;
 import me.yamakaja.rpgpets.api.config.ConfigGeneral;
 import me.yamakaja.rpgpets.api.config.ConfigMessages;
@@ -17,7 +15,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Supplier;
@@ -35,13 +32,12 @@ public enum RPGPetsItem {
             ))),
     PET(() -> RPGPetsItem.getPetCarrier(PetType.getRandomPetType(), ConfigMessages.ITEM_PET_DEFAULTNAME.get(), 0, 0, 1, false, PetState.READY));
 
+    private static RPGPets plugin;
     private Supplier<ItemStack> itemStackSupplier;
 
     RPGPetsItem(Supplier<ItemStack> itemStackSupplier) {
         this.itemStackSupplier = itemStackSupplier;
     }
-
-    private static RPGPets plugin;
 
     public static void initialize(RPGPets plugin) {
         RPGPetsItem.plugin = plugin;

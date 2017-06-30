@@ -259,24 +259,15 @@ public class PetManager implements Listener {
      */
     private void unregisterFromPlayer(Player player) {
         String name = player.getName();
+        if (!this.spawnedPets.containsKey(name))
+            return;
+
         PetDescriptor petDescriptor = this.plugin.getNMSHandler().getPetDescriptor(this.spawnedPets.get(name));
 
         player.getInventory().setItem(petSlots.get(name), RPGPetsItem.getPetCarrier(petDescriptor));
 
         this.spawnedPets.remove(name);
         this.petSlots.remove(name);
-    }
-
-    /**
-     * Same as {@link PetManager#unregisterFromPlayer(Player)}
-     */
-    private void unregisterFromPlayer(String playerName) {
-        PetDescriptor petDescriptor = this.plugin.getNMSHandler().getPetDescriptor(this.spawnedPets.get(playerName));
-
-        Bukkit.getPlayer(playerName).getInventory().setItem(petSlots.get(playerName), RPGPetsItem.getPetCarrier(petDescriptor));
-
-        this.spawnedPets.remove(playerName);
-        this.petSlots.remove(playerName);
     }
 
     /**
