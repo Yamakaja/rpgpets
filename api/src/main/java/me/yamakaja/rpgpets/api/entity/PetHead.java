@@ -64,7 +64,7 @@ public enum PetHead {
         return name;
     }
 
-    public UUID getUuid() {
+    public UUID getUUID() {
         return uuid;
     }
 

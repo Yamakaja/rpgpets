@@ -6,6 +6,7 @@ import com.getsentry.raven.event.Breadcrumb;
 import com.getsentry.raven.event.BreadcrumbBuilder;
 import me.yamakaja.rpgpets.api.RPGPets;
 import me.yamakaja.rpgpets.api.config.ConfigGeneral;
+import org.bukkit.Bukkit;
 
 /**
  * Created by Yamakaja on 23.06.17.
@@ -33,6 +34,9 @@ public class SentryManager {
         this.raven.addBuilderHelper(eventBuilder -> {
             eventBuilder.withTag("client", userId);
             eventBuilder.withTag("version", plugin.getDescription().getVersion());
+            eventBuilder.withTag("server", Bukkit.getVersion());
+            eventBuilder.withTag("nms", plugin.getNMSHandler().getNMSVersion());
+            eventBuilder.withTag("bukkit", Bukkit.getBukkitVersion());
         });
     }
 

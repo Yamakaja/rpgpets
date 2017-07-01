@@ -105,7 +105,9 @@ public class RPGPetsImpl extends JavaPlugin implements RPGPets {
     @Override
     public void onDisable() {
         this.sentryManager.recordShutdownCrumb("Cleaning up pets");
-        this.getPetManager().cleanup();
+
+        if (this.getPetManager() != null)
+            this.getPetManager().cleanup();
     }
 
     private void registerPets() {
