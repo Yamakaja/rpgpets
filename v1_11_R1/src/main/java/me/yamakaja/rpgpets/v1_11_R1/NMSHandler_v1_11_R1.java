@@ -18,7 +18,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import java.lang.reflect.Field;
-import java.util.UUID;
 
 /**
  * Created by Yamakaja on 10.06.17.
@@ -91,7 +90,7 @@ public class NMSHandler_v1_11_R1 implements NMSHandler {
 
     @Override
     public void setHeadSkin(SkullMeta meta, PetHead head) {
-        GameProfile profile = new GameProfile(head.getUuid(), head.getName());
+        GameProfile profile = new GameProfile(head.getUUID(), head.getName());
         profile.getProperties().put("textures", new Property("textures", head.getTexture(), head.getSignature()));
 
         try {

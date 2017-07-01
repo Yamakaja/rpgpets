@@ -92,7 +92,7 @@ public class NMSHandler_v1_12_R1 implements NMSHandler {
 
     @Override
     public void setHeadSkin(SkullMeta meta, PetHead head) {
-        GameProfile profile = new GameProfile(head.getUuid(), head.getName());
+        GameProfile profile = new GameProfile(head.getUUID(), head.getName());
         profile.getProperties().put("textures", new Property("textures", head.getTexture(), head.getSignature()));
 
         try {
