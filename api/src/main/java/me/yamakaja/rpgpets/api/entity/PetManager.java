@@ -95,7 +95,7 @@ public class PetManager implements Listener {
         if (event.getPlayer().getGameMode() == GameMode.CREATIVE)
             return;
 
-        PetDescriptor petDescriptor = RPGPetsItem.decode(event.getItem(), event.getPlayer());
+        PetDescriptor petDescriptor = RPGPetsItem.decode(event.getItem());
 
         if (petDescriptor == null)
             return;
@@ -193,7 +193,7 @@ public class PetManager implements Listener {
 
     @EventHandler
     public void onPlayerDropItem(PlayerDropItemEvent e) {
-        PetDescriptor petDescriptor = RPGPetsItem.decode(e.getItemDrop().getItemStack(), e.getPlayer());
+        PetDescriptor petDescriptor = RPGPetsItem.decode(e.getItemDrop().getItemStack());
 
         if (petDescriptor != null && petDescriptor.hasEntityId())
             e.setCancelled(true);
@@ -312,7 +312,7 @@ public class PetManager implements Listener {
     @EventHandler
     public void onAnvilPrepare(PrepareAnvilEvent event) {
         ItemStack item = event.getInventory().getItem(0);
-        PetDescriptor petDescriptor = RPGPetsItem.decode(item, null);
+        PetDescriptor petDescriptor = RPGPetsItem.decode(item);
 
         if (event.getInventory().getItem(1) != null)
             return;
@@ -353,7 +353,7 @@ public class PetManager implements Listener {
         if (stack.getType() == Material.AIR)
             return;
 
-        PetDescriptor petDescriptor = RPGPetsItem.decode(stack, null);
+        PetDescriptor petDescriptor = RPGPetsItem.decode(stack);
 
         if (petDescriptor == null)
             return;
@@ -370,7 +370,7 @@ public class PetManager implements Listener {
         if (event.getInventory().getType() != InventoryType.ANVIL)
             return;
 
-        PetDescriptor petDescriptor = RPGPetsItem.decode(event.getOldCursor(), null);
+        PetDescriptor petDescriptor = RPGPetsItem.decode(event.getOldCursor());
         if (petDescriptor == null)
             return;
 

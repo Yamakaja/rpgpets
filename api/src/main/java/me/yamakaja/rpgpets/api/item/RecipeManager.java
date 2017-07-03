@@ -67,7 +67,7 @@ public class RecipeManager implements Listener, Runnable {
                     && iterItem.getItemMeta().getDisplayName().equals(ConfigMessages.ITEM_FOOD_NAME.get())) {
                 food = iterItem;
             } else {
-                PetDescriptor petDescriptor = RPGPetsItem.decode(iterItem, null);
+                PetDescriptor petDescriptor = RPGPetsItem.decode(iterItem);
                 if (petDescriptor != null)
                     pet = petDescriptor;
             }

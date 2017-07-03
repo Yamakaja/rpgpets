@@ -5,6 +5,8 @@ import com.getsentry.raven.event.BreadcrumbBuilder;
 import me.yamakaja.rpgpets.api.RPGPets;
 import me.yamakaja.rpgpets.api.config.ConfigMessages;
 import me.yamakaja.rpgpets.api.config.ConfigPermissions;
+import me.yamakaja.rpgpets.api.entity.PetDescriptor;
+import me.yamakaja.rpgpets.api.entity.PetType;
 import me.yamakaja.rpgpets.api.item.RPGPetsItem;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -26,7 +28,6 @@ public class CommandRPGPets implements CommandExecutor, TabCompleter {
 
     private RPGPets plugin;
     private List<String> subcommands = Arrays.asList("give", "help");
-    ;
 
     public CommandRPGPets(RPGPets plugin) {
         this.plugin = plugin;
@@ -96,8 +97,14 @@ public class CommandRPGPets implements CommandExecutor, TabCompleter {
 
         if (args.length >= 4) {
             try {
-                stack.setAmount(Math.min(64, Integer.parseInt(args[3])));
+                if (item == RPGPetsItem.PET)
+                    stack = RPGPetsItem.getPetCarrier(new PetDescriptor(PetType.valueOf(args[3]), null, ConfigMessages.ITEM_PET_DEFAULTNAME.get(), 0, 0, false));
+                else
+                    stack.setAmount(Math.min(64, Integer.parseInt(args[3])));
             } catch (NumberFormatException e) {
+            } catch (IllegalArgumentException e) {
+                sender.sendMessage(ConfigMessages.COMMAND_GIVE_PETTYPE.get());
+                return;
             }
         }
 
@@ -113,9 +120,8 @@ public class CommandRPGPets implements CommandExecutor, TabCompleter {
 
     @Override
     public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] args) {
-        if (args.length == 0) {
+        if (args.length == 0)
             return subcommands;
-        }
 
         if (args.length == 1)
             return subcommands.stream().filter(cmd -> cmd.startsWith(args[0])).collect(Collectors.toList());

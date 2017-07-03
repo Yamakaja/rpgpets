@@ -9,7 +9,6 @@ import me.yamakaja.rpgpets.api.entity.PetType;
 import me.yamakaja.rpgpets.api.util.ItemBuilder;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
@@ -89,7 +88,7 @@ public enum RPGPetsItem {
      * @param itemStack The item to decode
      * @return The result, possibly null
      */
-    public static PetDescriptor decode(ItemStack itemStack, Player owner) {
+    public static PetDescriptor decode(ItemStack itemStack) {
         if (itemStack == null || itemStack.getType() != Material.SKULL_ITEM || !itemStack.hasItemMeta() || !itemStack.getItemMeta().hasDisplayName()
                 || !itemStack.getItemMeta().hasLore())
             return null;
@@ -131,7 +130,7 @@ public enum RPGPetsItem {
      */
     public static ItemStack resetPet(ItemStack stack) {
 
-        PetDescriptor petDescriptor = RPGPetsItem.decode(stack, null);
+        PetDescriptor petDescriptor = RPGPetsItem.decode(stack);
         petDescriptor.setEntityId(0);
         petDescriptor.setState(PetState.DEAD);
 
