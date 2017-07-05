@@ -230,7 +230,8 @@ public class PetManager implements Listener {
         if (!this.spawnedPets.containsKey(e.getPlayer().getName()))
             return;
 
-        if (e.getPlayer().getInventory().getHeldItemSlot() == this.petSlots.get(e.getPlayer().getName()))
+        int petSlot = this.petSlots.get(e.getPlayer().getName());
+        if (petSlot == 40 || e.getPlayer().getInventory().getHeldItemSlot() == petSlot)
             e.setCancelled(true);
     }
 
