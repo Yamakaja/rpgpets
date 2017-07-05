@@ -78,7 +78,7 @@ public enum RPGPetsItem {
         meta.setLore(lore);
 
         head.setItemMeta(meta);
-        return head;
+        return plugin.getNMSHandler().setRepairCost(head, ConfigMessages.ITEM_PET_DEFAULTNAME.get().equals(name) ? 29 : Short.MAX_VALUE);
     }
 
     /**

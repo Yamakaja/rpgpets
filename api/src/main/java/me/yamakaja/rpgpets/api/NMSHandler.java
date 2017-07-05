@@ -6,6 +6,7 @@ import me.yamakaja.rpgpets.api.entity.PetHead;
 import me.yamakaja.rpgpets.api.entity.PetRegistry;
 import org.bukkit.World;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 
@@ -55,4 +56,8 @@ public interface NMSHandler {
      * @param entityId The EntityId
      */
     void writeEntityId(ItemStack stack, int entityId);
+
+    int getWindowId(AnvilInventory inventory);
+
+    ItemStack setRepairCost(ItemStack item, int cost);
 }

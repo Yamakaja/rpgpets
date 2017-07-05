@@ -3,6 +3,7 @@ dependencies {
     compileOnly "com.sk89q.worldguard:worldguard:6.2"
     compileOnly "com.sk89q.worldedit:worldedit:6.1.5"
     compileOnly "com.alessiodp.parties:Parties:1.7.6"
+    compileOnly "com.comphenix.protocol:ProtocolLib-API:$protocolLibVersion"
 
     compileOnly "com.getsentry.raven:raven:8.0.3"
 }

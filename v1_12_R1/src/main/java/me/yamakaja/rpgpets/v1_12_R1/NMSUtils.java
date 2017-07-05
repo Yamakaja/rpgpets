@@ -1,13 +1,14 @@
 package me.yamakaja.rpgpets.v1_12_R1;
 
+import net.minecraft.server.v1_12_R1.ContainerAnvil;
 import net.minecraft.server.v1_12_R1.NBTBase;
-import net.minecraft.server.v1_12_R1.NBTTagCompound;
 import net.minecraft.server.v1_12_R1.PathfinderGoalMeleeAttack;
 import net.minecraft.server.v1_12_R1.PathfinderGoalSelector;
+import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftInventoryAnvil;
+import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.Set;
 
@@ -22,6 +23,7 @@ public class NMSUtils {
     private static Class<?> craftMetaItemClass;
 
     private static Field unhandledTagsField;
+    private static Field anvilInventoryContainer = getPrivateField("container", CraftInventoryAnvil.class);
 
     static {
         try {
@@ -30,18 +32,20 @@ public class NMSUtils {
             e.printStackTrace();
         }
 
-        try {
-            if (craftMetaItemClass != null) {
-                unhandledTagsField = craftMetaItemClass.getDeclaredField("unhandledTags");
-                unhandledTagsField.setAccessible(true);
-            }
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-        }
-
+        if (craftMetaItemClass != null)
+            unhandledTagsField = getPrivateField("unhandledTags", craftMetaItemClass);
     }
 
     private NMSUtils() {
+    }
+
+    public static ContainerAnvil getAnvilContainer(AnvilInventory inventory) {
+        try {
+            return (ContainerAnvil) anvilInventoryContainer.get(inventory);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     /**

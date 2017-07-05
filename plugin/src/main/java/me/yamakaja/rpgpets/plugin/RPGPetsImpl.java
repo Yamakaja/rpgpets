@@ -17,18 +17,16 @@ import me.yamakaja.rpgpets.api.util.PartiesHook;
 import me.yamakaja.rpgpets.api.util.WorldGuardHook;
 import me.yamakaja.rpgpets.plugin.command.CommandRPGPets;
 import me.yamakaja.rpgpets.plugin.protocol.EntitySpawnPacketTranslator;
+import me.yamakaja.rpgpets.plugin.protocol.WindowPropertyPacketListener;
 import me.yamakaja.rpgpets.v1_11_R1.NMSHandler_v1_11_R1;
 import me.yamakaja.rpgpets.v1_12_R1.NMSHandler_v1_12_R1;
 import org.bstats.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 /**
  * Created by Yamakaja on 10.06.17.
@@ -87,6 +85,7 @@ public class RPGPetsImpl extends JavaPlugin implements RPGPets {
 
         this.sentryManager.recordInitializationCrumb("Registering packet handler with ProtocolLib " + ProtocolLibrary.getPlugin().getDescription().getVersion());
         ProtocolLibrary.getProtocolManager().addPacketListener(new EntitySpawnPacketTranslator(this));
+        ProtocolLibrary.getProtocolManager().addPacketListener(new WindowPropertyPacketListener(this));
 
         this.sentryManager.recordInitializationCrumb("Registering pets");
         this.registerPets();

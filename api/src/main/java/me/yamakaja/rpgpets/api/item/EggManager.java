@@ -3,12 +3,14 @@ package me.yamakaja.rpgpets.api.item;
 import me.yamakaja.rpgpets.api.RPGPets;
 import me.yamakaja.rpgpets.api.config.ConfigMessages;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.Statistic;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
@@ -94,6 +96,11 @@ public class EggManager implements Listener, Runnable {
     }
 
     @EventHandler
+    public void onGameModeChange(PlayerGameModeChangeEvent e) {
+        update(e.getPlayer());
+    }
+
+    @EventHandler
     public void onPlayerLeave(PlayerQuitEvent e) {
         this.carryingPlayers.remove(e.getPlayer());
     }
@@ -117,6 +124,12 @@ public class EggManager implements Listener, Runnable {
             @Override
             public void run() {
 
+                if (carryingPlayers.containsKey(player) &&
+                        (player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR)) {
+                    carryingPlayers.remove(player);
+                    return;
+                }
+
                 ItemStack stack = player.getInventory().getItemInOffHand();
 
                 if (stack.getType() != Material.MONSTER_EGG || !stack.hasItemMeta()) {
@@ -138,7 +151,7 @@ public class EggManager implements Listener, Runnable {
                 carryingPlayers.put(player, getDistanceMoved(player));
             }
 
-        }.runTaskLater(this.plugin, 0);
+        }.runTask(plugin);
 
     }
 

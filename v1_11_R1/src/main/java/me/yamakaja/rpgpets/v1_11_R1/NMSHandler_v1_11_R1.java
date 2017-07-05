@@ -6,13 +6,17 @@ import me.yamakaja.rpgpets.api.NMSHandler;
 import me.yamakaja.rpgpets.api.RPGPets;
 import me.yamakaja.rpgpets.api.entity.*;
 import me.yamakaja.rpgpets.v1_11_R1.entity.*;
+import net.minecraft.server.v1_11_R1.ContainerAnvil;
 import net.minecraft.server.v1_11_R1.Entity;
 import net.minecraft.server.v1_11_R1.NBTTagCompound;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_11_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_11_R1.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_11_R1.inventory.CraftInventoryAnvil;
 import org.bukkit.craftbukkit.v1_11_R1.inventory.CraftItemFactory;
+import org.bukkit.craftbukkit.v1_11_R1.inventory.CraftItemStack;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
@@ -152,6 +156,36 @@ public class NMSHandler_v1_11_R1 implements NMSHandler {
         nbtTag.setInt("entityId", entityId);
         stack.setItemMeta(meta);
 
+    }
+
+    /**
+     * Returns the window id of an anvil inventory
+     *
+     * @param inventory The inventory to get the id of
+     * @return The window id
+     */
+    @Override
+    public int getWindowId(AnvilInventory inventory) {
+        ContainerAnvil container = NMSUtils.getAnvilContainer(inventory);
+
+        if (container == null)
+            throw new RuntimeException("Couldn't get container of anvil inventory?!");
+
+        return container.windowId;
+    }
+
+    /**
+     * Sets the repair cost of an item
+     *
+     * @param item The item of which to modify the repair cost
+     * @param cost The cost to set
+     * @return The modified item
+     */
+    @Override
+    public ItemStack setRepairCost(ItemStack item, int cost) {
+        net.minecraft.server.v1_11_R1.ItemStack stack = CraftItemStack.asNMSCopy(item);
+        stack.setRepairCost(cost);
+        return CraftItemStack.asCraftMirror(stack);
     }
 
 }

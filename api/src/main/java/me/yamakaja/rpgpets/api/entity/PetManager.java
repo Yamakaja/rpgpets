@@ -1,5 +1,6 @@
 package me.yamakaja.rpgpets.api.entity;
 
+import com.comphenix.packetwrapper.WrapperPlayServerWindowData;
 import com.getsentry.raven.event.Breadcrumb;
 import com.getsentry.raven.event.BreadcrumbBuilder;
 import me.yamakaja.rpgpets.api.RPGPets;
@@ -55,7 +56,7 @@ public class PetManager implements Listener {
      */
     public LivingEntity summon(PetDescriptor petDescriptor, int slot) {
         this.plugin.getSentryManager().recordBreadcrumb(new BreadcrumbBuilder().setMessage("Summoning Pet").setLevel(Breadcrumb.Level.DEBUG)
-        .setCategory("RUNTIME").setData(Collections.singletonMap("petDescriptor", petDescriptor.toString())).build());
+                .setCategory("RUNTIME").setData(Collections.singletonMap("petDescriptor", petDescriptor.toString())).build());
 
         if (this.spawnedPets.containsKey(petDescriptor.getOwner().getName()))
             return null;
@@ -322,6 +323,13 @@ public class PetManager implements Listener {
             return;
 
         event.getInventory().setRepairCost(30);
+
+        WrapperPlayServerWindowData packet = new WrapperPlayServerWindowData();
+        packet.setWindowId(this.plugin.getNMSHandler().getWindowId(event.getInventory()));
+        packet.setProperty(0);
+        packet.setValue(30);
+        packet.sendPacket((Player) event.getViewers().get(0));
+
         petDescriptor.setName(ChatColor.GOLD + ChatColor.stripColor(event.getInventory().getRenameText()).replace("§", ""));
         event.setResult(RPGPetsItem.getPetCarrier(petDescriptor));
     }
@@ -339,22 +347,35 @@ public class PetManager implements Listener {
 
     @EventHandler
     public void onAnvilClick(InventoryClickEvent event) {
-        if (event.getClickedInventory() == null || event.getClickedInventory().getType() != InventoryType.ANVIL)
-            return;
+        PetDescriptor petDescriptor;
 
-        if (event.getSlot() != 0 && event.getSlot() != 1)
-            return;
+        if (event.getClick() == ClickType.SHIFT_LEFT || event.getClick() == ClickType.SHIFT_RIGHT) {
+            ItemStack stack = event.getCurrentItem();
 
-        ItemStack stack = event.getCursor();
+            if (stack == null || stack.getType() == Material.AIR)
+                return;
 
-        if (event.getAction() == InventoryAction.HOTBAR_MOVE_AND_READD || event.getAction() == InventoryAction.HOTBAR_SWAP) {
-            stack = event.getWhoClicked().getInventory().getItem(event.getHotbarButton());
+            petDescriptor = RPGPetsItem.decode(stack);
+
+        } else {
+            if (event.getClickedInventory() == null || event.getClickedInventory().getType() != InventoryType.ANVIL)
+                return;
+
+            if (event.getSlot() != 0 && event.getSlot() != 1)
+                return;
+
+            ItemStack stack = event.getCursor();
+
+            if (event.getAction() == InventoryAction.HOTBAR_MOVE_AND_READD || event.getAction() == InventoryAction.HOTBAR_SWAP) {
+                stack = event.getWhoClicked().getInventory().getItem(event.getHotbarButton());
+            }
+
+            if (stack == null || stack.getType() == Material.AIR)
+                return;
+
+            petDescriptor = RPGPetsItem.decode(stack);
+
         }
-
-        if (stack.getType() == Material.AIR)
-            return;
-
-        PetDescriptor petDescriptor = RPGPetsItem.decode(stack);
 
         if (petDescriptor == null)
             return;
@@ -364,6 +385,7 @@ public class PetManager implements Listener {
             event.setCancelled(true);
             ((Player) event.getWhoClicked()).updateInventory();
         }
+
     }
 
     @EventHandler
