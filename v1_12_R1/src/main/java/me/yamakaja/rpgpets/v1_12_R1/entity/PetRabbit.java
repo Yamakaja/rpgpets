@@ -3,8 +3,8 @@ package me.yamakaja.rpgpets.v1_12_R1.entity;
 import me.yamakaja.rpgpets.api.config.ConfigMessages;
 import me.yamakaja.rpgpets.api.entity.Pet;
 import me.yamakaja.rpgpets.api.entity.PetDescriptor;
-import me.yamakaja.rpgpets.api.util.Hooks;
-import me.yamakaja.rpgpets.api.util.WorldGuardHook;
+import me.yamakaja.rpgpets.api.hook.Hooks;
+import me.yamakaja.rpgpets.api.hook.WorldGuardHook;
 import me.yamakaja.rpgpets.v1_12_R1.NMSUtils;
 import me.yamakaja.rpgpets.v1_12_R1.pathfinding.PetPathfinderGoalFollowOwner;
 import me.yamakaja.rpgpets.v1_12_R1.pathfinding.PetPathfinderGoalHurtByTarget;
@@ -73,9 +73,6 @@ public class PetRabbit extends EntityRabbit implements Pet {
 
     @Override
     public boolean B(Entity entity) { // attackEntityAsMob
-        if (Hooks.WORLDGUARD.isEnabled() && (entity instanceof EntityPlayer || entity instanceof Pet) && !WorldGuardHook.isPvpEnabled(this.petDescriptor.getOwner(), this.getBukkitEntity().getLocation()))
-            return false;
-
         final float damage = this.petDescriptor.getAttackDamage();
         final float knockback = this.petDescriptor.getKnockback();
         boolean flag = entity.damageEntity(DamageSource.mobAttack(this), damage);

@@ -1,4 +1,4 @@
-package me.yamakaja.rpgpets.api.util;
+package me.yamakaja.rpgpets.api.hook;
 
 import com.alessiodp.parties.utils.api.PartiesAPI;
 import org.bukkit.entity.Player;

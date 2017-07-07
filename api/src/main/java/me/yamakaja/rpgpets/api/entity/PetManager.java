@@ -6,8 +6,11 @@ import com.getsentry.raven.event.BreadcrumbBuilder;
 import me.yamakaja.rpgpets.api.RPGPets;
 import me.yamakaja.rpgpets.api.config.ConfigMessages;
 import me.yamakaja.rpgpets.api.event.PetLevelUpEvent;
+import me.yamakaja.rpgpets.api.hook.FeudalHook;
+import me.yamakaja.rpgpets.api.hook.Hooks;
+import me.yamakaja.rpgpets.api.hook.PartiesHook;
+import me.yamakaja.rpgpets.api.hook.WorldGuardHook;
 import me.yamakaja.rpgpets.api.item.RPGPetsItem;
-import me.yamakaja.rpgpets.api.util.PartiesHook;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -31,6 +34,8 @@ import org.bukkit.inventory.ItemStack;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.bukkit.event.inventory.InventoryType.ANVIL;
 
 /**
  * Created by Yamakaja on 12.06.17.
@@ -350,6 +355,9 @@ public class PetManager implements Listener {
         PetDescriptor petDescriptor;
 
         if (event.getClick() == ClickType.SHIFT_LEFT || event.getClick() == ClickType.SHIFT_RIGHT) {
+            if (event.getWhoClicked().getOpenInventory().getType() != ANVIL)
+                return;
+
             ItemStack stack = event.getCurrentItem();
 
             if (stack == null || stack.getType() == Material.AIR)
@@ -358,7 +366,7 @@ public class PetManager implements Listener {
             petDescriptor = RPGPetsItem.decode(stack);
 
         } else {
-            if (event.getClickedInventory() == null || event.getClickedInventory().getType() != InventoryType.ANVIL)
+            if (event.getClickedInventory() == null || event.getClickedInventory().getType() != ANVIL)
                 return;
 
             if (event.getSlot() != 0 && event.getSlot() != 1)
@@ -390,7 +398,7 @@ public class PetManager implements Listener {
 
     @EventHandler
     public void onAnvilDrag(InventoryDragEvent event) {
-        if (event.getInventory().getType() != InventoryType.ANVIL)
+        if (event.getInventory().getType() != ANVIL)
             return;
 
         PetDescriptor petDescriptor = RPGPetsItem.decode(event.getOldCursor());
@@ -409,36 +417,46 @@ public class PetManager implements Listener {
         if (!(e.getEntity() instanceof LivingEntity) || !(e.getDamager() instanceof LivingEntity))
             return;
 
+        Player playerOne;
+        Player playerTwo;
+
         if (e.getDamager().getType() == EntityType.PLAYER) {
             PetDescriptor petDescriptor = this.plugin.getNMSHandler().getPetDescriptor((LivingEntity) e.getEntity());
             if (petDescriptor == null)
                 return;
 
-            if (PartiesHook.areInSameParty((Player) e.getDamager(), petDescriptor.getOwner()))
-                e.setCancelled(true);
-            return;
+            playerOne = (Player) e.getDamager();
+            playerTwo = petDescriptor.getOwner();
         }
 
-        if (e.getEntity().getType() == EntityType.PLAYER) {
+        else if (e.getEntity().getType() == EntityType.PLAYER) {
             PetDescriptor petDescriptor = this.plugin.getNMSHandler().getPetDescriptor((LivingEntity) e.getDamager());
             if (petDescriptor == null)
                 return;
 
-            if (PartiesHook.areInSameParty((Player) e.getEntity(), petDescriptor.getOwner()))
-                e.setCancelled(true);
-
-            return;
+            playerOne = (Player) e.getEntity();
+            playerTwo = petDescriptor.getOwner();
         }
 
-        PetDescriptor damager = this.plugin.getNMSHandler().getPetDescriptor((LivingEntity) e.getDamager());
-        PetDescriptor entity = this.plugin.getNMSHandler().getPetDescriptor((LivingEntity) e.getEntity());
+        else {
+            PetDescriptor damager = this.plugin.getNMSHandler().getPetDescriptor((LivingEntity) e.getDamager());
+            PetDescriptor entity = this.plugin.getNMSHandler().getPetDescriptor((LivingEntity) e.getEntity());
 
-        if (damager == null || entity == null)
-            return;
+            if (damager == null || entity == null)
+                return;
 
-        if (PartiesHook.areInSameParty(damager.getOwner(), entity.getOwner()))
+            playerOne = damager.getOwner();
+            playerTwo = entity.getOwner();
+        }
+
+        if (Hooks.PARTIES.isEnabled() && PartiesHook.areInSameParty(playerOne, playerTwo))
             e.setCancelled(true);
 
+        else if (Hooks.WORLDGUARD.isEnabled() && !WorldGuardHook.isPvpEnabled(playerOne, e.getEntity().getLocation()))
+            e.setCancelled(true);
+
+        else if (Hooks.FEUDAL.isEnabled() && FeudalHook.areAllied(playerOne, playerTwo))
+            e.setCancelled(true);
     }
 
 }

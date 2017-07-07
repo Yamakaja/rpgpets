@@ -38,9 +38,13 @@ dependencies {
     server "org.spigotmc:spigot:$spigotServerVersion"
 
     serverPlugin "com.comphenix.protocol:ProtocolLib:$protocolLibVersion"
-    serverPlugin "com.sk89q.worldguard:worldguard:6.2.1"
-    serverPlugin "com.sk89q.worldedit:worldedit:6.1.7"
-    serverPlugin "com.alessiodp.parties:Parties:1.7.6"
+    serverPlugin "com.sk89q.worldguard:worldguard:$worldGuardVersion"
+    serverPlugin "com.sk89q.worldedit:worldedit:$worldEditVersion"
+    serverPlugin "com.alessiodp.parties:Parties:$partiesVersion"
+    serverPlugin "us.forseth11.feudal:feudal:$feudalVersion"
+    serverPlugin "net.milkbowl.vault:Vault:$vaultVersion"
+    serverPlugin "net.drtshock.essentialsx:core:$essentialsVersion"
+    serverPlugin "net.drtshock.essentialsx:chat:$essentialsVersion"
 }
 
 jar {
@@ -62,11 +66,11 @@ processResources {
 }
 
 task installPlugins(type: Copy) {
-//    print("Installing required plugins ... ")
-//    from(configurations.serverPlugin)
-//    into "$rootDir/testserver/plugins"
-//    rename("([^-]*).*\\.jar", '$1.jar')
-//    println("Done.")
+    print("Installing required plugins ... ")
+    from(configurations.serverPlugin)
+    into "$rootDir/testserver/plugins"
+    rename("([^-]*).*\\.jar", '$1.jar')
+    println("Done.")
 }
 
 task installServer(type: Copy) {

@@ -7,14 +7,15 @@ import me.yamakaja.rpgpets.api.config.ConfigGeneral;
 import me.yamakaja.rpgpets.api.config.ConfigManager;
 import me.yamakaja.rpgpets.api.entity.PetManager;
 import me.yamakaja.rpgpets.api.entity.PetType;
+import me.yamakaja.rpgpets.api.hook.FeudalHook;
 import me.yamakaja.rpgpets.api.item.EggManager;
 import me.yamakaja.rpgpets.api.item.RPGPetsItem;
 import me.yamakaja.rpgpets.api.item.RecipeManager;
 import me.yamakaja.rpgpets.api.logging.ErrorLogHandler;
 import me.yamakaja.rpgpets.api.logging.SentryManager;
-import me.yamakaja.rpgpets.api.util.Hooks;
-import me.yamakaja.rpgpets.api.util.PartiesHook;
-import me.yamakaja.rpgpets.api.util.WorldGuardHook;
+import me.yamakaja.rpgpets.api.hook.Hooks;
+import me.yamakaja.rpgpets.api.hook.PartiesHook;
+import me.yamakaja.rpgpets.api.hook.WorldGuardHook;
 import me.yamakaja.rpgpets.plugin.command.CommandRPGPets;
 import me.yamakaja.rpgpets.plugin.protocol.EntitySpawnPacketTranslator;
 import me.yamakaja.rpgpets.v1_11_R1.NMSHandler_v1_11_R1;
@@ -63,7 +64,6 @@ public class RPGPetsImpl extends JavaPlugin implements RPGPets {
         }
         this.sentryManager.recordInitializationCrumb("Loaded NMSHandler for version " + this.getNMSHandler().getNMSVersion());
 
-        this.sentryManager.recordInitializationCrumb("Detecting Parties");
         if (Bukkit.getPluginManager().getPlugin("Parties") != null) {
             this.getLogger().info("Parties detected! Enabling hook!");
             this.sentryManager.recordInitializationCrumb("Initializing Parties hook");
@@ -76,6 +76,13 @@ public class RPGPetsImpl extends JavaPlugin implements RPGPets {
             this.sentryManager.recordInitializationCrumb("Initializing WorldGuard hook");
             Hooks.WORLDGUARD.enable();
             WorldGuardHook.initialize();
+        }
+
+        if (Bukkit.getPluginManager().getPlugin("Feudal") != null) {
+            this.getLogger().info("Feudal detected! Enabling hook!");
+            this.sentryManager.recordInitializationCrumb("Initializing Feudal hook!");
+            Hooks.FEUDAL.enable();
+            FeudalHook.initialize();
         }
 
         RPGPetsItem.initialize(this);

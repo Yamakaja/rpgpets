@@ -1,4 +1,4 @@
-package me.yamakaja.rpgpets.api.util;
+package me.yamakaja.rpgpets.api.hook;
 
 /**
  * Created by Yamakaja on 28.06.17.
@@ -6,7 +6,8 @@ package me.yamakaja.rpgpets.api.util;
 public enum Hooks {
 
     WORLDGUARD,
-    PARTIES;
+    PARTIES,
+    FEUDAL;
 
     private boolean enabled = false;
 
