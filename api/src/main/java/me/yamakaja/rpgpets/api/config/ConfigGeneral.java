@@ -14,7 +14,8 @@ public enum ConfigGeneral {
     GROWUP_END("growup_end"),
     FEED_COOLDOWN("feed_cooldown"),
     ENABLE_SENTRY("sentry"),
-    ENABLE_METRICS("metrics");
+    ENABLE_METRICS("metrics"),
+    ENABLE_UPDATE_CHECKER("update");
 
     private static YamlConfiguration configuration;
     private String path;
@@ -81,6 +82,10 @@ public enum ConfigGeneral {
 
     public List<Boolean> getAsBooleanList() {
         return configuration.getBooleanList(this.path);
+    }
+
+    public boolean isPresent() {
+        return configuration.contains(this.path);
     }
 
 }

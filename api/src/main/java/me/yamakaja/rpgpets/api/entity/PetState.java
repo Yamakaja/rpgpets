@@ -7,6 +7,6 @@ public enum PetState {
 
     SPAWNED,
     READY,
-    DEAD;
+    DEAD
 
 }

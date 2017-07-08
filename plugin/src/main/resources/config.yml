@@ -21,3 +21,6 @@ sentry: true
 
 # Enable metrics reporting to bstats
 metrics: true
+
+# Enable update checker
+update: true

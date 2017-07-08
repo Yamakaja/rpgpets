@@ -29,10 +29,11 @@ dependencies {
     compile project(":api")
     compile project(":v1_11_R1")
     compile project(":v1_12_R1")
+
     compileOnly "com.comphenix.protocol:ProtocolLib-API:$protocolLibVersion"
+    compileOnly "com.google.code.gson:gson:2.8.0"
 
     compile 'com.getsentry.raven:raven:8.0.3'
-
     compile "org.bstats:bstats-bukkit:1.1"
 
     server "org.spigotmc:spigot:$spigotServerVersion"

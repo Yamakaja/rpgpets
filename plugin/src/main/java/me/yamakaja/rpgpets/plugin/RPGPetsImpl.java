@@ -18,6 +18,7 @@ import me.yamakaja.rpgpets.api.hook.PartiesHook;
 import me.yamakaja.rpgpets.api.hook.WorldGuardHook;
 import me.yamakaja.rpgpets.plugin.command.CommandRPGPets;
 import me.yamakaja.rpgpets.plugin.protocol.EntitySpawnPacketTranslator;
+import me.yamakaja.rpgpets.plugin.version.UpdateChecker;
 import me.yamakaja.rpgpets.v1_11_R1.NMSHandler_v1_11_R1;
 import me.yamakaja.rpgpets.v1_12_R1.NMSHandler_v1_12_R1;
 import org.bstats.Metrics;
@@ -101,6 +102,11 @@ public class RPGPetsImpl extends JavaPlugin implements RPGPets {
         this.eggManager = new EggManager(this);
         this.recipeManager = new RecipeManager(this);
         Bukkit.getOnlinePlayers().forEach(p -> this.eggManager.update(p));
+
+        if (!ConfigGeneral.ENABLE_UPDATE_CHECKER.isPresent() || ConfigGeneral.ENABLE_UPDATE_CHECKER.getAsBoolean()) {
+            this.sentryManager.recordInitializationCrumb("Initializing update checker");
+            new UpdateChecker(this);
+        }
 
         this.getLogger().info("Successfully enabled RPGPets!");
         this.sentryManager.clearContext();
