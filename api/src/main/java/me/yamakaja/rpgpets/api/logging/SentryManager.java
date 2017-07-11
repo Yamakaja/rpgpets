@@ -8,6 +8,8 @@ import me.yamakaja.rpgpets.api.RPGPets;
 import me.yamakaja.rpgpets.api.config.ConfigGeneral;
 import org.bukkit.Bukkit;
 
+import java.util.logging.Level;
+
 /**
  * Created by Yamakaja on 23.06.17.
  */
@@ -24,8 +26,9 @@ public class SentryManager {
         try {
             this.raven = RavenFactory.ravenInstance("https://ebbb5b6c46d04f6180bb841084ed7bec:acf0480726aa4db99ad45d4c083b76af@sentry.io/182971");
             this.active = true;
-        } catch (Exception e) {
-            plugin.getLogger().severe("Failed to enable automatic error reporting!");
+        } catch (Throwable e) {
+            plugin.getLogger().warning("Failed to enable automatic error reporting!");
+            plugin.getLogger().log(Level.WARNING, "Please report this back to the author, the plugin will work regardless:", e);
             return;
         }
 
