@@ -24,6 +24,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.EntityPortalEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.*;
 import org.bukkit.event.player.*;
@@ -341,13 +342,30 @@ public class PetManager implements Listener {
 
     @EventHandler
     public void onTeleport(PlayerTeleportEvent e) {
+        if (e.isCancelled())
+            return;
+
         if (e.getFrom().getWorld() == e.getTo().getWorld() && e.getFrom().distanceSquared(e.getTo()) < 30 * 30)
             return;
 
         if (!this.spawnedPets.containsKey(e.getPlayer().getName()))
             return;
 
-        this.spawnedPets.get(e.getPlayer().getName()).teleport(e.getPlayer());
+        LivingEntity entity = this.spawnedPets.get(e.getPlayer().getName());
+        PetDescriptor petDescriptor = this.plugin.getNMSHandler().getPetDescriptor(entity);
+
+        petDescriptor.setState((entity.getHealth() == entity.getMaxHealth()) ? PetState.READY : PetState.DEAD);
+        this.unregisterFromPlayer(e.getPlayer());
+        entity.remove();
+    }
+
+    @EventHandler
+    public void onPortal(EntityPortalEvent e) {
+        if (e.getEntity() instanceof LivingEntity
+                && this.plugin.getNMSHandler().getPetDescriptor((LivingEntity) e.getEntity()) != null
+                && e.getTo().getWorld() != e.getFrom().getWorld())
+
+            e.setCancelled(true);
     }
 
     @EventHandler
@@ -427,18 +445,14 @@ public class PetManager implements Listener {
 
             playerOne = (Player) e.getDamager();
             playerTwo = petDescriptor.getOwner();
-        }
-
-        else if (e.getEntity().getType() == EntityType.PLAYER) {
+        } else if (e.getEntity().getType() == EntityType.PLAYER) {
             PetDescriptor petDescriptor = this.plugin.getNMSHandler().getPetDescriptor((LivingEntity) e.getDamager());
             if (petDescriptor == null)
                 return;
 
             playerOne = (Player) e.getEntity();
             playerTwo = petDescriptor.getOwner();
-        }
-
-        else {
+        } else {
             PetDescriptor damager = this.plugin.getNMSHandler().getPetDescriptor((LivingEntity) e.getDamager());
             PetDescriptor entity = this.plugin.getNMSHandler().getPetDescriptor((LivingEntity) e.getEntity());
 

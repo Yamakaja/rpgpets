@@ -124,4 +124,5 @@ public class PetLlama extends EntityLlama implements Pet {
     public int getAge() {
         return this.petDescriptor.isAdult() ? 1 : Integer.MIN_VALUE;
     }
+
 }

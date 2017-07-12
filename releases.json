@@ -8,5 +8,10 @@
     "version": "1.1.10",
     "release": 1499758927012,
     "changes": "Improve sentry error catching"
+  },
+  {
+    "version": "1.1.11",
+    "release": 1499889612443,
+    "changes": "Fix teleportation issues"
   }
 ]
