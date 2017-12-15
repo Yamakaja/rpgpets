@@ -13,5 +13,10 @@
     "version": "1.1.11",
     "release": 1499889612443,
     "changes": "Fix teleportation issues"
+  },
+  {
+    "version": "1.1.12",
+    "release": 1513362939068,
+    "changes": "Remove Parties integration due to API instability"
   }
 ]

@@ -30,7 +30,7 @@ dependencies {
     compile project(":v1_11_R1")
     compile project(":v1_12_R1")
 
-    compileOnly "com.comphenix.protocol:ProtocolLib-API:$protocolLibVersion"
+    compileOnly "com.comphenix.protocol:ProtocolLib:$protocolLibVersion"
     compileOnly "com.google.code.gson:gson:2.8.0"
 
     compile 'com.getsentry.raven:raven:8.0.3'
@@ -41,7 +41,6 @@ dependencies {
     serverPlugin "com.comphenix.protocol:ProtocolLib:$protocolLibVersion"
     serverPlugin "com.sk89q.worldguard:worldguard:$worldGuardVersion"
     serverPlugin "com.sk89q.worldedit:worldedit:$worldEditVersion"
-    serverPlugin "com.alessiodp.parties:Parties:$partiesVersion"
     serverPlugin "us.forseth11.feudal:feudal:$feudalVersion"
     serverPlugin "net.milkbowl.vault:Vault:$vaultVersion"
     serverPlugin "net.drtshock.essentialsx:core:$essentialsVersion"

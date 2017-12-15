@@ -8,7 +8,6 @@ import me.yamakaja.rpgpets.api.config.ConfigMessages;
 import me.yamakaja.rpgpets.api.event.PetLevelUpEvent;
 import me.yamakaja.rpgpets.api.hook.FeudalHook;
 import me.yamakaja.rpgpets.api.hook.Hooks;
-import me.yamakaja.rpgpets.api.hook.PartiesHook;
 import me.yamakaja.rpgpets.api.hook.WorldGuardHook;
 import me.yamakaja.rpgpets.api.item.RPGPetsItem;
 import org.bukkit.Bukkit;
@@ -463,10 +462,7 @@ public class PetManager implements Listener {
             playerTwo = entity.getOwner();
         }
 
-        if (Hooks.PARTIES.isEnabled() && PartiesHook.areInSameParty(playerOne, playerTwo))
-            e.setCancelled(true);
-
-        else if (Hooks.WORLDGUARD.isEnabled() && !WorldGuardHook.isPvpEnabled(playerOne, e.getEntity().getLocation()))
+        if (Hooks.WORLDGUARD.isEnabled() && !WorldGuardHook.isPvpEnabled(playerOne, e.getEntity().getLocation()))
             e.setCancelled(true);
 
         else if (Hooks.FEUDAL.isEnabled() && FeudalHook.areAllied(playerOne, playerTwo))

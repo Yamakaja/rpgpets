@@ -7,10 +7,9 @@ allprojects {
         spigotServerVersion = "1.12-R0.1-SNAPSHOT"
 
         protocolLibVersion = "4.3.0"
-        feudalVersion = "1.6.4"
-        partiesVersion = "1.7.6"
+        feudalVersion = "1.9.0"
 
-        worldEditVersion = "6.1.7"
+        worldEditVersion = "6.1.7.3"
         worldGuardVersion = "6.2.1"
 
         vaultVersion = "1.5.6"

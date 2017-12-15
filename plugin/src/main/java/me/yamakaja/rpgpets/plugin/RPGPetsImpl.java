@@ -14,7 +14,6 @@ import me.yamakaja.rpgpets.api.item.RecipeManager;
 import me.yamakaja.rpgpets.api.logging.ErrorLogHandler;
 import me.yamakaja.rpgpets.api.logging.SentryManager;
 import me.yamakaja.rpgpets.api.hook.Hooks;
-import me.yamakaja.rpgpets.api.hook.PartiesHook;
 import me.yamakaja.rpgpets.api.hook.WorldGuardHook;
 import me.yamakaja.rpgpets.plugin.command.CommandRPGPets;
 import me.yamakaja.rpgpets.plugin.protocol.EntitySpawnPacketTranslator;
@@ -64,13 +63,6 @@ public class RPGPetsImpl extends JavaPlugin implements RPGPets {
             return;
         }
         this.sentryManager.recordInitializationCrumb("Loaded NMSHandler for version " + this.getNMSHandler().getNMSVersion());
-
-        if (Bukkit.getPluginManager().getPlugin("Parties") != null) {
-            this.getLogger().info("Parties detected! Enabling hook!");
-            this.sentryManager.recordInitializationCrumb("Initializing Parties hook");
-            Hooks.PARTIES.enable();
-            PartiesHook.initialize();
-        }
 
         if (Bukkit.getPluginManager().getPlugin("WorldGuard") != null) {
             this.getLogger().info("WorldGuard detected! Enabling hook!");

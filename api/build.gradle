@@ -3,8 +3,7 @@ dependencies {
 
     compileOnly "com.sk89q.worldguard:worldguard:$worldGuardVersion"
     compileOnly "com.sk89q.worldedit:worldedit:$worldEditVersion"
-    compileOnly "com.alessiodp.parties:Parties:$partiesVersion"
-    compileOnly "com.comphenix.protocol:ProtocolLib-API:$protocolLibVersion"
+    compileOnly "com.comphenix.protocol:ProtocolLib:$protocolLibVersion"
     compileOnly "us.forseth11.feudal:feudal:$feudalVersion"
 
     compileOnly "com.getsentry.raven:raven:8.0.3"
