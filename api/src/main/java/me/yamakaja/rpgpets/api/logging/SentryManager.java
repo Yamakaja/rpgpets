@@ -7,7 +7,6 @@ import com.getsentry.raven.event.BreadcrumbBuilder;
 import me.yamakaja.rpgpets.api.RPGPets;
 import me.yamakaja.rpgpets.api.config.ConfigGeneral;
 import org.bukkit.Bukkit;
-
 import java.util.logging.Level;
 
 /**
