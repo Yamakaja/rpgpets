@@ -344,6 +344,9 @@ public class PetManager implements Listener {
         if (e.isCancelled())
             return;
 
+        if (e.getFrom() == null || e.getFrom().getWorld() == null || e.getTo() == null || e.getTo().getWorld() == null)
+            return;
+
         if (e.getFrom().getWorld() == e.getTo().getWorld() && e.getFrom().distanceSquared(e.getTo()) < 30 * 30)
             return;
 
