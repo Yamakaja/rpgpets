@@ -67,15 +67,20 @@ public class RPGPetsImpl extends JavaPlugin implements RPGPets {
         if (Bukkit.getPluginManager().getPlugin("WorldGuard") != null) {
             this.getLogger().info("WorldGuard detected! Enabling hook!");
             this.sentryManager.recordInitializationCrumb("Initializing WorldGuard hook");
-            Hooks.WORLDGUARD.enable();
-            WorldGuardHook.initialize();
+            try {
+                WorldGuardHook.initialize();
+                Hooks.WORLDGUARD.enable();
+            } catch (Exception e) {
+                this.getLogger().severe("An error occurred while trying to enable WorldGuard hook: ");
+                e.printStackTrace();
+            }
         }
 
         if (Bukkit.getPluginManager().getPlugin("Feudal") != null) {
             this.getLogger().info("Feudal detected! Enabling hook!");
             this.sentryManager.recordInitializationCrumb("Initializing Feudal hook!");
-            Hooks.FEUDAL.enable();
             FeudalHook.initialize();
+            Hooks.FEUDAL.enable();
         }
 
         RPGPetsItem.initialize(this);

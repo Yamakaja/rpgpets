@@ -146,6 +146,6 @@ public enum RPGPetsItem {
     }
 
     public ItemStack get() {
-        return itemStackSupplier.get();
+        return this.itemStackSupplier.get();
     }
 }
