@@ -18,5 +18,10 @@
     "version": "1.1.12",
     "release": 1513362939068,
     "changes": "Remove Parties integration due to API instability"
+  },
+  {
+    "version": "1.1.13",
+    "release": 1514891679600,
+    "changes": "Multiple bug fixes"
   }
 ]
