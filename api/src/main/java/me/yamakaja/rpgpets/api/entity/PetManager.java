@@ -19,6 +19,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -152,7 +153,7 @@ public class PetManager implements Listener {
             event.getPlayer().getInventory().setItemInOffHand(itemStack);
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerDeath(PlayerDeathEvent e) {
         if (!this.spawnedPets.containsKey(e.getEntity().getName()))
             return;
@@ -160,6 +161,17 @@ public class PetManager implements Listener {
         int slot = this.petSlots.get(e.getEntity().getName());
 
         ItemStack itemStackInInventory = e.getEntity().getInventory().getItem(slot);
+        LivingEntity entity = this.spawnedPets.get(e.getEntity().getName());
+        PetDescriptor petDescriptor = this.plugin.getNMSHandler().getPetDescriptor(entity);
+        petDescriptor.setState(PetState.DEAD);
+
+        entity.remove();
+
+        if (e.getKeepInventory()) {
+            e.getEntity().getInventory().setItem(slot, RPGPetsItem.getPetCarrier(petDescriptor));
+            return;
+        }
+
         int dropsSlot = -1;
         for (int i = 0; i < e.getDrops().size(); i++)
             if (e.getDrops().get(i).isSimilar(itemStackInInventory)) {
@@ -169,13 +181,6 @@ public class PetManager implements Listener {
 
         if (dropsSlot == -1)
             throw new RuntimeException("Logic error! Cannot find inventory item in drops!");
-
-        LivingEntity entity = this.spawnedPets.get(e.getEntity().getName());
-        PetDescriptor petDescriptor = this.plugin.getNMSHandler().getPetDescriptor(entity);
-        petDescriptor.setState(PetState.DEAD);
-
-        entity.remove();
-        this.spawnedPets.remove(e.getEntity().getName());
 
         e.getDrops().set(dropsSlot, RPGPetsItem.getPetCarrier(petDescriptor));
     }
