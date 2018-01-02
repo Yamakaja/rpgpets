@@ -88,7 +88,8 @@ public class RecipeManager implements Listener, Runnable {
     @EventHandler
     public void onInventoryClick(InventoryClickEvent e) {
         if (e.getClickedInventory() == null || (e.getClickedInventory().getType() != InventoryType.CRAFTING &&
-                e.getClickedInventory().getType() != InventoryType.WORKBENCH) || e.getSlot() != 0)
+                e.getClickedInventory().getType() != InventoryType.WORKBENCH) || e.getSlot() != 0 ||
+                !(e.getClickedInventory() instanceof CraftingInventory))
             return;
 
         CraftingInventory inventory = (CraftingInventory) e.getClickedInventory();
