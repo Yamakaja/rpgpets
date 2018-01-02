@@ -42,7 +42,8 @@ public class ConfigManager {
 
         YamlConfiguration messagesConfig = YamlConfiguration.loadConfiguration(messagesConfigFile);
 
-        String prefix = ChatColor.translateAlternateColorCodes('&', messagesConfig.getString("prefix"));
+        String rawPrefix = messagesConfig.getString("prefix");
+        String prefix = ChatColor.translateAlternateColorCodes('&', rawPrefix == null ? "" : rawPrefix);
 
         for (ConfigMessages message : ConfigMessages.values())
             message.setMessage(ChatColor.translateAlternateColorCodes('&',
