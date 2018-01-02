@@ -63,7 +63,8 @@ public class SentryManager {
      * @param message The message
      */
     public void recordInitializationCrumb(String message) {
-        this.recordBreadcrumb(new BreadcrumbBuilder().setLevel(Breadcrumb.Level.DEBUG).setCategory("Initialization").setMessage(message).build());
+        if (active)
+            this.recordBreadcrumb(new BreadcrumbBuilder().setLevel(Breadcrumb.Level.DEBUG).setCategory("INIT").setMessage(message).build());
     }
 
     /**
@@ -72,7 +73,8 @@ public class SentryManager {
      * @param message The message
      */
     public void recordShutdownCrumb(String message) {
-        this.recordBreadcrumb(new BreadcrumbBuilder().setLevel(Breadcrumb.Level.DEBUG).setCategory("Shutdown").setMessage(message).build());
+        if (active)
+            this.recordBreadcrumb(new BreadcrumbBuilder().setLevel(Breadcrumb.Level.DEBUG).setCategory("SHUTDOWN").setMessage(message).build());
     }
 
     /**

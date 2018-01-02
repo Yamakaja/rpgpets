@@ -16,6 +16,7 @@ import me.yamakaja.rpgpets.api.logging.SentryManager;
 import me.yamakaja.rpgpets.api.hook.Hooks;
 import me.yamakaja.rpgpets.api.hook.WorldGuardHook;
 import me.yamakaja.rpgpets.plugin.command.CommandRPGPets;
+import me.yamakaja.rpgpets.plugin.command.ReloadPreprocessor;
 import me.yamakaja.rpgpets.plugin.protocol.EntitySpawnPacketTranslator;
 import me.yamakaja.rpgpets.plugin.version.UpdateChecker;
 import me.yamakaja.rpgpets.v1_11_R1.NMSHandler_v1_11_R1;
@@ -56,6 +57,7 @@ public class RPGPetsImpl extends JavaPlugin implements RPGPets {
             new Metrics(this);
 
         this.getCommand("rpgpets").setExecutor(new CommandRPGPets(this));
+        this.getServer().getPluginManager().registerEvents(new ReloadPreprocessor(), this);
 
         this.sentryManager.recordInitializationCrumb("Loading NMSHandler");
         if (!this.loadNMSHandler()) {
