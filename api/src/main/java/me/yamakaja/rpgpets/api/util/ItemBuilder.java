@@ -22,6 +22,7 @@ public class ItemBuilder extends ItemStack {
 
     /**
      * Creates a new {@link ItemBuilder} identical to the given {@link ItemStack}
+     *
      * @param stack The {@link ItemStack} to clone
      */
     public ItemBuilder(ItemStack stack) {
@@ -168,7 +169,7 @@ public class ItemBuilder extends ItemStack {
      * @return The line
      * @throws IndexOutOfBoundsException
      */
-    public String getLore(int line) throws IndexOutOfBoundsException{
+    public String getLore(int line) throws IndexOutOfBoundsException {
         return this.getItemMeta().getLore().get(line);
     }
 

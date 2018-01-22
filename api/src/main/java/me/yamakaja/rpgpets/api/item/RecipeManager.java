@@ -8,6 +8,7 @@ import me.yamakaja.rpgpets.api.entity.PetState;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
@@ -85,7 +86,7 @@ public class RecipeManager implements Listener, Runnable {
         event.getInventory().setResult(RPGPetsItem.getPetCarrier(pet));
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onInventoryClick(InventoryClickEvent e) {
         if (e.getClickedInventory() == null || (e.getClickedInventory().getType() != InventoryType.CRAFTING &&
                 e.getClickedInventory().getType() != InventoryType.WORKBENCH) || e.getSlot() != 0 ||

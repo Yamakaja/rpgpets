@@ -153,7 +153,7 @@ public class PetManager implements Listener {
             event.getPlayer().getInventory().setItemInOffHand(itemStack);
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerDeath(PlayerDeathEvent e) {
         if (!this.spawnedPets.containsKey(e.getEntity().getName()))
             return;

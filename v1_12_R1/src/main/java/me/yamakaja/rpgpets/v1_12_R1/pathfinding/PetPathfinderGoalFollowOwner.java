@@ -60,7 +60,7 @@ public class PetPathfinderGoalFollowOwner extends PathfinderGoal {
     @Override
     public void e() { // updateTask
         super.e();
-        if (targetLoc.distanceSquared(owner.getLocation()) > 4*4) {
+        if (targetLoc.distanceSquared(owner.getLocation()) > 4 * 4) {
             targetLoc = null;
             c();
         }

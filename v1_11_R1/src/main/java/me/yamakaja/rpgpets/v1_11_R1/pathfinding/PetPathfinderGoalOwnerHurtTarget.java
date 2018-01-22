@@ -24,7 +24,7 @@ public class PetPathfinderGoalOwnerHurtTarget extends PathfinderGoalTarget {
 
     @Override
     public boolean a() {
-        EntityLiving nmsPlayer = ((CraftPlayer)entity.getPetDescriptor().getOwner()).getHandle();
+        EntityLiving nmsPlayer = ((CraftPlayer) entity.getPetDescriptor().getOwner()).getHandle();
         this.target = nmsPlayer.bM();
 
         int ticksLived = nmsPlayer.bN();
@@ -35,7 +35,7 @@ public class PetPathfinderGoalOwnerHurtTarget extends PathfinderGoalTarget {
         this.e.setGoalTarget(this.target, EntityTargetEvent.TargetReason.OWNER_ATTACKED_TARGET, true);
         EntityLiving entityliving = ((CraftPlayer) this.entity.getPetDescriptor().getOwner()).getHandle();
 
-        if(entityliving != null)
+        if (entityliving != null)
             this.c = entityliving.bN();
 
         super.c();

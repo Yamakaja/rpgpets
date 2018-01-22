@@ -3,9 +3,11 @@ package me.yamakaja.rpgpets.api.config;
 import me.yamakaja.rpgpets.api.RPGPets;
 import me.yamakaja.rpgpets.api.entity.PetType;
 import org.bukkit.ChatColor;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
+import java.io.IOException;
 
 /**
  * Created by Yamakaja on 10.06.17.
@@ -28,19 +30,21 @@ public class ConfigManager {
     /**
      * Load config values and initialize enums
      */
-    public void injectConfigs() {
+    public void injectConfigs() throws InvalidConfigurationException, IOException {
         File dataDir = plugin.getDataFolder();
 
         // General
         File generalConfigFile = new File(dataDir, "config.yml");
 
-        YamlConfiguration generalConfig = YamlConfiguration.loadConfiguration(generalConfigFile);
+        YamlConfiguration generalConfig = new YamlConfiguration();
+        generalConfig.load(generalConfigFile);
         ConfigGeneral.initialize(generalConfig);
 
         // Messages
         File messagesConfigFile = new File(dataDir, "messages.yml");
 
-        YamlConfiguration messagesConfig = YamlConfiguration.loadConfiguration(messagesConfigFile);
+        YamlConfiguration messagesConfig = new YamlConfiguration();
+        messagesConfig.load(messagesConfigFile);
 
         String rawPrefix = messagesConfig.getString("prefix");
         String prefix = ChatColor.translateAlternateColorCodes('&', rawPrefix == null ? "" : rawPrefix);
@@ -53,7 +57,8 @@ public class ConfigManager {
         // Permissions
         File permissionsConfigFile = new File(dataDir, "permissions.yml");
 
-        YamlConfiguration permissionsConfig = YamlConfiguration.loadConfiguration(permissionsConfigFile);
+        YamlConfiguration permissionsConfig = new YamlConfiguration();
+        permissionsConfig.load(permissionsConfigFile);
 
         for (ConfigPermissions permission : ConfigPermissions.values())
             permission.set(permissionsConfig.getString(permission.name().replace('_', '.').toLowerCase()));
@@ -61,7 +66,8 @@ public class ConfigManager {
         // Pet Stats
         File petStatsFile = new File(dataDir, "petstats.yml");
 
-        YamlConfiguration petStats = YamlConfiguration.loadConfiguration(petStatsFile);
+        YamlConfiguration petStats = new YamlConfiguration();
+        petStats.load(petStatsFile);
 
         for (PetType type : PetType.values()) {
             String basePath = type.name().toLowerCase() + ".";

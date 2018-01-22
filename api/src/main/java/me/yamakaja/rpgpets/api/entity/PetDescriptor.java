@@ -71,7 +71,7 @@ public class PetDescriptor {
     }
 
     public PetType getPetType() {
-         return petType;
+        return petType;
     }
 
     public Player getOwner() {

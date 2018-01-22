@@ -9,6 +9,7 @@ import me.yamakaja.rpgpets.api.entity.PetDescriptor;
 import me.yamakaja.rpgpets.api.entity.PetType;
 import me.yamakaja.rpgpets.api.item.RPGPetsItem;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -39,6 +40,13 @@ public class CommandRPGPets implements CommandExecutor, TabCompleter {
                 new BreadcrumbBuilder().setMessage("Command executed").setCategory("Command").setLevel(Breadcrumb.Level.DEBUG)
                         .setData(Collections.singletonMap("args", String.join(" ", args))).build()
         );
+
+        if (!commandSender.hasPermission(ConfigPermissions.COMMAND_HELP.get())) {
+            commandSender.sendMessage(ChatColor.AQUA + "Running " + ChatColor.RED + "RPGPets" + ChatColor.AQUA + " version "
+                    + ChatColor.RED + this.plugin.getDescription().getVersion() + ChatColor.AQUA + " by "
+                    + ChatColor.RED + "Yamakaja");
+            return true;
+        }
 
         if (args.length == 0) {
             commandSender.sendMessage(ConfigMessages.COMMAND_HELP_HINT.get());
@@ -120,6 +128,9 @@ public class CommandRPGPets implements CommandExecutor, TabCompleter {
 
     @Override
     public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] args) {
+        if (!commandSender.hasPermission(ConfigPermissions.COMMAND_HELP.get()))
+            return Collections.emptyList();
+
         if (args.length == 0)
             return subcommands;
 
@@ -127,13 +138,28 @@ public class CommandRPGPets implements CommandExecutor, TabCompleter {
             return subcommands.stream().filter(cmd -> cmd.startsWith(args[0])).collect(Collectors.toList());
 
         if (args.length >= 2 && args[0].equals("give")) {
+            if (!commandSender.hasPermission(ConfigPermissions.COMMAND_GIVE.get()))
+                return Collections.emptyList();
+
             if (args.length == 2)
-                return Bukkit.getOnlinePlayers().stream().map(Player::getName).filter(player -> player.startsWith(args[1]))
+                return Bukkit.getOnlinePlayers().stream()
+                        .map(Player::getName)
+                        .filter(player -> player.startsWith(args[1]))
                         .collect(Collectors.toList());
+
             if (args.length == 3)
-                return Arrays.stream(RPGPetsItem.values()).map(Enum::name).filter(name -> name.startsWith(args[2])).collect(Collectors.toList());
+                return Arrays.stream(RPGPetsItem.values())
+                        .map(Enum::name)
+                        .filter(name -> name.startsWith(args[2]))
+                        .collect(Collectors.toList());
+
+            if (args.length == 4 && args[2].equalsIgnoreCase("PET"))
+                return Arrays.stream(PetType.values())
+                        .map(Enum::name)
+                        .filter(name -> name.startsWith(args[3]))
+                        .collect(Collectors.toList());
         }
-        return null;
+        return Collections.emptyList();
     }
 
 }

@@ -32,14 +32,15 @@ public interface NMSHandler {
 
     /**
      * Ads an NMS entity to a world
-     *  @param entity The entity to add
+     *
+     * @param entity The entity to add
      * @param world  The world to add the entity to
      */
     LivingEntity addToWorld(Pet entity, World world);
 
     /**
-     * @return The pet descritor of the passed bukkit entity, null if the entity isn't a pet
      * @param entity
+     * @return The pet descritor of the passed bukkit entity, null if the entity isn't a pet
      */
     PetDescriptor getPetDescriptor(LivingEntity entity);
 

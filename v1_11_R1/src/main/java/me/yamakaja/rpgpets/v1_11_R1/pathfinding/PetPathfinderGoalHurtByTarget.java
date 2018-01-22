@@ -6,7 +6,9 @@
 package me.yamakaja.rpgpets.v1_11_R1.pathfinding;
 
 import me.yamakaja.rpgpets.api.entity.Pet;
-import net.minecraft.server.v1_11_R1.*;
+import net.minecraft.server.v1_11_R1.EntityCreature;
+import net.minecraft.server.v1_11_R1.EntityLiving;
+import net.minecraft.server.v1_11_R1.PathfinderGoalTarget;
 import org.bukkit.event.entity.EntityTargetEvent.TargetReason;
 
 public class PetPathfinderGoalHurtByTarget extends PathfinderGoalTarget {

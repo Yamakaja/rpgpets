@@ -3,8 +3,6 @@ package me.yamakaja.rpgpets.v1_11_R1.entity;
 import me.yamakaja.rpgpets.api.config.ConfigMessages;
 import me.yamakaja.rpgpets.api.entity.Pet;
 import me.yamakaja.rpgpets.api.entity.PetDescriptor;
-import me.yamakaja.rpgpets.api.hook.Hooks;
-import me.yamakaja.rpgpets.api.hook.WorldGuardHook;
 import me.yamakaja.rpgpets.v1_11_R1.NMSUtils;
 import me.yamakaja.rpgpets.v1_11_R1.pathfinding.PetPathfinderGoalFollowOwner;
 import me.yamakaja.rpgpets.v1_11_R1.pathfinding.PetPathfinderGoalHurtByTarget;

@@ -12,7 +12,6 @@ import net.minecraft.server.v1_11_R1.NBTTagCompound;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_11_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_11_R1.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_11_R1.inventory.CraftInventoryAnvil;
 import org.bukkit.craftbukkit.v1_11_R1.inventory.CraftItemFactory;
 import org.bukkit.craftbukkit.v1_11_R1.inventory.CraftItemStack;
 import org.bukkit.entity.LivingEntity;

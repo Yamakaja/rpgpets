@@ -8,13 +8,13 @@ import me.yamakaja.rpgpets.api.config.ConfigManager;
 import me.yamakaja.rpgpets.api.entity.PetManager;
 import me.yamakaja.rpgpets.api.entity.PetType;
 import me.yamakaja.rpgpets.api.hook.FeudalHook;
+import me.yamakaja.rpgpets.api.hook.Hooks;
+import me.yamakaja.rpgpets.api.hook.WorldGuardHook;
 import me.yamakaja.rpgpets.api.item.EggManager;
 import me.yamakaja.rpgpets.api.item.RPGPetsItem;
 import me.yamakaja.rpgpets.api.item.RecipeManager;
 import me.yamakaja.rpgpets.api.logging.ErrorLogHandler;
 import me.yamakaja.rpgpets.api.logging.SentryManager;
-import me.yamakaja.rpgpets.api.hook.Hooks;
-import me.yamakaja.rpgpets.api.hook.WorldGuardHook;
 import me.yamakaja.rpgpets.plugin.command.CommandRPGPets;
 import me.yamakaja.rpgpets.plugin.command.ReloadPreprocessor;
 import me.yamakaja.rpgpets.plugin.protocol.EntitySpawnPacketTranslator;
@@ -23,8 +23,11 @@ import me.yamakaja.rpgpets.v1_11_R1.NMSHandler_v1_11_R1;
 import me.yamakaja.rpgpets.v1_12_R1.NMSHandler_v1_12_R1;
 import org.bstats.Metrics;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -44,10 +47,37 @@ public class RPGPetsImpl extends JavaPlugin implements RPGPets {
     private EggManager eggManager;
     private RecipeManager recipeManager;
 
+    private boolean initialized;
+
     @Override
     public void onEnable() {
         this.configManager = new ConfigManager(this);
-        this.configManager.injectConfigs();
+        try {
+            this.configManager.injectConfigs();
+        } catch (InvalidConfigurationException e) {
+            this.getLogger().severe("=====================================");
+            this.getLogger().severe("");
+            this.getLogger().severe("There was an error parsing the");
+            this.getLogger().severe("RPGPets configuration files:");
+            this.getLogger().severe("");
+            Arrays.stream(e.getMessage().split("\n")).forEach(message -> this.getLogger().severe(message));
+            this.getLogger().severe("");
+            this.getLogger().severe("Disabling plugin ...");
+            this.getLogger().severe("");
+            this.getLogger().severe("=====================================");
+            this.getPluginLoader().disablePlugin(this);
+            return;
+        } catch (IOException e) {
+            this.getLogger().severe("=====================================");
+            this.getLogger().severe("");
+            this.getLogger().severe("An error occurred while reading");
+            this.getLogger().severe("a config file:");
+            Arrays.stream(e.toString().split("\n")).forEach(message -> this.getLogger().severe(message));
+            this.getLogger().severe("");
+            this.getLogger().severe("=====================================");
+            return;
+        }
+
         this.getLogger().info("Configs loaded!");
 
         this.sentryManager = new SentryManager(this, "%%__USER__%%");
@@ -109,10 +139,15 @@ public class RPGPetsImpl extends JavaPlugin implements RPGPets {
 
         this.getLogger().info("Successfully enabled RPGPets!");
         this.sentryManager.clearContext();
+
+        this.initialized = true;
     }
 
     @Override
     public void onDisable() {
+        if (!this.initialized)
+            return;
+
         this.sentryManager.recordShutdownCrumb("Cleaning up pets");
 
         if (this.getPetManager() != null)
@@ -140,10 +175,10 @@ public class RPGPetsImpl extends JavaPlugin implements RPGPets {
 
         switch (nmsVersion) {
             case "v1_11_R1":
-                nmsHandler = new NMSHandler_v1_11_R1(this);
+                this.nmsHandler = new NMSHandler_v1_11_R1(this);
                 break;
             case "v1_12_R1":
-                nmsHandler = new NMSHandler_v1_12_R1(this);
+                this.nmsHandler = new NMSHandler_v1_12_R1(this);
                 break;
             default:
                 this.getLogger().severe("*****************************************************");
@@ -156,27 +191,27 @@ public class RPGPetsImpl extends JavaPlugin implements RPGPets {
 
     @Override
     public NMSHandler getNMSHandler() {
-        return nmsHandler;
+        return this.nmsHandler;
     }
 
     @Override
     public ConfigManager getConfigManager() {
-        return configManager;
+        return this.configManager;
     }
 
     @Override
     public PetManager getPetManager() {
-        return petManager;
+        return this.petManager;
     }
 
     @Override
     public RecipeManager getRecipeManager() {
-        return recipeManager;
+        return this.recipeManager;
     }
 
     @Override
     public SentryManager getSentryManager() {
-        return sentryManager;
+        return this.sentryManager;
     }
 
 }
