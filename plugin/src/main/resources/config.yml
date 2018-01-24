@@ -24,3 +24,7 @@ metrics: true
 
 # Enable update checker
 update: true
+
+# This enables a hack which overwrites the outcome of the food + pet crafting event at priority MONITOR.
+# Due to the inappropriate nature of this, you should probably keep this disabled.
+enable_crafting_hack: false

@@ -99,7 +99,7 @@ public class PetPigZombie extends EntityPigZombie implements Pet {
 
     private void updateCustomName() {
         this.setCustomName(ConfigMessages.GENERAL_PETNAME.get(Integer.toString(this.petDescriptor.getLevel()),
-                this.petDescriptor.getName(), Float.toString(this.getHealth() / 2)));
+                this.petDescriptor.getName(), String.format("%.1f", this.getHealth() / 2)));
     }
 
     @Override

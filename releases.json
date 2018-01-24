@@ -28,5 +28,10 @@
     "version": "1.1.14",
     "release": 1516644347474,
     "changes": "Improve config error handling + minor bugfixes"
+  },
+  {
+    "version": "1.1.15",
+    "release": 1516795050899,
+    "changes": "Add crafting override config option"
   }
 ]

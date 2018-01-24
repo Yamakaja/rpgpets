@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
@@ -18,6 +19,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapelessRecipe;
 import org.bukkit.material.MaterialData;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -86,7 +88,7 @@ public class RecipeManager implements Listener, Runnable {
         event.getInventory().setResult(RPGPetsItem.getPetCarrier(pet));
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onInventoryClick(InventoryClickEvent e) {
         if (e.getClickedInventory() == null || (e.getClickedInventory().getType() != InventoryType.CRAFTING &&
                 e.getClickedInventory().getType() != InventoryType.WORKBENCH) || e.getSlot() != 0 ||
@@ -113,6 +115,16 @@ public class RecipeManager implements Listener, Runnable {
         }
 
         this.cooldown.put(e.getWhoClicked().getName(), System.currentTimeMillis());
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR) // ARGH ... BAD
+    public void onCraft(CraftItemEvent event) {
+        if (!ConfigGeneral.ENABLE_CRAFTING_HACK.getAsBoolean())
+            return;
+
+        PetDescriptor descriptor = RPGPetsItem.decode(event.getCurrentItem());
+        if (descriptor != null)
+            event.setCancelled(false);
     }
 
     @Override

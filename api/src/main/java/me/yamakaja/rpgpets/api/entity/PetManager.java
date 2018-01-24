@@ -87,7 +87,7 @@ public class PetManager implements Listener {
             return;
 
         LivingEntity entity = this.spawnedPets.get(event.getPlayer().getName());
-        this.unregisterFromPlayer(event.getPlayer());
+        this.unregisterFromPlayer(event.getPlayer(), true);
         entity.remove();
     }
 
@@ -130,7 +130,7 @@ public class PetManager implements Listener {
             if (entity.getEntityId() != petDescriptor.getEntityId())
                 return;
 
-            this.unregisterFromPlayer(event.getPlayer());
+            this.unregisterFromPlayer(event.getPlayer(), true);
             entity.remove();
             return;
         }
@@ -165,6 +165,7 @@ public class PetManager implements Listener {
         PetDescriptor petDescriptor = this.plugin.getNMSHandler().getPetDescriptor(entity);
         petDescriptor.setState(PetState.DEAD);
 
+        this.unregisterFromPlayer(e.getEntity(), false);
         entity.remove();
 
         if (e.getKeepInventory()) {
@@ -217,7 +218,7 @@ public class PetManager implements Listener {
                 Integer.toString(descriptor.getLevel())));
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onInventoryClick(InventoryClickEvent e) {
         if (!this.spawnedPets.containsKey(e.getWhoClicked().getName()))
             return;
@@ -234,6 +235,11 @@ public class PetManager implements Listener {
 
         if (e.getClickedInventory().getType() == InventoryType.PLAYER && e.getSlot() == slot)
             e.setCancelled(true);
+        else {
+            PetDescriptor petDescriptor = RPGPetsItem.decode(e.getCurrentItem());
+            if (petDescriptor != null && petDescriptor.hasEntityId())
+                e.setCancelled(true);
+        }
     }
 
     @EventHandler
@@ -260,7 +266,7 @@ public class PetManager implements Listener {
         e.getDrops().clear();
 
         petDescriptor.setState(PetState.DEAD);
-        this.unregisterFromPlayer(petDescriptor.getOwner());
+        this.unregisterFromPlayer(petDescriptor.getOwner(), !petDescriptor.getOwner().isDead());
         petDescriptor.getOwner().sendMessage(ConfigMessages.GENERAL_PETDEATH.get());
     }
 
@@ -275,7 +281,7 @@ public class PetManager implements Listener {
             if (petDescriptor == null)
                 continue;
 
-            unregisterFromPlayer(petDescriptor.getOwner());
+            unregisterFromPlayer(petDescriptor.getOwner(), true);
             entity.remove();
         }
     }
@@ -285,16 +291,18 @@ public class PetManager implements Listener {
      * This does <b>NOT</b> de-spawn the pet.
      * Neither does this method check whether the player actually has a pet spawned
      *
-     * @param player The player which has the pet spawned
+     * @param player           The player which has the pet spawned
+     * @param giveItemToPlayer Whether the pet container should be given to the pet owner
      */
-    private void unregisterFromPlayer(Player player) {
+    private void unregisterFromPlayer(Player player, boolean giveItemToPlayer) {
         String name = player.getName();
         if (!this.spawnedPets.containsKey(name))
             return;
 
         PetDescriptor petDescriptor = this.plugin.getNMSHandler().getPetDescriptor(this.spawnedPets.get(name));
 
-        player.getInventory().setItem(petSlots.get(name), RPGPetsItem.getPetCarrier(petDescriptor));
+        if (giveItemToPlayer)
+            player.getInventory().setItem(petSlots.get(name), RPGPetsItem.getPetCarrier(petDescriptor));
 
         this.spawnedPets.remove(name);
         this.petSlots.remove(name);
@@ -362,7 +370,7 @@ public class PetManager implements Listener {
         PetDescriptor petDescriptor = this.plugin.getNMSHandler().getPetDescriptor(entity);
 
         petDescriptor.setState((entity.getHealth() == entity.getMaxHealth()) ? PetState.READY : PetState.DEAD);
-        this.unregisterFromPlayer(e.getPlayer());
+        this.unregisterFromPlayer(e.getPlayer(), true);
         entity.remove();
     }
 

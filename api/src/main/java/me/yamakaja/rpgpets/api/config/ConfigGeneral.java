@@ -15,7 +15,8 @@ public enum ConfigGeneral {
     FEED_COOLDOWN("feed_cooldown"),
     ENABLE_SENTRY("sentry"),
     ENABLE_METRICS("metrics"),
-    ENABLE_UPDATE_CHECKER("update");
+    ENABLE_UPDATE_CHECKER("update"),
+    ENABLE_CRAFTING_HACK("enable_crafting_hack");
 
     private static YamlConfiguration configuration;
     private String path;
