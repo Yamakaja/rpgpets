@@ -33,5 +33,10 @@
     "version": "1.1.15",
     "release": 1516795050899,
     "changes": "Add crafting override config option"
+  },
+  {
+    "version": "1.1.16",
+    "release": 1517824950741,
+    "changes": "Add alternative pet revival method"
   }
 ]

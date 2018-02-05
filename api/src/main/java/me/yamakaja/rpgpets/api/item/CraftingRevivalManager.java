@@ -26,23 +26,20 @@ import java.util.Map;
 /**
  * Created by Yamakaja on 17.06.17.
  */
-public class RecipeManager implements Listener, Runnable {
+public class CraftingRevivalManager extends AbstractRevivalManager {
 
-    private RPGPets plugin;
     private ShapelessRecipe recipe;
 
-    private Map<String, Long> cooldown = new HashMap<>();
-
-    public RecipeManager(RPGPets plugin) {
-        this.plugin = plugin;
+    public CraftingRevivalManager(RPGPets plugin) {
+        super(plugin);
 
         recipe = new ShapelessRecipe(new ItemStack(Material.SKULL_ITEM, 1, (short) 3));
 
         recipe.addIngredient(Material.SLIME_BALL);
         recipe.addIngredient(new MaterialData(Material.SKULL_ITEM, (byte) 3));
 
-        this.plugin.getServer().addRecipe(recipe);
-        this.plugin.getServer().getPluginManager().registerEvents(this, plugin);
+        plugin.getServer().addRecipe(recipe);
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
 
         plugin.getServer().getScheduler().runTaskTimer(plugin, this, 60 * 60 * 20, 60 * 60 * 20);
     }
@@ -105,16 +102,14 @@ public class RecipeManager implements Listener, Runnable {
         if (resultData.getItemType() != Material.SKULL_ITEM || resultData.getData() != (byte) 3)
             return;
 
-        long cd = this.cooldown.getOrDefault(e.getWhoClicked().getName(), 0L);
-
-        if (System.currentTimeMillis() < cd + ConfigGeneral.FEED_COOLDOWN.getAsInt() * 1000) {
+        if (this.isCoolingDown(e.getWhoClicked().getUniqueId())) {
             e.setCancelled(true);
             ((Player) e.getWhoClicked()).updateInventory();
             e.getWhoClicked().sendMessage(ConfigMessages.GENERAL_FEEDCOOLDOWN.get());
             return;
         }
 
-        this.cooldown.put(e.getWhoClicked().getName(), System.currentTimeMillis());
+        this.setCooldown(e.getWhoClicked().getUniqueId());
     }
 
     @EventHandler(priority = EventPriority.MONITOR) // ARGH ... BAD
@@ -125,13 +120,6 @@ public class RecipeManager implements Listener, Runnable {
         PetDescriptor descriptor = RPGPetsItem.decode(event.getCurrentItem());
         if (descriptor != null)
             event.setCancelled(false);
-    }
-
-    @Override
-    public void run() {
-        long cd = ConfigGeneral.FEED_COOLDOWN.getAsInt() * 1000;
-        long currentTime = System.currentTimeMillis();
-        this.cooldown.entrySet().removeIf(entry -> currentTime > entry.getValue() + cd);
     }
 
 }

@@ -16,7 +16,8 @@ public enum ConfigGeneral {
     ENABLE_SENTRY("sentry"),
     ENABLE_METRICS("metrics"),
     ENABLE_UPDATE_CHECKER("update"),
-    ENABLE_CRAFTING_HACK("enable_crafting_hack");
+    ENABLE_CRAFTING_HACK("enable_crafting_hack"),
+    ENABLE_ALTERNATIVE_REVIVAL("enable_alternative_revival");
 
     private static YamlConfiguration configuration;
     private String path;

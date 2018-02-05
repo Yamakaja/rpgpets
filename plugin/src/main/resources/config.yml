@@ -28,3 +28,6 @@ update: true
 # This enables a hack which overwrites the outcome of the food + pet crafting event at priority MONITOR.
 # Due to the inappropriate nature of this, you should probably keep this disabled.
 enable_crafting_hack: false
+
+# If this option is enabled, pets are revived by dropping pet food onto the exhausted pet within your inventory
+enable_alternative_revival: false

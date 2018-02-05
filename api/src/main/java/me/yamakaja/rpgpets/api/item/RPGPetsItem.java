@@ -23,14 +23,18 @@ import java.util.function.Supplier;
  */
 public enum RPGPetsItem {
     FOOD(() -> new ItemBuilder(Material.SLIME_BALL).setDisplayName(ConfigMessages.ITEM_FOOD_NAME.get())
-            .setLore(Arrays.asList(ConfigMessages.ITEM_FOOD_TOOLTIP.get().split("\n")))),
+            .setLore(Arrays.asList((ConfigGeneral.ENABLE_ALTERNATIVE_REVIVAL.getAsBoolean()
+                    ? ConfigMessages.ITEM_FOOD_TOOLTIP_ALTERNATIVE : ConfigMessages.ITEM_FOOD_TOOLTIP_DEFAULT).get()
+                    .split("\n")))),
     EGG(() -> new ItemBuilder(Material.MONSTER_EGG)
             .setDisplayName(ConfigMessages.ITEM_EGG_NAME.get()).setLore(Arrays.asList(
                     ConfigMessages.ITEM_EGG_LORE_REMAINING.get(Integer.toString(ConfigGeneral.HATCH_DISTANCE.getAsInt())),
                     ConfigMessages.ITEM_EGG_LORE_HAND.get(),
-                    ChatColor.BLACK.toString() + ChatColor.MAGIC + Integer.toString(ConfigGeneral.HATCH_DISTANCE.getAsInt() * 100) + ":" + Double.toString(Math.random()).substring(2)
+                    ChatColor.BLACK.toString() + ChatColor.MAGIC + Integer.toString(ConfigGeneral.HATCH_DISTANCE
+                            .getAsInt() * 100) + ":" + Double.toString(Math.random()).substring(2)
             ))),
-    PET(() -> RPGPetsItem.getPetCarrier(PetType.getRandomPetType(), ConfigMessages.ITEM_PET_DEFAULTNAME.get(), 0, 0, 1, false, PetState.READY));
+    PET(() -> RPGPetsItem.getPetCarrier(PetType.getRandomPetType(), ConfigMessages.ITEM_PET_DEFAULTNAME.get(),
+            0, 0, 1, false, PetState.READY));
 
     private static RPGPets plugin;
     private Supplier<ItemStack> itemStackSupplier;

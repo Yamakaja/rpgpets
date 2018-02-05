@@ -35,7 +35,9 @@ command:
 item:
   food:
     name: "&6Pet Food"
-    tooltip: "&8Place into the crafting window\n&8together with an exhausted pet"
+    tooltip:
+      default: "&8Place into the crafting window\n&8together with an exhausted pet"
+      alternative: "&8Place onto an exhausted pet in your inventory to revive" # Used when the alternative revival method is enabled
   egg:
     name: "&1Mystery Egg"
     lore:

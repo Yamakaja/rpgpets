@@ -12,7 +12,8 @@ import me.yamakaja.rpgpets.api.hook.Hooks;
 import me.yamakaja.rpgpets.api.hook.WorldGuardHook;
 import me.yamakaja.rpgpets.api.item.EggManager;
 import me.yamakaja.rpgpets.api.item.RPGPetsItem;
-import me.yamakaja.rpgpets.api.item.RecipeManager;
+import me.yamakaja.rpgpets.api.item.CraftingRevivalManager;
+import me.yamakaja.rpgpets.api.item.InventoryRevivalManager;
 import me.yamakaja.rpgpets.api.logging.ErrorLogHandler;
 import me.yamakaja.rpgpets.api.logging.SentryManager;
 import me.yamakaja.rpgpets.plugin.command.CommandRPGPets;
@@ -45,7 +46,6 @@ public class RPGPetsImpl extends JavaPlugin implements RPGPets {
 
     private PetManager petManager;
     private EggManager eggManager;
-    private RecipeManager recipeManager;
 
     private boolean initialized;
 
@@ -129,7 +129,12 @@ public class RPGPetsImpl extends JavaPlugin implements RPGPets {
         this.sentryManager.recordInitializationCrumb("Registering managers");
         this.petManager = new PetManager(this);
         this.eggManager = new EggManager(this);
-        this.recipeManager = new RecipeManager(this);
+
+        if (!ConfigGeneral.ENABLE_ALTERNATIVE_REVIVAL.getAsBoolean())
+            new CraftingRevivalManager(this);
+        else
+            new InventoryRevivalManager(this);
+
         Bukkit.getOnlinePlayers().forEach(p -> this.eggManager.update(p));
 
         if (!ConfigGeneral.ENABLE_UPDATE_CHECKER.isPresent() || ConfigGeneral.ENABLE_UPDATE_CHECKER.getAsBoolean()) {
@@ -202,11 +207,6 @@ public class RPGPetsImpl extends JavaPlugin implements RPGPets {
     @Override
     public PetManager getPetManager() {
         return this.petManager;
-    }
-
-    @Override
-    public RecipeManager getRecipeManager() {
-        return this.recipeManager;
     }
 
     @Override
