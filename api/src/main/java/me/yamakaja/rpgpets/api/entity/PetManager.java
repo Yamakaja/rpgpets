@@ -491,9 +491,6 @@ public class PetManager implements Listener {
         else if (Hooks.TOWNY.isEnabled() && (TownyHook.areAllied(playerOne, playerTwo)
                 || !TownyHook.isPvpEnabled(e.getEntity().getLocation())))
             e.setCancelled(true);
-
-        else
-            e.setCancelled(false);
     }
 
 }
