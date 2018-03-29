@@ -38,5 +38,10 @@
     "version": "1.1.16",
     "release": 1517824950741,
     "changes": "Add alternative pet revival method"
+  },
+  {
+    "version": "1.1.17",
+    "release": 1522329811830,
+    "changes": "Add towny integration"
   }
 ]
