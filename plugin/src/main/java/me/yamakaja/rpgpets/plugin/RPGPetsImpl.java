@@ -9,6 +9,7 @@ import me.yamakaja.rpgpets.api.entity.PetManager;
 import me.yamakaja.rpgpets.api.entity.PetType;
 import me.yamakaja.rpgpets.api.hook.FeudalHook;
 import me.yamakaja.rpgpets.api.hook.Hooks;
+import me.yamakaja.rpgpets.api.hook.TownyHook;
 import me.yamakaja.rpgpets.api.hook.WorldGuardHook;
 import me.yamakaja.rpgpets.api.item.EggManager;
 import me.yamakaja.rpgpets.api.item.RPGPetsItem;
@@ -97,7 +98,7 @@ public class RPGPetsImpl extends JavaPlugin implements RPGPets {
         this.sentryManager.recordInitializationCrumb("Loaded NMSHandler for version " + this.getNMSHandler().getNMSVersion());
 
         if (Bukkit.getPluginManager().getPlugin("WorldGuard") != null) {
-            this.getLogger().info("WorldGuard detected! Enabling hook!");
+            this.getLogger().info("WorldGuard detected! Enabling integration!");
             this.sentryManager.recordInitializationCrumb("Initializing WorldGuard hook");
             try {
                 WorldGuardHook.initialize();
@@ -109,10 +110,20 @@ public class RPGPetsImpl extends JavaPlugin implements RPGPets {
         }
 
         if (Bukkit.getPluginManager().getPlugin("Feudal") != null) {
-            this.getLogger().info("Feudal detected! Enabling hook!");
+            this.getLogger().info("Feudal detected! Enabling integration!");
             this.sentryManager.recordInitializationCrumb("Initializing Feudal hook!");
             FeudalHook.initialize();
             Hooks.FEUDAL.enable();
+        }
+
+        try {
+            Class.forName("com.palmergames.bukkit.towny.Towny");
+            this.getLogger().info("Towny detected! Enabling integration!");
+            this.sentryManager.recordInitializationCrumb("Initializing Towny hook!");
+            TownyHook.initialize();
+            Hooks.TOWNY.enable();
+        } catch (ClassNotFoundException e) {
+            // Fail silently ...
         }
 
         RPGPetsItem.initialize(this);

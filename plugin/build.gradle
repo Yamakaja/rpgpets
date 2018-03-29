@@ -45,6 +45,7 @@ dependencies {
     serverPlugin "net.milkbowl.vault:Vault:$vaultVersion"
     serverPlugin "net.drtshock.essentialsx:core:$essentialsVersion"
     serverPlugin "net.drtshock.essentialsx:chat:$essentialsVersion"
+    serverPlugin "com.palmergames.towny:towny:$townyVersion"
 }
 
 jar {

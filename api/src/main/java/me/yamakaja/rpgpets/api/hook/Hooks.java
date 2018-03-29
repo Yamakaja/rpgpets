@@ -6,7 +6,8 @@ package me.yamakaja.rpgpets.api.hook;
 public enum Hooks {
 
     WORLDGUARD,
-    FEUDAL;
+    FEUDAL,
+    TOWNY;
 
     private boolean enabled = false;
 

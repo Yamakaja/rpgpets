@@ -3,7 +3,7 @@ main: me.yamakaja.rpgpets.plugin.RPGPetsImpl
 version: @version@
 author: Yamakaja
 depend: [ProtocolLib]
-softdepend: [WorldGuard, Feudal]
+softdepend: [WorldGuard, Feudal, Towny]
 load: STARTUP
 commands:
   rpgpets:

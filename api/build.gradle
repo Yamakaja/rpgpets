@@ -7,4 +7,6 @@ dependencies {
     compileOnly "us.forseth11.feudal:feudal:$feudalVersion"
 
     compileOnly "com.getsentry.raven:raven:8.0.3"
+
+    compileOnly "com.palmergames.towny:towny:$townyVersion"
 }
