@@ -83,7 +83,7 @@ public class NMSHandler_v1_12_R1 implements NMSHandler {
     }
 
     @Override
-    public PetDescriptor getPetDescriptor(LivingEntity entity) {
+    public PetDescriptor getPetDescriptor(org.bukkit.entity.Entity entity) {
         Entity nmsEntity = ((CraftEntity) entity).getHandle();
 
         if (nmsEntity instanceof Pet) {
@@ -157,7 +157,6 @@ public class NMSHandler_v1_12_R1 implements NMSHandler {
 
         nbtTag.setInt("entityId", entityId);
         stack.setItemMeta(meta);
-
     }
 
     /**

@@ -81,7 +81,7 @@ public class NMSHandler_v1_11_R1 implements NMSHandler {
     }
 
     @Override
-    public PetDescriptor getPetDescriptor(LivingEntity entity) {
+    public PetDescriptor getPetDescriptor(org.bukkit.entity.Entity entity) {
         Entity nmsEntity = ((CraftEntity) entity).getHandle();
 
         if (nmsEntity instanceof Pet) {

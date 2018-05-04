@@ -17,7 +17,8 @@ public enum ConfigGeneral {
     ENABLE_METRICS("metrics"),
     ENABLE_UPDATE_CHECKER("update"),
     ENABLE_CRAFTING_HACK("enable_crafting_hack"),
-    ENABLE_ALTERNATIVE_REVIVAL("enable_alternative_revival");
+    ENABLE_ALTERNATIVE_REVIVAL("enable_alternative_revival"),
+    DISABLE_FARMLAND_DESTRUCTION("disable_farmland_destruction");
 
     private static YamlConfiguration configuration;
     private String path;

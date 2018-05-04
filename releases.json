@@ -48,5 +48,10 @@
     "version": "1.1.18",
     "release": 1525447380454,
     "changes": "Fix: Duplication glitch & NPE"
+  },
+  {
+    "version": "1.1.19",
+    "release": 1525457466918,
+    "changes": "Anti-dupe measures & config option to disable crop damage from pets"
   }
 ]

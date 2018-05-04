@@ -4,6 +4,7 @@ import com.comphenix.packetwrapper.WrapperPlayServerWindowData;
 import com.getsentry.raven.event.Breadcrumb;
 import com.getsentry.raven.event.BreadcrumbBuilder;
 import me.yamakaja.rpgpets.api.RPGPets;
+import me.yamakaja.rpgpets.api.config.ConfigGeneral;
 import me.yamakaja.rpgpets.api.config.ConfigMessages;
 import me.yamakaja.rpgpets.api.event.PetLevelUpEvent;
 import me.yamakaja.rpgpets.api.hook.FeudalHook;
@@ -23,10 +24,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.entity.EntityPortalEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.*;
 import org.bukkit.event.player.*;
 import org.bukkit.event.world.ChunkUnloadEvent;
@@ -111,8 +109,6 @@ public class PetManager implements Listener {
 
         event.setCancelled(true);
 
-        ItemStack stack = event.getItem();
-
         if (this.spawnedPets.containsKey(event.getPlayer().getUniqueId())) {
             if (!petDescriptor.hasEntityId())
                 return;
@@ -123,11 +119,6 @@ public class PetManager implements Listener {
                 event.getPlayer().sendMessage(ConfigMessages.GENERAL_PETHEALTH.get());
                 return;
             }
-
-            if (event.getHand() == EquipmentSlot.HAND)
-                event.getPlayer().getInventory().setItemInMainHand(RPGPetsItem.resetPet(stack));
-            else
-                event.getPlayer().getInventory().setItemInOffHand(RPGPetsItem.resetPet(stack));
 
             if (entity.getEntityId() != petDescriptor.getEntityId())
                 return;
@@ -143,6 +134,7 @@ public class PetManager implements Listener {
             event.getPlayer().sendMessage(ConfigMessages.GENERAL_STATUS.get());
             return;
         }
+
         petDescriptor.setOwner(event.getPlayer());
         LivingEntity entity = this.summon(petDescriptor, event.getHand() == EquipmentSlot.HAND
                 ? event.getPlayer().getInventory().getHeldItemSlot() : 40);
@@ -167,13 +159,11 @@ public class PetManager implements Listener {
         PetDescriptor petDescriptor = this.plugin.getNMSHandler().getPetDescriptor(entity);
         petDescriptor.setState(PetState.DEAD);
 
-        this.unregisterFromPlayer(e.getEntity(), false);
+        this.unregisterFromPlayer(e.getEntity(), e.getKeepInventory());
         entity.remove();
 
-        if (e.getKeepInventory()) {
-            e.getEntity().getInventory().setItem(slot, RPGPetsItem.getPetCarrier(petDescriptor));
+        if (e.getKeepInventory())
             return;
-        }
 
         int dropsSlot = -1;
         for (int i = 0; i < e.getDrops().size(); i++)
@@ -290,6 +280,13 @@ public class PetManager implements Listener {
     }
 
     @EventHandler
+    public void onCropTrample(EntityChangeBlockEvent e) {
+        if (ConfigGeneral.DISABLE_FARMLAND_DESTRUCTION.getAsBoolean()
+                && this.plugin.getNMSHandler().getPetDescriptor(e.getEntity()) != null)
+            e.setCancelled(true);
+    }
+
+    @EventHandler
     public void onEntityDeath(EntityDeathEvent e) {
         if (!this.spawnedPets.containsValue(e.getEntity()))
             return;
@@ -338,8 +335,23 @@ public class PetManager implements Listener {
 
         PetDescriptor petDescriptor = this.plugin.getNMSHandler().getPetDescriptor(this.spawnedPets.get(uuid));
 
-        if (giveItemToPlayer)
-            player.getInventory().setItem(petSlots.get(uuid), RPGPetsItem.getPetCarrier(petDescriptor));
+        int slot = petSlots.get(uuid);
+
+        ItemStack item = player.getInventory().getItem(slot);
+        LivingEntity entity = this.spawnedPets.get(player.getUniqueId());
+
+        PetDescriptor itemDescriptor = RPGPetsItem.decode(item);
+        if (itemDescriptor == null || itemDescriptor.getEntityId() != entity.getEntityId())
+            giveItemToPlayer = false;
+
+        if (giveItemToPlayer) {
+            if (entity.getHealth() != entity.getMaxHealth()) {
+                petDescriptor.setState(PetState.DEAD);
+                petDescriptor.setEntityId(0);
+            }
+
+            player.getInventory().setItem(slot, RPGPetsItem.getPetCarrier(petDescriptor));
+        }
 
         this.spawnedPets.remove(uuid);
         this.petSlots.remove(uuid);

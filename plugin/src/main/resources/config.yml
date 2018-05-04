@@ -31,3 +31,6 @@ enable_crafting_hack: false
 
 # If this option is enabled, pets are revived by dropping pet food onto the exhausted pet within your inventory
 enable_alternative_revival: false
+
+# This option determines whether or not pets are allowed to destroy farmland
+disable_farmland_destruction: false

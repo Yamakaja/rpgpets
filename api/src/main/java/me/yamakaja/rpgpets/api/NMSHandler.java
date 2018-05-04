@@ -5,6 +5,7 @@ import me.yamakaja.rpgpets.api.entity.PetDescriptor;
 import me.yamakaja.rpgpets.api.entity.PetHead;
 import me.yamakaja.rpgpets.api.entity.PetRegistry;
 import org.bukkit.World;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.ItemStack;
@@ -42,7 +43,7 @@ public interface NMSHandler {
      * @param entity
      * @return The pet descritor of the passed bukkit entity, null if the entity isn't a pet
      */
-    PetDescriptor getPetDescriptor(LivingEntity entity);
+    PetDescriptor getPetDescriptor(Entity entity);
 
     void setHeadSkin(SkullMeta meta, PetHead head);
 
