@@ -43,5 +43,10 @@
     "version": "1.1.17",
     "release": 1522329811830,
     "changes": "Add towny integration"
+  },
+  {
+    "version": "1.1.18",
+    "release": 1525447380454,
+    "changes": "Fix: Duplication glitch & NPE"
   }
 ]

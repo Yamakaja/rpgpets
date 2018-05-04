@@ -36,6 +36,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import static org.bukkit.event.inventory.InventoryType.ANVIL;
 
@@ -44,8 +45,8 @@ import static org.bukkit.event.inventory.InventoryType.ANVIL;
  */
 public class PetManager implements Listener {
 
-    private Map<String, LivingEntity> spawnedPets = new HashMap<>();
-    private Map<String, Integer> petSlots = new HashMap<>();
+    private Map<UUID, LivingEntity> spawnedPets = new HashMap<>();
+    private Map<UUID, Integer> petSlots = new HashMap<>();
     private RPGPets plugin;
 
     public PetManager(RPGPets plugin) {
@@ -65,7 +66,7 @@ public class PetManager implements Listener {
         this.plugin.getSentryManager().recordBreadcrumb(new BreadcrumbBuilder().setMessage("Summoning Pet").setLevel(Breadcrumb.Level.DEBUG)
                 .setCategory("RUNTIME").setData(Collections.singletonMap("petDescriptor", petDescriptor.toString())).build());
 
-        if (this.spawnedPets.containsKey(petDescriptor.getOwner().getName()))
+        if (this.spawnedPets.containsKey(petDescriptor.getOwner().getUniqueId()))
             return null;
 
         LivingEntity entity = this.plugin.getNMSHandler().addToWorld(petDescriptor.getPetType().summon(petDescriptor),
@@ -73,8 +74,8 @@ public class PetManager implements Listener {
 
         entity.setVelocity(petDescriptor.getOwner().getLocation().getDirection());
 
-        this.spawnedPets.put(petDescriptor.getOwner().getName(), entity);
-        this.petSlots.put(petDescriptor.getOwner().getName(), slot);
+        this.spawnedPets.put(petDescriptor.getOwner().getUniqueId(), entity);
+        this.petSlots.put(petDescriptor.getOwner().getUniqueId(), slot);
 
         return entity;
     }
@@ -84,10 +85,10 @@ public class PetManager implements Listener {
         if (event.getNewGameMode() != GameMode.CREATIVE && event.getNewGameMode() != GameMode.SPECTATOR)
             return;
 
-        if (!this.spawnedPets.containsKey(event.getPlayer().getName()))
+        if (!this.spawnedPets.containsKey(event.getPlayer().getUniqueId()))
             return;
 
-        LivingEntity entity = this.spawnedPets.get(event.getPlayer().getName());
+        LivingEntity entity = this.spawnedPets.get(event.getPlayer().getUniqueId());
         this.unregisterFromPlayer(event.getPlayer(), true);
         entity.remove();
     }
@@ -112,11 +113,11 @@ public class PetManager implements Listener {
 
         ItemStack stack = event.getItem();
 
-        if (this.spawnedPets.containsKey(event.getPlayer().getName())) {
+        if (this.spawnedPets.containsKey(event.getPlayer().getUniqueId())) {
             if (!petDescriptor.hasEntityId())
                 return;
 
-            LivingEntity entity = this.spawnedPets.get(event.getPlayer().getName());
+            LivingEntity entity = this.spawnedPets.get(event.getPlayer().getUniqueId());
 
             if (entity.getHealth() != entity.getMaxHealth()) {
                 event.getPlayer().sendMessage(ConfigMessages.GENERAL_PETHEALTH.get());
@@ -156,13 +157,13 @@ public class PetManager implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerDeath(PlayerDeathEvent e) {
-        if (!this.spawnedPets.containsKey(e.getEntity().getName()))
+        if (!this.spawnedPets.containsKey(e.getEntity().getUniqueId()))
             return;
 
-        int slot = this.petSlots.get(e.getEntity().getName());
+        int slot = this.petSlots.get(e.getEntity().getUniqueId());
 
         ItemStack itemStackInInventory = e.getEntity().getInventory().getItem(slot);
-        LivingEntity entity = this.spawnedPets.get(e.getEntity().getName());
+        LivingEntity entity = this.spawnedPets.get(e.getEntity().getUniqueId());
         PetDescriptor petDescriptor = this.plugin.getNMSHandler().getPetDescriptor(entity);
         petDescriptor.setState(PetState.DEAD);
 
@@ -189,16 +190,16 @@ public class PetManager implements Listener {
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent e) {
-        if (!this.spawnedPets.containsKey(e.getPlayer().getName()))
+        if (!this.spawnedPets.containsKey(e.getPlayer().getUniqueId()))
             return;
 
-        int slot = this.petSlots.get(e.getPlayer().getName());
+        int slot = this.petSlots.get(e.getPlayer().getUniqueId());
 
-        LivingEntity entity = this.spawnedPets.get(e.getPlayer().getName());
+        LivingEntity entity = this.spawnedPets.get(e.getPlayer().getUniqueId());
         PetDescriptor petDescriptor = this.plugin.getNMSHandler().getPetDescriptor(entity);
 
         entity.remove();
-        this.spawnedPets.remove(e.getPlayer().getName());
+        this.spawnedPets.remove(e.getPlayer().getUniqueId());
 
         petDescriptor.setState(entity.getHealth() == entity.getMaxHealth() ? PetState.READY : PetState.DEAD);
         e.getPlayer().getInventory().setItem(slot, RPGPetsItem.getPetCarrier(petDescriptor));
@@ -221,10 +222,10 @@ public class PetManager implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onInventoryClick(InventoryClickEvent e) {
-        if (!this.spawnedPets.containsKey(e.getWhoClicked().getName()))
+        if (!this.spawnedPets.containsKey(e.getWhoClicked().getUniqueId()))
             return;
 
-        int slot = this.petSlots.get(e.getWhoClicked().getName());
+        int slot = this.petSlots.get(e.getWhoClicked().getUniqueId());
 
         if (e.getClickedInventory() == null)
             return;
@@ -245,12 +246,47 @@ public class PetManager implements Listener {
 
     @EventHandler
     public void onPlayerSwapItems(PlayerSwapHandItemsEvent e) {
-        if (!this.spawnedPets.containsKey(e.getPlayer().getName()))
+        if (!this.spawnedPets.containsKey(e.getPlayer().getUniqueId()))
             return;
 
-        int petSlot = this.petSlots.get(e.getPlayer().getName());
+        int petSlot = this.petSlots.get(e.getPlayer().getUniqueId());
         if (petSlot == 40 || e.getPlayer().getInventory().getHeldItemSlot() == petSlot)
             e.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onItemFrameInteract(PlayerInteractEntityEvent e) {
+        if (e.getRightClicked().getType() != EntityType.ITEM_FRAME)
+            return;
+
+        handleEntityInteraction(e);
+    }
+
+    @EventHandler
+    public void onArmorStandInteract(PlayerInteractAtEntityEvent e) {
+        if (e.getRightClicked().getType() != EntityType.ARMOR_STAND)
+            return;
+
+        handleEntityInteraction(e);
+    }
+
+    private void handleEntityInteraction(PlayerInteractEntityEvent e) {
+        Player player = e.getPlayer();
+        if (!this.spawnedPets.containsKey(player.getUniqueId()))
+            return;
+
+        int petSlot = this.petSlots.get(player.getUniqueId());
+
+        switch (e.getHand()) {
+            case OFF_HAND:
+                if (petSlot == 40)
+                    e.setCancelled(true);
+                break;
+            case HAND:
+                if (petSlot == e.getPlayer().getInventory().getHeldItemSlot())
+                    e.setCancelled(true);
+                break;
+        }
     }
 
     @EventHandler
@@ -296,17 +332,17 @@ public class PetManager implements Listener {
      * @param giveItemToPlayer Whether the pet container should be given to the pet owner
      */
     private void unregisterFromPlayer(Player player, boolean giveItemToPlayer) {
-        String name = player.getName();
-        if (!this.spawnedPets.containsKey(name))
+        UUID uuid = player.getUniqueId();
+        if (!this.spawnedPets.containsKey(uuid))
             return;
 
-        PetDescriptor petDescriptor = this.plugin.getNMSHandler().getPetDescriptor(this.spawnedPets.get(name));
+        PetDescriptor petDescriptor = this.plugin.getNMSHandler().getPetDescriptor(this.spawnedPets.get(uuid));
 
         if (giveItemToPlayer)
-            player.getInventory().setItem(petSlots.get(name), RPGPetsItem.getPetCarrier(petDescriptor));
+            player.getInventory().setItem(petSlots.get(uuid), RPGPetsItem.getPetCarrier(petDescriptor));
 
-        this.spawnedPets.remove(name);
-        this.petSlots.remove(name);
+        this.spawnedPets.remove(uuid);
+        this.petSlots.remove(uuid);
     }
 
     /**
@@ -364,10 +400,10 @@ public class PetManager implements Listener {
         if (e.getFrom().getWorld() == e.getTo().getWorld() && e.getFrom().distanceSquared(e.getTo()) < 30 * 30)
             return;
 
-        if (!this.spawnedPets.containsKey(e.getPlayer().getName()))
+        if (!this.spawnedPets.containsKey(e.getPlayer().getUniqueId()))
             return;
 
-        LivingEntity entity = this.spawnedPets.get(e.getPlayer().getName());
+        LivingEntity entity = this.spawnedPets.get(e.getPlayer().getUniqueId());
         PetDescriptor petDescriptor = this.plugin.getNMSHandler().getPetDescriptor(entity);
 
         petDescriptor.setState((entity.getHealth() == entity.getMaxHealth()) ? PetState.READY : PetState.DEAD);

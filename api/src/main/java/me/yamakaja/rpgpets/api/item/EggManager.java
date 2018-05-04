@@ -132,7 +132,7 @@ public class EggManager implements Listener, Runnable {
 
                 ItemStack stack = player.getInventory().getItemInOffHand();
 
-                if (stack.getType() != Material.MONSTER_EGG || !stack.hasItemMeta()) {
+                if (stack == null || stack.getType() != Material.MONSTER_EGG || !stack.hasItemMeta()) {
                     carryingPlayers.remove(player);
                     return;
                 }
