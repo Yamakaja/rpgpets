@@ -16,15 +16,13 @@ public class ConfigManager {
 
     private RPGPets plugin;
 
+    private ConfigVersionManager versionManager;
+
     public ConfigManager(RPGPets plugin) {
         this.plugin = plugin;
+        this.versionManager = new ConfigVersionManager(this.plugin);
 
-        boolean debug = System.getProperty("me.yamakaja.debug") != null;
-
-        plugin.saveResource("config.yml", debug);
-        plugin.saveResource("messages.yml", debug);
-        plugin.saveResource("permissions.yml", debug);
-        plugin.saveResource("petstats.yml", debug);
+        this.versionManager.migrateConfiguration();
     }
 
     /**
@@ -63,35 +61,27 @@ public class ConfigManager {
         for (ConfigPermissions permission : ConfigPermissions.values())
             permission.set(permissionsConfig.getString(permission.name().replace('_', '.').toLowerCase()));
 
-        // Pet Stats
-        File petStatsFile = new File(dataDir, "petstats.yml");
-
-        YamlConfiguration petStats = new YamlConfiguration();
-        petStats.load(petStatsFile);
-
         for (PetType type : PetType.values()) {
-            String basePath = type.name().toLowerCase() + ".";
+            YamlConfiguration petStats = YamlConfiguration.loadConfiguration(new File(this.plugin.getDataFolder(),
+                    "pets/" + type.name().toLowerCase() + ".yml"));
 
             type.initStats(
-                    petStats.getInt(basePath + "maxLevel"),
-                    (float) petStats.getDouble(basePath + "baseExpRequirement"),
-                    (float) petStats.getDouble(basePath + "expRequirementMultiplier"),
-                    petStats.getInt(basePath + "randomWeight"),
-
-                    (float) petStats.getDouble(basePath + "base.speed"),
-                    (float) petStats.getDouble(basePath + "base.attackDamage"),
-                    (float) petStats.getDouble(basePath + "base.knockback"),
-                    (float) petStats.getDouble(basePath + "base.maxHealth"),
-
-                    (float) petStats.getDouble(basePath + "levelup.speed"),
-                    (float) petStats.getDouble(basePath + "levelup.attackDamage"),
-                    (float) petStats.getDouble(basePath + "levelup.knockback"),
-                    (float) petStats.getDouble(basePath + "levelup.maxHealth"),
-
-                    (float) petStats.getDouble(basePath + "babymodifier.speed"),
-                    (float) petStats.getDouble(basePath + "babymodifier.attackDamage"),
-                    (float) petStats.getDouble(basePath + "babymodifier.knockback"),
-                    (float) petStats.getDouble(basePath + "babymodifier.maxHealth"));
+                    petStats.getInt("maxLevel"),
+                    (float) petStats.getDouble("baseExpRequirement"),
+                    (float) petStats.getDouble("expRequirementMultiplier"),
+                    petStats.getInt("randomWeight"),
+                    (float) petStats.getDouble("base.speed"),
+                    (float) petStats.getDouble("base.attackDamage"),
+                    (float) petStats.getDouble("base.knockback"),
+                    (float) petStats.getDouble("base.maxHealth"),
+                    (float) petStats.getDouble("levelup.speed"),
+                    (float) petStats.getDouble("levelup.attackDamage"),
+                    (float) petStats.getDouble("levelup.knockback"),
+                    (float) petStats.getDouble("levelup.maxHealth"),
+                    (float) petStats.getDouble("babymodifier.speed"),
+                    (float) petStats.getDouble("babymodifier.attackDamage"),
+                    (float) petStats.getDouble("babymodifier.knockback"),
+                    (float) petStats.getDouble("babymodifier.maxHealth"));
         }
 
         PetType.initWeightMap();

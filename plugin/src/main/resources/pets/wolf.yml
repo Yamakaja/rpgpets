@@ -1,0 +1,19 @@
+maxLevel: 20
+baseExpRequirement: 10
+expRequirementMultiplier: 1.5
+randomWeight: 10
+base:
+  speed: 1
+  attackDamage: 5
+  knockback: 2
+  maxHealth: 5
+levelup:
+  speed: 0.1
+  attackDamage: 2
+  knockback: 0.05
+  maxHealth: 2
+babymodifier:
+  speed: 1.5
+  attackDamage: 0.5
+  knockback: 0.25
+  maxHealth: 1

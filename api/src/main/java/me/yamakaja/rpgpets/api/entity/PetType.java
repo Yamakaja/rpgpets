@@ -19,6 +19,8 @@ public enum PetType {
     RABBIT(EntityType.RABBIT, "rabbit", "PetRabbit", PetHead.RABBIT),
     LLAMA(EntityType.LLAMA, "llama", "PetLlama", PetHead.LLAMA),
     SHEEP(EntityType.SHEEP, "sheep", "PetSheep", PetHead.SHEEP),
+    VILLAGER(EntityType.VILLAGER, "villager", "PetVillager", PetHead.VILLAGER),
+    WOLF(EntityType.WOLF, "wolf", "PetWolf", PetHead.WOLF),
     ZOMBIE(EntityType.ZOMBIE, "zombie", "PetZombie", PetHead.ZOMBIE);
 
     private static Map<Double, PetType> weightDistributionMap = new LinkedHashMap<>();
@@ -79,12 +81,11 @@ public enum PetType {
     public static PetType getRandomPetType() {
         double random = Math.random();
 
-        for (Double prb : sortedWeightList) {
-            if (prb > random) {
+        for (Double prb : sortedWeightList)
+            if (prb > random)
                 return weightDistributionMap.get(prb);
-            }
-        }
-        throw new RuntimeException("Failed to selection random element, this indicates an implementation error! Please contact author!");
+
+        throw new RuntimeException("Failed to selection random element - logic error!");
     }
 
     public Class<?> getEntityClass() {
