@@ -30,6 +30,7 @@ import org.bukkit.event.player.*;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -402,6 +403,43 @@ public class PetManager implements Listener {
     }
 
     @EventHandler
+    public void onNameTagUse(PlayerInteractEntityEvent e) {
+        ItemStack stack = e.getHand() == EquipmentSlot.HAND ? e.getPlayer().getInventory().getItemInMainHand()
+                : e.getPlayer().getInventory().getItemInOffHand();
+
+        if (stack == null || stack.getType() != Material.NAME_TAG)
+            return;
+
+        PetDescriptor pet = this.plugin.getNMSHandler().getPetDescriptor(e.getRightClicked());
+        if (pet == null)
+            return;
+
+        if (pet.getOwner() != e.getPlayer())
+            return;
+
+        if (!pet.getName().equals(ConfigMessages.ITEM_PET_DEFAULTNAME.get())) {
+            e.getPlayer().sendMessage(ConfigMessages.GENERAL_NAMEONCE.get());
+            e.setCancelled(true);
+            return;
+        }
+
+        pet.setName(stack.getItemMeta().getDisplayName());
+        e.setCancelled(true);
+        if (e.getHand() == EquipmentSlot.HAND)
+            e.getPlayer().getInventory().setItemInMainHand(null);
+        else
+            e.getPlayer().getInventory().setItemInOffHand(null);
+
+        int slot = this.petSlots.get(e.getPlayer().getUniqueId());
+
+        ItemStack petItem = e.getPlayer().getInventory().getItem(slot);
+        ItemMeta petItemMeta = petItem.getItemMeta();
+        petItemMeta.setDisplayName(pet.getName());
+        petItem.setItemMeta(petItemMeta);
+        e.getPlayer().getInventory().setItem(slot, petItem);
+    }
+
+    @EventHandler
     public void onTeleport(PlayerTeleportEvent e) {
         if (e.isCancelled())
             return;
@@ -426,7 +464,7 @@ public class PetManager implements Listener {
     @EventHandler
     public void onPortal(EntityPortalEvent e) {
         if (e.getEntity() instanceof LivingEntity
-                && this.plugin.getNMSHandler().getPetDescriptor((LivingEntity) e.getEntity()) != null
+                && this.plugin.getNMSHandler().getPetDescriptor(e.getEntity()) != null
                 && e.getTo().getWorld() != e.getFrom().getWorld())
 
             e.setCancelled(true);

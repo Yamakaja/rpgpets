@@ -122,4 +122,10 @@ public class PetCow extends EntityCow implements Pet {
     public int getAge() {
         return this.petDescriptor.isAdult() ? 1 : Integer.MIN_VALUE;
     }
+
+    @Override
+    public boolean a(EntityHuman entityhuman, EnumHand enumhand) { // onInteract
+        return false;
+    }
+
 }

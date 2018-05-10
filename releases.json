@@ -58,5 +58,10 @@
     "version": "1.2.0",
     "release": 1525909318798,
     "changes": "Add wolf and villager; Restructure pet config"
+  },
+  {
+    "version": "1.3.0",
+    "release": 1525984526323,
+    "changes": "Add ocelot, horse and donkey"
   }
 ]

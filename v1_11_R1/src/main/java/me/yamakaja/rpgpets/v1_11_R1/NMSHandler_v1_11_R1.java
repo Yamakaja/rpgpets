@@ -49,8 +49,11 @@ public class NMSHandler_v1_11_R1 implements NMSHandler {
 
         PetType.CHICKEN.setEntityClass(PetChicken.class);
         PetType.COW.setEntityClass(PetCow.class);
+        PetType.DONKEY.setEntityClass(PetDonkey.class);
+        PetType.HORSE.setEntityClass(PetHorse.class);
         PetType.MUSHROOM_COW.setEntityClass(PetMushroomCow.class);
         PetType.LLAMA.setEntityClass(PetLlama.class);
+        PetType.OCELOT.setEntityClass(PetOcelot.class);
         PetType.PIG.setEntityClass(PetPig.class);
         PetType.PIG_ZOMBIE.setEntityClass(PetPigZombie.class);
         PetType.POLAR_BEAR.setEntityClass(PetPolarBear.class);

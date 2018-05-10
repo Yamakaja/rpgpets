@@ -12,7 +12,10 @@ import java.util.*;
 public enum PetType {
     CHICKEN(EntityType.CHICKEN, "chicken", "PetChicken", PetHead.CHICKEN),
     COW(EntityType.COW, "cow", "PetCow", PetHead.COW),
+    DONKEY(EntityType.DONKEY, "donkey", "PetDonkey", PetHead.DONKEY),
+    HORSE(EntityType.HORSE, "horse", "PetHorse", PetHead.HORSE),
     MUSHROOM_COW(EntityType.MUSHROOM_COW, "mushroom_cow", "PetMushroomCow", PetHead.MUSHROOM_COW),
+    OCELOT(EntityType.OCELOT, "ocelot", "PetOcelot", PetHead.OCELOT),
     PIG(EntityType.PIG, "pig", "PetPig", PetHead.PIG),
     PIG_ZOMBIE(EntityType.PIG_ZOMBIE, "pig_zombie", "PetPigZombie", PetHead.PIG_ZOMBIE),
     POLAR_BEAR(EntityType.POLAR_BEAR, "polar_bear", "PetPolarBear", PetHead.POLAR_BEAR),
@@ -21,7 +24,7 @@ public enum PetType {
     SHEEP(EntityType.SHEEP, "sheep", "PetSheep", PetHead.SHEEP),
     VILLAGER(EntityType.VILLAGER, "villager", "PetVillager", PetHead.VILLAGER),
     WOLF(EntityType.WOLF, "wolf", "PetWolf", PetHead.WOLF),
-    ZOMBIE(EntityType.ZOMBIE, "zombie", "PetZombie", PetHead.ZOMBIE);
+    ZOMBIE(EntityType.HORSE, "zombie", "PetZombie", PetHead.ZOMBIE);
 
     private static Map<Double, PetType> weightDistributionMap = new LinkedHashMap<>();
     private static List<Double> sortedWeightList = new LinkedList<>();

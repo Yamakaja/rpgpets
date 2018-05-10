@@ -6,6 +6,7 @@ import me.yamakaja.rpgpets.api.config.ConfigMessages;
 import me.yamakaja.rpgpets.api.entity.PetDescriptor;
 import me.yamakaja.rpgpets.api.entity.PetState;
 import me.yamakaja.rpgpets.api.entity.PetType;
+import me.yamakaja.rpgpets.api.util.EnchantmentGlow;
 import me.yamakaja.rpgpets.api.util.ItemBuilder;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -27,12 +28,14 @@ public enum RPGPetsItem {
                     ? ConfigMessages.ITEM_FOOD_TOOLTIP_ALTERNATIVE : ConfigMessages.ITEM_FOOD_TOOLTIP_DEFAULT).get()
                     .split("\n")))),
     EGG(() -> new ItemBuilder(Material.MONSTER_EGG)
-            .setDisplayName(ConfigMessages.ITEM_EGG_NAME.get()).setLore(Arrays.asList(
+            .setDisplayName(ConfigMessages.ITEM_EGG_NAME.get())
+            .setLore(Arrays.asList(
                     ConfigMessages.ITEM_EGG_LORE_REMAINING.get(Integer.toString(ConfigGeneral.HATCH_DISTANCE.getAsInt())),
                     ConfigMessages.ITEM_EGG_LORE_HAND.get(),
                     ChatColor.BLACK.toString() + ChatColor.MAGIC + Integer.toString(ConfigGeneral.HATCH_DISTANCE
-                            .getAsInt() * 100) + ":" + Double.toString(Math.random()).substring(2)
-            ))),
+                            .getAsInt() * 100) + ":" + Double.toString(Math.random()).substring(2)))
+            .addEnchantment(EnchantmentGlow.getGlow(), 1, true)
+    ),
     PET(() -> RPGPetsItem.getPetCarrier(PetType.getRandomPetType(), ConfigMessages.ITEM_PET_DEFAULTNAME.get(),
             0, 0, 1, false, PetState.READY));
 

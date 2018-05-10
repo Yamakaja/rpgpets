@@ -12,20 +12,20 @@ import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 
 /**
- * Created by Yamakaja on 10.06.17.
+ * Created by Yamakaja on 5/10/18.
  */
-public class PetCow extends EntityCow implements Pet {
+public class PetHorse extends EntityHorse implements Pet {
 
     private PetDescriptor petDescriptor;
     private PathfinderGoalMeleeAttack meleeAttackGoal;
 
     @SuppressWarnings("unused") // Called and required my Minecraft code
-    public PetCow(World world) {
+    public PetHorse(World world) {
         super(world);
         this.die();
     }
 
-    public PetCow(PetDescriptor petDescriptor) {
+    public PetHorse(PetDescriptor petDescriptor) {
         super(((CraftPlayer) petDescriptor.getOwner()).getHandle().getWorld());
 
         this.petDescriptor = petDescriptor;
