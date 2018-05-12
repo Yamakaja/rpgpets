@@ -40,8 +40,8 @@ public interface NMSHandler {
     LivingEntity addToWorld(Pet entity, World world);
 
     /**
-     * @param entity
-     * @return The pet descritor of the passed bukkit entity, null if the entity isn't a pet
+     * @param entity The entity to check
+     * @return The pet descriptor of the passed bukkit entity, null if the entity is null or isn't a pet
      */
     PetDescriptor getPetDescriptor(Entity entity);
 

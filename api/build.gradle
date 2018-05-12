@@ -9,4 +9,7 @@ dependencies {
     compileOnly "com.getsentry.raven:raven:8.0.3"
 
     compileOnly "com.palmergames.towny:towny:$townyVersion"
+
+    compile "org.ow2.asm:asm:5.1"
+    compile "org.ow2.asm:asm-util:5.1"
 }

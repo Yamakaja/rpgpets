@@ -4,11 +4,9 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import me.yamakaja.rpgpets.api.NMSHandler;
 import me.yamakaja.rpgpets.api.RPGPets;
+import me.yamakaja.rpgpets.api.classgen.PetClassGenerator;
 import me.yamakaja.rpgpets.api.entity.*;
-import me.yamakaja.rpgpets.v1_11_R1.entity.*;
-import net.minecraft.server.v1_11_R1.ContainerAnvil;
-import net.minecraft.server.v1_11_R1.Entity;
-import net.minecraft.server.v1_11_R1.NBTTagCompound;
+import net.minecraft.server.v1_11_R1.*;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_11_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_11_R1.entity.CraftEntity;
@@ -40,6 +38,7 @@ public class NMSHandler_v1_11_R1 implements NMSHandler {
         }
     }
 
+    private PetClassGenerator classGen;
     private RPGPets plugin;
     private PetRegistry petRegistry;
 
@@ -47,21 +46,25 @@ public class NMSHandler_v1_11_R1 implements NMSHandler {
         this.plugin = plugin;
         this.petRegistry = new PetRegistryImpl();
 
-        PetType.CHICKEN.setEntityClass(PetChicken.class);
-        PetType.COW.setEntityClass(PetCow.class);
-        PetType.DONKEY.setEntityClass(PetDonkey.class);
-        PetType.HORSE.setEntityClass(PetHorse.class);
-        PetType.MUSHROOM_COW.setEntityClass(PetMushroomCow.class);
-        PetType.LLAMA.setEntityClass(PetLlama.class);
-        PetType.OCELOT.setEntityClass(PetOcelot.class);
-        PetType.PIG.setEntityClass(PetPig.class);
-        PetType.PIG_ZOMBIE.setEntityClass(PetPigZombie.class);
-        PetType.POLAR_BEAR.setEntityClass(PetPolarBear.class);
-        PetType.RABBIT.setEntityClass(PetRabbit.class);
-        PetType.SHEEP.setEntityClass(PetSheep.class);
-        PetType.VILLAGER.setEntityClass(PetVillager.class);
-        PetType.WOLF.setEntityClass(PetWolf.class);
-        PetType.ZOMBIE.setEntityClass(PetZombie.class);
+        this.classGen = new PetClassGenerator(PetClassTemplate.class);
+
+        PetType.CHICKEN.setEntitySuperClass(EntityChicken.class);
+        PetType.COW.setEntitySuperClass(EntityCow.class);
+        PetType.DONKEY.setEntitySuperClass(EntityHorseDonkey.class);
+        PetType.HORSE.setEntitySuperClass(EntityHorse.class);
+        PetType.LLAMA.setEntitySuperClass(EntityLlama.class);
+        PetType.MUSHROOM_COW.setEntitySuperClass(EntityMushroomCow.class);
+        PetType.OCELOT.setEntitySuperClass(EntityOcelot.class);
+        PetType.PIG.setEntitySuperClass(EntityPig.class);
+        PetType.PIG_ZOMBIE.setEntitySuperClass(EntityPigZombie.class);
+        PetType.POLAR_BEAR.setEntitySuperClass(EntityPolarBear.class);
+        PetType.RABBIT.setEntitySuperClass(EntityRabbit.class);
+        PetType.SHEEP.setEntitySuperClass(EntitySheep.class);
+        PetType.VILLAGER.setEntitySuperClass(EntityVillager.class);
+        PetType.WOLF.setEntitySuperClass(EntityWolf.class);
+        PetType.ZOMBIE.setEntitySuperClass(EntityZombie.class);
+
+        PetType.generateClasses(classGen);
     }
 
     @Override

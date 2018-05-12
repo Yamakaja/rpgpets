@@ -1,4 +1,4 @@
-package me.yamakaja.rpgpets.v1_12_R1.entity;
+package me.yamakaja.rpgpets.v1_12_R1;
 
 import me.yamakaja.rpgpets.api.entity.PetRegistry;
 import net.minecraft.server.v1_12_R1.EntityTypes;

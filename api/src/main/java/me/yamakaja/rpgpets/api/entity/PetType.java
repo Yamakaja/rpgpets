@@ -1,5 +1,6 @@
 package me.yamakaja.rpgpets.api.entity;
 
+import me.yamakaja.rpgpets.api.classgen.PetClassGenerator;
 import org.bukkit.entity.EntityType;
 
 import java.lang.reflect.Constructor;
@@ -24,13 +25,14 @@ public enum PetType {
     SHEEP(EntityType.SHEEP, "sheep", "PetSheep", PetHead.SHEEP),
     VILLAGER(EntityType.VILLAGER, "villager", "PetVillager", PetHead.VILLAGER),
     WOLF(EntityType.WOLF, "wolf", "PetWolf", PetHead.WOLF),
-    ZOMBIE(EntityType.HORSE, "zombie", "PetZombie", PetHead.ZOMBIE);
+    ZOMBIE(EntityType.ZOMBIE, "zombie", "PetZombie", PetHead.ZOMBIE);
 
     private static Map<Double, PetType> weightDistributionMap = new LinkedHashMap<>();
     private static List<Double> sortedWeightList = new LinkedList<>();
 
     private EntityType baseType;
     private Class<?> entityClass;
+    private Class<?> entitySuperClass;
     private Constructor<?> constructor;
     private String entityId;
     private String entityName;
@@ -91,6 +93,11 @@ public enum PetType {
         throw new RuntimeException("Failed to selection random element - logic error!");
     }
 
+    public static void generateClasses(PetClassGenerator classGen) {
+        for (PetType type : PetType.values())
+            type.setEntityClass(classGen.generatePetClass(type));
+    }
+
     public Class<?> getEntityClass() {
         return entityClass;
     }
@@ -103,6 +110,14 @@ public enum PetType {
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
         }
+    }
+
+    public Class<?> getEntitySuperClass() {
+        return entitySuperClass;
+    }
+
+    public void setEntitySuperClass(Class<?> entitySuperClass) {
+        this.entitySuperClass = entitySuperClass;
     }
 
     public Pet summon(PetDescriptor descriptor) {

@@ -1,31 +1,34 @@
-package me.yamakaja.rpgpets.v1_11_R1.entity;
+package me.yamakaja.rpgpets.v1_12_R1;
 
+import me.yamakaja.rpgpets.api.classgen.PetFilter;
 import me.yamakaja.rpgpets.api.config.ConfigMessages;
 import me.yamakaja.rpgpets.api.entity.Pet;
 import me.yamakaja.rpgpets.api.entity.PetDescriptor;
-import me.yamakaja.rpgpets.v1_11_R1.NMSUtils;
-import me.yamakaja.rpgpets.v1_11_R1.pathfinding.PetPathfinderGoalFollowOwner;
-import me.yamakaja.rpgpets.v1_11_R1.pathfinding.PetPathfinderGoalHurtByTarget;
-import me.yamakaja.rpgpets.v1_11_R1.pathfinding.PetPathfinderGoalOwnerHurtTarget;
-import net.minecraft.server.v1_11_R1.*;
+import me.yamakaja.rpgpets.api.entity.PetType;
+import me.yamakaja.rpgpets.v1_12_R1.pathfinding.PetPathfinderGoalFollowOwner;
+import me.yamakaja.rpgpets.v1_12_R1.pathfinding.PetPathfinderGoalHurtByTarget;
+import me.yamakaja.rpgpets.v1_12_R1.pathfinding.PetPathfinderGoalOwnerHurtTarget;
+import net.minecraft.server.v1_12_R1.*;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_11_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 
 /**
- * Created by Yamakaja on 10.06.17.
+ * Created by Yamakaja on 5/12/18.
  */
-public class PetLlama extends EntityLlama implements Pet {
+public abstract class PetClassTemplate extends EntityAgeable implements Pet {
 
     private PetDescriptor petDescriptor;
     private PathfinderGoalMeleeAttack meleeAttackGoal;
 
     @SuppressWarnings("unused") // Called and required my Minecraft code
-    public PetLlama(World world) {
+    public PetClassTemplate(World world) {
         super(world);
         this.die();
     }
 
-    public PetLlama(PetDescriptor petDescriptor) {
+    @SuppressWarnings("unused") // Called through reflection
+    public PetClassTemplate(PetDescriptor petDescriptor) {
         super(((CraftPlayer) petDescriptor.getOwner()).getHandle().getWorld());
 
         this.petDescriptor = petDescriptor;
@@ -53,7 +56,7 @@ public class PetLlama extends EntityLlama implements Pet {
     @Override
     protected void initAttributes() {
         super.initAttributes();
-        this.getAttributeInstance(GenericAttributes.FOLLOW_RANGE).setValue(15);
+        this.getAttributeInstance(GenericAttributes.FOLLOW_RANGE).setValue(30);
     }
 
     @Override
@@ -100,8 +103,8 @@ public class PetLlama extends EntityLlama implements Pet {
     }
 
     @Override
-    public void A_() { // onUpdate
-        super.A_();
+    public void B_() { // onUpdate
+        super.B_();
 
         if (this.ticksLived % 10 == 0)
             this.updateCustomName();
@@ -122,4 +125,11 @@ public class PetLlama extends EntityLlama implements Pet {
     public int getAge() {
         return this.petDescriptor.isAdult() ? 1 : Integer.MIN_VALUE;
     }
+
+    @PetFilter({PetType.VILLAGER, PetType.WOLF, PetType.OCELOT, PetType.HORSE, PetType.DONKEY, PetType.PIG, PetType.LLAMA, PetType.SHEEP, PetType.MUSHROOM_COW})
+    @Override
+    public boolean a(EntityHuman entityhuman, EnumHand enumhand) { // onInteract
+        return false;
+    }
+
 }
