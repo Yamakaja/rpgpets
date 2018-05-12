@@ -85,6 +85,9 @@ public class ConfigManager {
         }
 
         PetType.initWeightMap();
+
+        // Items
+        ConfigItems.initialize(plugin, YamlConfiguration.loadConfiguration(new File(dataDir, "items.yml")));
     }
 
 }

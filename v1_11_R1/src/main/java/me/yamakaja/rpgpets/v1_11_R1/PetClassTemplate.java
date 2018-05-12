@@ -52,18 +52,30 @@ public class PetClassTemplate extends EntityAgeable implements Pet {
 
         this.updateCustomName();
         this.setCustomNameVisible(true);
+
+        Object o = this;
+        if (o instanceof EntityZombie) {
+            EntityZombie zombie = (EntityZombie) o;
+            zombie.setBaby(!this.petDescriptor.isAdult());
+        }
     }
 
     @Override
     protected void initAttributes() {
         super.initAttributes();
-        this.getAttributeInstance(GenericAttributes.FOLLOW_RANGE).setValue(15);
+        this.getAttributeInstance(GenericAttributes.FOLLOW_RANGE).setValue(30);
     }
 
     @Override
     public void updateAttributes() {
         this.getAttributeInstance(GenericAttributes.maxHealth).setValue(this.petDescriptor.getMaxHealth());
         NMSUtils.setSpeed(this.meleeAttackGoal, this.petDescriptor.getSpeed());
+
+        Object o = this;
+        if (o instanceof EntityZombie) {
+            EntityZombie zombie = (EntityZombie) o;
+            zombie.setBaby(!this.petDescriptor.isAdult());
+        }
     }
 
     @Override
@@ -137,6 +149,10 @@ public class PetClassTemplate extends EntityAgeable implements Pet {
     @PetFilter({}) // Remove method - required by EntityAgeable
     public EntityAgeable createChild(EntityAgeable entityAgeable) {
         return null;
+    }
+
+    @PetFilter({PetType.ZOMBIE, PetType.PIG_ZOMBIE})
+    public void setOnFire(int i) {
     }
 
 }

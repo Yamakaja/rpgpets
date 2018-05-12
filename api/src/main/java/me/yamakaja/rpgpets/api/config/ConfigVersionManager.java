@@ -54,6 +54,7 @@ public class ConfigVersionManager {
                 "config.yml",
                 "messages.yml",
                 "permissions.yml",
+                "items.yml",
                 "pets/chicken.yml",
                 "pets/cow.yml",
                 "pets/donkey.yml",

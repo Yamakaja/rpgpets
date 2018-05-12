@@ -22,7 +22,7 @@ public class PetClassGenerator {
             InputStream inputStream = templateClass.getResourceAsStream(templateClass.getSimpleName() + ".class");
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 
-            byte[] buffer = new byte[1024];
+            byte[] buffer = new byte[1 << 10];
             for (int read; (read = inputStream.read(buffer)) > 0; )
                 byteArrayOutputStream.write(buffer, 0, read);
 

@@ -2,6 +2,7 @@ package me.yamakaja.rpgpets.api.item;
 
 import me.yamakaja.rpgpets.api.RPGPets;
 import me.yamakaja.rpgpets.api.config.ConfigGeneral;
+import me.yamakaja.rpgpets.api.config.ConfigItems;
 import me.yamakaja.rpgpets.api.config.ConfigMessages;
 import me.yamakaja.rpgpets.api.entity.PetDescriptor;
 import me.yamakaja.rpgpets.api.entity.PetState;
@@ -23,7 +24,7 @@ import java.util.function.Supplier;
  * Created by Yamakaja on 10.06.17.
  */
 public enum RPGPetsItem {
-    FOOD(() -> new ItemBuilder(Material.SLIME_BALL).setDisplayName(ConfigMessages.ITEM_FOOD_NAME.get())
+    FOOD(() -> new ItemBuilder(ConfigItems.FOOD_MATERIAL).setDisplayName(ConfigMessages.ITEM_FOOD_NAME.get())
             .setLore(Arrays.asList((ConfigGeneral.ENABLE_ALTERNATIVE_REVIVAL.getAsBoolean()
                     ? ConfigMessages.ITEM_FOOD_TOOLTIP_ALTERNATIVE : ConfigMessages.ITEM_FOOD_TOOLTIP_DEFAULT).get()
                     .split("\n")))),

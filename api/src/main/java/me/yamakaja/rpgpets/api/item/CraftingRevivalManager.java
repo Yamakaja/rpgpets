@@ -2,6 +2,7 @@ package me.yamakaja.rpgpets.api.item;
 
 import me.yamakaja.rpgpets.api.RPGPets;
 import me.yamakaja.rpgpets.api.config.ConfigGeneral;
+import me.yamakaja.rpgpets.api.config.ConfigItems;
 import me.yamakaja.rpgpets.api.config.ConfigMessages;
 import me.yamakaja.rpgpets.api.entity.PetDescriptor;
 import me.yamakaja.rpgpets.api.entity.PetState;
@@ -35,7 +36,7 @@ public class CraftingRevivalManager extends AbstractRevivalManager {
 
         recipe = new ShapelessRecipe(new ItemStack(Material.SKULL_ITEM, 1, (short) 3));
 
-        recipe.addIngredient(Material.SLIME_BALL);
+        recipe.addIngredient(ConfigItems.FOOD_MATERIAL);
         recipe.addIngredient(new MaterialData(Material.SKULL_ITEM, (byte) 3));
 
         plugin.getServer().addRecipe(recipe);
@@ -63,7 +64,7 @@ public class CraftingRevivalManager extends AbstractRevivalManager {
             if (iterItem == null)
                 continue;
 
-            if (iterItem.getType() == Material.SLIME_BALL && iterItem.hasItemMeta() && iterItem.getItemMeta().hasDisplayName()
+            if (iterItem.getType() == ConfigItems.FOOD_MATERIAL && iterItem.hasItemMeta() && iterItem.getItemMeta().hasDisplayName()
                     && iterItem.getItemMeta().getDisplayName().equals(ConfigMessages.ITEM_FOOD_NAME.get())) {
                 food = iterItem;
             } else {

@@ -1,0 +1,15 @@
+food:
+  material: SLIME_BALL
+  recipe:
+    enabled: false
+    grid: ["AAA", "ASA", "AAA"]
+    items:
+      A: APPLE
+      S: SLIME_BALL
+egg:
+  recipe:
+    enabled: false
+    grid: ["DDD", "DED", "DDD"]
+    items:
+      D: DIAMOND
+      E: EGG
