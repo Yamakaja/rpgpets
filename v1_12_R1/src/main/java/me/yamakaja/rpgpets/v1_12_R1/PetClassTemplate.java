@@ -21,7 +21,7 @@ public abstract class PetClassTemplate extends EntityAgeable implements Pet {
     private PetDescriptor petDescriptor;
     private PathfinderGoalMeleeAttack meleeAttackGoal;
 
-    @SuppressWarnings("unused") // Called and required my Minecraft code
+    @SuppressWarnings("unused") // Called and required by Minecraft code
     public PetClassTemplate(World world) {
         super(world);
         this.die();

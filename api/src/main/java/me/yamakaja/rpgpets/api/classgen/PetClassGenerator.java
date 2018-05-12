@@ -46,8 +46,7 @@ public class PetClassGenerator {
         String name = templateClass.getName();
         int lastDot = name.lastIndexOf('.');
         name = name.substring(0, lastDot + 1) + "entity." + type.getEntityName();
-        String className = name.replace('.', '/');
-        ClassVisitor visitor = new PetClassTemplateVisitor(Opcodes.ASM5, writer, className, type);
+        ClassVisitor visitor = new PetClassTemplateVisitor(Opcodes.ASM5, writer, name.replace('.', '/'), type);
         reader.accept(visitor, 0);
 
         return classLoader.loadCustomClass(name, writer.toByteArray());
