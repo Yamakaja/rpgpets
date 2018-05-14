@@ -87,8 +87,10 @@ public class CommandRPGPets implements CommandExecutor, TabCompleter {
             return;
         }
 
-        Player player = Bukkit.getPlayer(args[1]);
-        if (player == null) {
+        boolean all = false;
+
+        Player targetPlayer = Bukkit.getPlayer(args[1]);
+        if (targetPlayer == null && !(all = "@a".equals(args[1]))) {
             sender.sendMessage(ConfigMessages.COMMAND_GIVE_TARGETNOTFOUND.get());
             return;
         }
@@ -116,14 +118,21 @@ public class CommandRPGPets implements CommandExecutor, TabCompleter {
             }
         }
 
-        if (player.getInventory().firstEmpty() == -1)
-            player.getWorld().dropItem(player.getLocation(), stack);
-        else
-            player.getInventory().addItem(stack);
+        if (all)
+            for (Player p : Bukkit.getOnlinePlayers()) dropItem(p, stack);
+        else dropItem(targetPlayer, stack);
 
         sender.sendMessage(ConfigMessages.COMMAND_GIVE_SUCCESS.get(Integer.toString(stack.getAmount()),
-                stack.hasItemMeta() && stack.getItemMeta().hasDisplayName() ? stack.getItemMeta().getDisplayName() : item.name(), player.getName()));
+                stack.hasItemMeta() && stack.getItemMeta().hasDisplayName() ? stack.getItemMeta().getDisplayName() : item.name(),
+                all ? "all online players" : targetPlayer.getName()));
 
+    }
+
+    private void dropItem(Player targetPlayer, ItemStack stack) {
+        if (targetPlayer.getInventory().firstEmpty() == -1)
+            targetPlayer.getWorld().dropItem(targetPlayer.getEyeLocation(), stack).setVelocity(targetPlayer.getLocation().getDirection().multiply(0.2));
+        else
+            targetPlayer.getInventory().addItem(stack);
     }
 
     @Override

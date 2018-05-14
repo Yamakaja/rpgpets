@@ -28,6 +28,7 @@ command:
     description: "Gives player RPGPets items"
     syntax: "/rpgpets give <player> <<food/egg> [amount] | pet [type]>"
     targetnotfound: "&cInvalid player!"
+    everyone: "all online players"
     unknown: "&cUnknown item requested!"
     success: "&aSuccessfully gave {0}x {1}&a to {2}!" # 0: Amount, 1: of, 2: to
     pettype: "&cInvalid pet type!"

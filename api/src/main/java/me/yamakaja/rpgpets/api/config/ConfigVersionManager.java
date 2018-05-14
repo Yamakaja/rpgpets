@@ -14,7 +14,7 @@ import java.util.function.Consumer;
  */
 public class ConfigVersionManager {
 
-    private static final int CURRENT_VERSION = 1;
+    private static final int CURRENT_VERSION = 2;
     private RPGPets plugin;
     private int configVersion = 0;
 
@@ -25,10 +25,9 @@ public class ConfigVersionManager {
     }
 
     private void readConfigVersion() {
-        this.plugin.getDataFolder().mkdir();
-
         File versionFile = new File(this.plugin.getDataFolder(), ".config-version.dat");
 
+        this.plugin.getDataFolder().mkdir();
         if (Objects.requireNonNull(this.plugin.getDataFolder().list()).length == 0) {
             System.out.println("Loading default configs ...");
             saveResources();
@@ -147,6 +146,20 @@ public class ConfigVersionManager {
 
             petStatsFile.delete();
             it.configVersion = 1;
+        }),
+        VERSION_1_TO_2(it -> {
+            // To update:   - Add "command.give.everyone" to messages.yml
+
+            File messageConfigFile = new File(it.plugin.getDataFolder(), "messages.yml");
+            YamlConfiguration messagesConfig = YamlConfiguration.loadConfiguration(messageConfigFile);
+            messagesConfig.set("command.give.everyone", "all online players");
+            try {
+                messagesConfig.save(messageConfigFile);
+            } catch (IOException e) {
+                throw new RuntimeException("Failed to migrate config!", e);
+            }
+
+            it.configVersion = 2;
         });
 
         private Consumer<ConfigVersionManager> consumer;
