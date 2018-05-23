@@ -73,5 +73,10 @@
     "version": "1.3.2",
     "release": 1526282206476,
     "changes": "Add @a to give command"
+  },
+  {
+    "version": "1.3.3",
+    "release": 1527092263998,
+    "changes": "Aesthetic update"
   }
 ]

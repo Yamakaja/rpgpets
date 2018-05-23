@@ -1,9 +1,11 @@
 package me.yamakaja.rpgpets.api.config;
 
 import me.yamakaja.rpgpets.api.RPGPets;
+import me.yamakaja.rpgpets.api.entity.PetType;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.slf4j.event.Level;
 
 import java.io.*;
 import java.util.Objects;
@@ -14,7 +16,7 @@ import java.util.function.Consumer;
  */
 public class ConfigVersionManager {
 
-    private static final int CURRENT_VERSION = 2;
+    private static final int CURRENT_VERSION = 3;
     private RPGPets plugin;
     private int configVersion = 0;
 
@@ -70,7 +72,7 @@ public class ConfigVersionManager {
                 "pets/villager.yml",
                 "pets/wolf.yml",
                 "pets/zombie.yml"})
-            this.plugin.saveResource(file, debug);
+            this.saveResource(file, debug);
     }
 
     /**
@@ -92,7 +94,7 @@ public class ConfigVersionManager {
 
         this.plugin.getLogger().info("[Config] Starting config migration to schema version " + CURRENT_VERSION);
 
-        while (this.configVersion < CURRENT_VERSION)
+        for (; this.configVersion < CURRENT_VERSION; configVersion++)
             transformers[this.configVersion].accept(this);
 
         updateConfigVersion();
@@ -108,11 +110,38 @@ public class ConfigVersionManager {
         }
     }
 
+    public void saveResource(String resourcePath, boolean replace) {
+        if (resourcePath == null || resourcePath.isEmpty())
+            throw new IllegalArgumentException("ResourcePath cannot be null or empty!");
+
+        int lastIndex = resourcePath.lastIndexOf('/');
+        File outDir = new File(this.plugin.getDataFolder(), resourcePath.substring(0, lastIndex >= 0 ? lastIndex : 0));
+        if (!outDir.exists())
+            outDir.mkdirs();
+
+        File outFile = new File(this.plugin.getDataFolder(), resourcePath);
+        if (outFile.exists() && !replace)
+            return;
+
+        try (InputStream in = this.plugin.getResource(resourcePath);
+             OutputStream out = new FileOutputStream(outFile)) {
+            byte[] buf = new byte[1024];
+            int len;
+
+            while ((len = in.read(buf)) > 0)
+                out.write(buf, 0, len);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to save resource \"" + resourcePath + "\": ", e);
+        }
+
+    }
+
     private enum VersionTransformer implements Consumer<ConfigVersionManager> {
 
         VERSION_0_to_1(it -> {
             // To update:   - Separate pet stats into multiple files
             //              - Add new file for villager and wolf
+
             String[] petTypes = {"chicken", "cow", "llama", "mushroom_cow", "pig", "pig_zombie", "polar_bear", "rabbit",
                     "sheep", "zombie"};
 
@@ -160,6 +189,59 @@ public class ConfigVersionManager {
             }
 
             it.configVersion = 2;
+        }),
+        VERSION_2_TO_3(it -> {
+            // To update:   - Add "pet.<pet>: <name>" entries to messages.yml
+
+            File messageConfigFile = new File(it.plugin.getDataFolder(), "messages.yml");
+            YamlConfiguration messagesConfig = YamlConfiguration.loadConfiguration(messageConfigFile);
+
+            PetType[] types = new PetType[]{
+                    PetType.CHICKEN,
+                    PetType.COW,
+                    PetType.DONKEY,
+                    PetType.HORSE,
+                    PetType.LLAMA,
+                    PetType.MUSHROOM_COW,
+                    PetType.OCELOT,
+                    PetType.PIG,
+                    PetType.PIG_ZOMBIE,
+                    PetType.POLAR_BEAR,
+                    PetType.RABBIT,
+                    PetType.SHEEP,
+                    PetType.VILLAGER,
+                    PetType.WOLF,
+                    PetType.ZOMBIE};
+
+            String[] names = new String[]{
+                    "Chicken",
+                    "Cow",
+                    "Donkey",
+                    "Horse",
+                    "Llama",
+                    "Mushroom Cow",
+                    "Ocelot",
+                    "Pig",
+                    "Zombie Pigman",
+                    "Polar Bear",
+                    "Rabbit",
+                    "Sheep",
+                    "Villager",
+                    "Wolf",
+                    "Zombie"
+            };
+
+            // noinspection ConstantConditions
+            for (int i = 0; i < types.length && i < names.length; i++)
+                messagesConfig.set("typename." + types[i].name().toLowerCase(), names);
+
+            try {
+                messagesConfig.save(messageConfigFile);
+            } catch (IOException e) {
+                throw new RuntimeException("Failed to migrate config!", e);
+            }
+
+            it.configVersion = 3;
         });
 
         private Consumer<ConfigVersionManager> consumer;
@@ -174,5 +256,4 @@ public class ConfigVersionManager {
         }
 
     }
-
 }

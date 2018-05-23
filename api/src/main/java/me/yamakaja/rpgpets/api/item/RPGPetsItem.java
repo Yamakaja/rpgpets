@@ -77,7 +77,7 @@ public enum RPGPetsItem {
 
         List<String> lore = new LinkedList<>();
 
-        lore.add(ConfigMessages.ITEM_PET_LORE_TYPE.get(type.name()));
+        lore.add(ConfigMessages.ITEM_PET_LORE_TYPE.get(type.getTypeName()));
         lore.add(ConfigMessages.ITEM_PET_LORE_LEVEL.get(Integer.toString(level)) + (type.getMaxLevel() == level ? " " + ConfigMessages.ITEM_PET_LORE_MAXLEVEL.get() : ""));
         lore.add(ConfigMessages.ITEM_PET_LORE_EXP.get(Float.toString((int) (100 * exp / requiredExp))));
         lore.add(ConfigMessages.ITEM_PET_LORE_AGE.get((grownUp ? ConfigMessages.ITEM_PET_LORE_ADULT : ConfigMessages.ITEM_PET_LORE_BABY).get()));
@@ -117,10 +117,12 @@ public enum RPGPetsItem {
         ItemMeta meta = itemStack.getItemMeta();
         List<String> lore = meta.getLore();
 
-        lore.set(1, ConfigMessages.ITEM_PET_LORE_LEVEL.get("?"));
-        lore.set(2, ConfigMessages.ITEM_PET_LORE_EXP.get("?"));
-        lore.set(3, ConfigMessages.ITEM_PET_LORE_AGE.get("?"));
-        lore.set(4, ConfigMessages.ITEM_PET_LORE_STATUS.get(ConfigMessages.ITEM_PET_LORE_SPAWNED.get()));
+        lore.remove(4);
+        lore.remove(3);
+        lore.remove(2);
+        lore.remove(1);
+
+        lore.add(ConfigMessages.ITEM_PET_LORE_SPAWNED.get());
 
         meta.setLore(lore);
         itemStack.setItemMeta(meta);

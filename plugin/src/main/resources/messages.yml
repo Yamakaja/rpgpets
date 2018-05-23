@@ -7,6 +7,24 @@
 # The prefix to use for messages from RPGPets, insert with {prefix}
 prefix: "&8[&bRPGPets&8] "
 
+# Pet names which are displayed in-game
+typename:
+  chicken: Chicken
+  cow: Cow
+  donkey: Donkey
+  horse: Horse
+  llama: Llama
+  mushroom_cow: Mushroom Cow
+  ocelot: Ocelot
+  pig: Pig
+  pig_zombie: Zombie Pigman
+  polar_bear: Polar Bear
+  rabbit: Rabbit
+  sheep: Sheep
+  villager: Scammer
+  wolf: Wolf
+  zombie: Zombie
+
 general:
   levelup: "&6{0}&b just leveled up to level &6{1}&b!" # 0: Name of pet that leveled up, 1: New level
   petname: "&8[&b{0}&8] &6{1} &c{2}\u2764" # 0: Level, 1: Pet name, 2: Health in hearts (HP/2)

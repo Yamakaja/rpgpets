@@ -36,6 +36,7 @@ public enum PetType {
     private Constructor<?> constructor;
     private String entityId;
     private String entityName;
+    private String typeName;
     private int randomWeight;
     private PetHead mhfName;
     private int maxLevel;
@@ -234,6 +235,14 @@ public enum PetType {
         return mhfName;
     }
 
+    public String getTypeName() {
+        return typeName;
+    }
+
+    public void setTypeName(String typeName) {
+        this.typeName = typeName;
+    }
+
     @Override
     public String toString() {
         return "PetType{" +
@@ -241,6 +250,7 @@ public enum PetType {
                 ", entityClass=" + entityClass +
                 ", entityId='" + entityId + '\'' +
                 ", entityName='" + entityName + '\'' +
+                ", typeName='" + typeName + '\'' +
                 ", randomWeight=" + randomWeight +
                 ", mhfName='" + mhfName + '\'' +
                 ", maxLevel=" + maxLevel +

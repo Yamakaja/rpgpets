@@ -52,6 +52,9 @@ public class ConfigManager {
                     messagesConfig.getString(message.name().replace('_', '.').toLowerCase()))
                     .replace("{prefix}", prefix));
 
+        for (PetType type : PetType.values())
+            type.setTypeName(messagesConfig.getString("typename." + type.name().toLowerCase()));
+
         // Permissions
         File permissionsConfigFile = new File(dataDir, "permissions.yml");
 
