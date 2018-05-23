@@ -5,7 +5,6 @@ import me.yamakaja.rpgpets.api.entity.PetType;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.slf4j.event.Level;
 
 import java.io.*;
 import java.util.Objects;
@@ -174,7 +173,6 @@ public class ConfigVersionManager {
             it.plugin.saveResource("pets/villager.yml", false);
 
             petStatsFile.delete();
-            it.configVersion = 1;
         }),
         VERSION_1_TO_2(it -> {
             // To update:   - Add "command.give.everyone" to messages.yml
@@ -187,8 +185,6 @@ public class ConfigVersionManager {
             } catch (IOException e) {
                 throw new RuntimeException("Failed to migrate config!", e);
             }
-
-            it.configVersion = 2;
         }),
         VERSION_2_TO_3(it -> {
             // To update:   - Add "pet.<pet>: <name>" entries to messages.yml
@@ -240,8 +236,6 @@ public class ConfigVersionManager {
             } catch (IOException e) {
                 throw new RuntimeException("Failed to migrate config!", e);
             }
-
-            it.configVersion = 3;
         });
 
         private Consumer<ConfigVersionManager> consumer;
