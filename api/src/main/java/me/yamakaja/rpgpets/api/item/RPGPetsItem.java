@@ -38,7 +38,7 @@ public enum RPGPetsItem {
             .addEnchantment(EnchantmentGlow.getGlow(), 1, true)
     ),
     PET(() -> RPGPetsItem.getPetCarrier(PetType.getRandomPetType(), ConfigMessages.ITEM_PET_DEFAULTNAME.get(),
-            0, 0, 1, false, PetState.READY));
+            0, 0, 1, false, PetState.READY, false));
 
     private static RPGPets plugin;
     private Supplier<ItemStack> itemStackSupplier;
@@ -62,31 +62,10 @@ public enum RPGPetsItem {
      * @param petState The state of the pet
      * @return The carrying item stack
      */
-    public static ItemStack getPetCarrier(PetType type, String name, int level, float exp, float requiredExp, boolean grownUp, PetState petState) {
-        ItemStack head = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
-
-        PetDescriptor petDescriptor = new PetDescriptor(type, null, name, level, exp, grownUp);
+    public static ItemStack getPetCarrier(PetType type, String name, int level, float exp, float requiredExp, boolean grownUp, PetState petState, boolean minified) {
+        PetDescriptor petDescriptor = new PetDescriptor(type, null, name, level, exp, grownUp, minified);
         petDescriptor.setState(petState);
-
-        plugin.getNMSHandler().writePetDescriptor(head, petDescriptor);
-
-        SkullMeta meta = (SkullMeta) head.getItemMeta();
-        RPGPetsItem.plugin.getNMSHandler().setHeadSkin(meta, type.getHead());
-
-        meta.setDisplayName(name);
-
-        List<String> lore = new LinkedList<>();
-
-        lore.add(ConfigMessages.ITEM_PET_LORE_TYPE.get(type.getTypeName()));
-        lore.add(ConfigMessages.ITEM_PET_LORE_LEVEL.get(Integer.toString(level)) + (type.getMaxLevel() == level ? " " + ConfigMessages.ITEM_PET_LORE_MAXLEVEL.get() : ""));
-        lore.add(ConfigMessages.ITEM_PET_LORE_EXP.get(Float.toString((int) (100 * exp / requiredExp))));
-        lore.add(ConfigMessages.ITEM_PET_LORE_AGE.get((grownUp ? ConfigMessages.ITEM_PET_LORE_ADULT : ConfigMessages.ITEM_PET_LORE_BABY).get()));
-        lore.add(ConfigMessages.ITEM_PET_LORE_STATUS.get(petState == PetState.DEAD ? ConfigMessages.ITEM_PET_LORE_DEAD.get()
-                : (petState == PetState.READY ? ConfigMessages.ITEM_PET_LORE_READY.get() : ConfigMessages.ITEM_PET_LORE_SPAWNED.get())));
-        meta.setLore(lore);
-
-        head.setItemMeta(meta);
-        return plugin.getNMSHandler().setRepairCost(head, ConfigMessages.ITEM_PET_DEFAULTNAME.get().equals(name) ? 29 : Short.MAX_VALUE);
+        return getPetCarrier(petDescriptor);
     }
 
     /**
@@ -102,7 +81,6 @@ public enum RPGPetsItem {
             return null;
 
         return plugin.getNMSHandler().readPetDescriptor(itemStack);
-
     }
 
     /**
@@ -139,7 +117,6 @@ public enum RPGPetsItem {
      * @return The modified item
      */
     public static ItemStack resetPet(ItemStack stack) {
-
         PetDescriptor petDescriptor = RPGPetsItem.decode(stack);
         petDescriptor.setEntityId(0);
         petDescriptor.setState(PetState.DEAD);
@@ -148,11 +125,29 @@ public enum RPGPetsItem {
     }
 
     /**
-     * Wrapper for {@link RPGPetsItem#getPetCarrier(PetType, String, int, float, float, boolean, PetState)}
+     * Wrapper for {@link RPGPetsItem#getPetCarrier(PetType, String, int, float, float, boolean, PetState, boolean)}
      */
     public static ItemStack getPetCarrier(PetDescriptor petDescriptor) {
-        return RPGPetsItem.getPetCarrier(petDescriptor.getPetType(), petDescriptor.getName(), petDescriptor.getLevel(),
-                petDescriptor.getExperience(), petDescriptor.getExperienceRequirement(), petDescriptor.isAdult(), petDescriptor.getState());
+        ItemStack head = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
+        plugin.getNMSHandler().writePetDescriptor(head, petDescriptor);
+
+        SkullMeta meta = (SkullMeta) head.getItemMeta();
+        RPGPetsItem.plugin.getNMSHandler().setHeadSkin(meta, petDescriptor.getPetType().getHead());
+
+        meta.setDisplayName(petDescriptor.getName());
+
+        List<String> lore = new LinkedList<>();
+
+        lore.add(ConfigMessages.ITEM_PET_LORE_TYPE.get(petDescriptor.getPetType().getTypeName()));
+        lore.add(ConfigMessages.ITEM_PET_LORE_LEVEL.get(Integer.toString(petDescriptor.getLevel())) + (petDescriptor.getPetType().getMaxLevel() == petDescriptor.getLevel() ? " " + ConfigMessages.ITEM_PET_LORE_MAXLEVEL.get() : ""));
+        lore.add(ConfigMessages.ITEM_PET_LORE_EXP.get(Float.toString((int) (100 * petDescriptor.getExperience() / petDescriptor.getExperienceRequirement()))));
+        lore.add(ConfigMessages.ITEM_PET_LORE_AGE.get((petDescriptor.isAdult() ? ConfigMessages.ITEM_PET_LORE_ADULT : ConfigMessages.ITEM_PET_LORE_BABY).get()));
+        lore.add(ConfigMessages.ITEM_PET_LORE_STATUS.get(petDescriptor.getState() == PetState.DEAD ? ConfigMessages.ITEM_PET_LORE_DEAD.get()
+                : (petDescriptor.getState() == PetState.READY ? ConfigMessages.ITEM_PET_LORE_READY.get() : ConfigMessages.ITEM_PET_LORE_SPAWNED.get())));
+        meta.setLore(lore);
+
+        head.setItemMeta(meta);
+        return plugin.getNMSHandler().setRepairCost(head, ConfigMessages.ITEM_PET_DEFAULTNAME.get().equals(petDescriptor.getName()) ? 29 : Short.MAX_VALUE);
     }
 
     public ItemStack get() {

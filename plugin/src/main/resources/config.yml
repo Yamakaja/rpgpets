@@ -34,3 +34,6 @@ enable_alternative_revival: false
 
 # This option determines whether or not pets are allowed to destroy farmland
 disable_farmland_destruction: false
+
+# Controls which level a pet has to reach to be minifiable
+minify_level: 15

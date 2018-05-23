@@ -6,7 +6,9 @@ package me.yamakaja.rpgpets.api.config;
 public enum ConfigPermissions {
 
     COMMAND_HELP,
-    COMMAND_GIVE;
+    COMMAND_GIVE,
+    COMMAND_MINIFY,
+    COMMAND_DEMINIFY;
 
     private String permission;
 

@@ -1,6 +1,6 @@
 allprojects {
     group 'me.yamakaja.rpgpets'
-    version '1.3.3'
+    version '1.4.0'
 
     ext {
         spigotApiVersion = "1.11.2-R0.1-SNAPSHOT"

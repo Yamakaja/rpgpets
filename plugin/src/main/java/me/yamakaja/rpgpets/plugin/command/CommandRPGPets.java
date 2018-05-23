@@ -3,6 +3,7 @@ package me.yamakaja.rpgpets.plugin.command;
 import com.getsentry.raven.event.Breadcrumb;
 import com.getsentry.raven.event.BreadcrumbBuilder;
 import me.yamakaja.rpgpets.api.RPGPets;
+import me.yamakaja.rpgpets.api.config.ConfigGeneral;
 import me.yamakaja.rpgpets.api.config.ConfigMessages;
 import me.yamakaja.rpgpets.api.config.ConfigPermissions;
 import me.yamakaja.rpgpets.api.entity.PetDescriptor;
@@ -14,9 +15,11 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -41,44 +44,149 @@ public class CommandRPGPets implements CommandExecutor, TabCompleter {
                         .setData(Collections.singletonMap("args", String.join(" ", args))).build()
         );
 
-        if (!commandSender.hasPermission(ConfigPermissions.COMMAND_HELP.get())) {
-            commandSender.sendMessage(ChatColor.AQUA + "Running " + ChatColor.RED + "RPGPets" + ChatColor.AQUA + " version "
-                    + ChatColor.RED + this.plugin.getDescription().getVersion() + ChatColor.AQUA + " by "
-                    + ChatColor.RED + "Yamakaja");
-            return true;
-        }
-
         if (args.length == 0) {
-            commandSender.sendMessage(ConfigMessages.COMMAND_HELP_HINT.get());
+            if (checkPerms(commandSender, ConfigPermissions.COMMAND_HELP.get()))
+                commandSender.sendMessage(ConfigMessages.COMMAND_HELP_HINT.get());
             return true;
         }
 
         switch (args[0].toLowerCase()) {
             case "give":
-                if (!commandSender.hasPermission(ConfigPermissions.COMMAND_GIVE.get())) {
-                    commandSender.sendMessage(ConfigMessages.COMMAND_NOPERM.get());
+                if (!checkPerms(commandSender, ConfigPermissions.COMMAND_GIVE.get()))
                     return true;
-                }
 
                 processGive(commandSender, args);
                 break;
             case "help":
-                if (!commandSender.hasPermission(ConfigPermissions.COMMAND_HELP.get())) {
+                if (!checkPerms(commandSender, ConfigPermissions.COMMAND_HELP.get()))
+                    return true;
+
+
+                commandSender.sendMessage(ConfigMessages.COMMAND_HELP_SUBCOMMANDS.get());
+                commandSender.sendMessage(ConfigMessages.COMMAND_HELP_SUBCOMMAND.get("help", ConfigMessages.COMMAND_HELP_DESCRIPTION.get()));
+                commandSender.sendMessage(ConfigMessages.COMMAND_HELP_SUBCOMMAND.get("give", ConfigMessages.COMMAND_GIVE_DESCRIPTION.get()));
+                commandSender.sendMessage(ConfigMessages.COMMAND_HELP_SUBCOMMAND.get("minify", ConfigMessages.COMMAND_MINIFY_DESCRIPTION.get()));
+                commandSender.sendMessage(ConfigMessages.COMMAND_HELP_SUBCOMMAND.get("deminify", ConfigMessages.COMMAND_DEMINIFY_DESCRIPTION.get()));
+                commandSender.sendMessage(ConfigMessages.COMMAND_HELP_SUBCOMMAND.get("reload", ConfigMessages.COMMAND_RELOAD_DESCRIPTION.get()));
+                break;
+
+            case "minify": {
+                if (!checkPerms(commandSender, ConfigPermissions.COMMAND_MINIFY.get()))
+                    return true;
+
+
+                if (!(commandSender instanceof Player)) {
+                    commandSender.sendMessage(ConfigMessages.COMMAND_NOCONSOLE.get());
+                    return true;
+                }
+
+                Player player = (Player) commandSender;
+                ItemStack item = player.getInventory().getItemInMainHand();
+                PetDescriptor petDescriptor = RPGPetsItem.decode(item);
+
+                if (petDescriptor == null) {
+                    player.sendMessage(ConfigMessages.COMMAND_MINIFY_ITEM.get());
+                    return true;
+                }
+
+                if (petDescriptor.getEntityId() != 0) {
+                    player.sendMessage(ConfigMessages.COMMAND_MINIFY_ACTIVE.get());
+                    return true;
+                }
+
+                if (petDescriptor.isMinified()) {
+                    player.sendMessage(ConfigMessages.COMMAND_MINIFY_MINIFIED.get());
+                    return true;
+                }
+
+                if (petDescriptor.getLevel() < ConfigGeneral.MINIFY_LEVEL.getAsInt()) {
+                    player.sendMessage(ConfigMessages.COMMAND_MINIFY_LEVEL.get(String.valueOf(ConfigGeneral.MINIFY_LEVEL.getAsInt())));
+                    return true;
+                }
+
+                petDescriptor.setMinified(true);
+                player.getInventory().setItemInMainHand(RPGPetsItem.getPetCarrier(petDescriptor));
+                player.sendMessage(ConfigMessages.COMMAND_MINIFY_SUCCESS.get());
+                break;
+            }
+
+            case "deminify": {
+                if (!checkPerms(commandSender, ConfigPermissions.COMMAND_DEMINIFY.get()))
+                    return true;
+
+
+                if (!(commandSender instanceof Player)) {
+                    commandSender.sendMessage(ConfigMessages.COMMAND_NOCONSOLE.get());
+                    return true;
+                }
+
+                Player player = (Player) commandSender;
+                ItemStack item = player.getInventory().getItemInMainHand();
+                PetDescriptor petDescriptor = RPGPetsItem.decode(item);
+
+                if (petDescriptor == null) {
+                    player.sendMessage(ConfigMessages.COMMAND_MINIFY_ITEM.get());
+                    return true;
+                }
+
+                if (petDescriptor.getEntityId() != 0) {
+                    player.sendMessage(ConfigMessages.COMMAND_MINIFY_ACTIVE.get());
+                    return true;
+                }
+
+                if (!petDescriptor.isMinified()) {
+                    player.sendMessage(ConfigMessages.COMMAND_DEMINIFY_NORMAL.get());
+                    return true;
+                }
+
+                petDescriptor.setMinified(false);
+                player.getInventory().setItemInMainHand(RPGPetsItem.getPetCarrier(petDescriptor));
+                player.sendMessage(ConfigMessages.COMMAND_DEMINIFY_SUCCESS.get());
+                break;
+            }
+
+            case "reload":
+                if (!commandSender.isOp()) {
                     commandSender.sendMessage(ConfigMessages.COMMAND_NOPERM.get());
                     return true;
                 }
 
-                commandSender.sendMessage(ConfigMessages.COMMAND_HELP_SUBCOMMANDS.get());
-                commandSender.sendMessage(ConfigMessages.COMMAND_HELP_SUBCOMMAND.get("help",
-                        ConfigMessages.COMMAND_HELP_DESCRIPTION.get()));
-                commandSender.sendMessage(ConfigMessages.COMMAND_HELP_SUBCOMMAND.get("give",
-                        ConfigMessages.COMMAND_GIVE_DESCRIPTION.get()));
+                try {
+                    this.plugin.getConfigManager().injectConfigs();
+                    commandSender.sendMessage(ChatColor.GREEN + "Successfully reloaded RPGPets config!");
+                } catch (InvalidConfigurationException | IOException e) {
+                    e.printStackTrace();
+                    commandSender.sendMessage(ChatColor.RED + "An error occurred while reloading the RPGPets config, please check the console!");
+                }
                 break;
             default:
-                commandSender.sendMessage(ConfigMessages.COMMAND_HELP_HINT.get());
+                if (checkPerms(commandSender, ConfigPermissions.COMMAND_HELP.get()))
+                    commandSender.sendMessage(ConfigMessages.COMMAND_HELP_HINT.get());
         }
 
         return true;
+    }
+
+    /**
+     * Checks if the player has the passed permission, and if no, sends them the appropriate error message
+     *
+     * @param sender     The command sender that initiated the command
+     * @param permission The permission to check
+     * @return Whether the check succeeded
+     */
+    private boolean checkPerms(CommandSender sender, String permission) {
+        if (sender.hasPermission(permission))
+            return true;
+
+        if (!sender.hasPermission(ConfigPermissions.COMMAND_HELP.get())) {
+            sender.sendMessage(ChatColor.AQUA + "Running " + ChatColor.RED + "RPGPets" + ChatColor.AQUA + " version "
+                    + ChatColor.RED + this.plugin.getDescription().getVersion() + ChatColor.AQUA + " by "
+                    + ChatColor.RED + "Yamakaja");
+            return false;
+        }
+
+        sender.sendMessage(ConfigMessages.COMMAND_NOPERM.get());
+        return false;
     }
 
     private void processGive(CommandSender sender, String[] args) {
@@ -108,7 +216,8 @@ public class CommandRPGPets implements CommandExecutor, TabCompleter {
         if (args.length >= 4) {
             try {
                 if (item == RPGPetsItem.PET)
-                    stack = RPGPetsItem.getPetCarrier(new PetDescriptor(PetType.valueOf(args[3]), null, ConfigMessages.ITEM_PET_DEFAULTNAME.get(), 0, 0, false));
+                    stack = RPGPetsItem.getPetCarrier(new PetDescriptor(PetType.valueOf(args[3]),
+                            null, ConfigMessages.ITEM_PET_DEFAULTNAME.get(), 0, 0, false, false));
                 else
                     stack.setAmount(Math.min(64, Integer.parseInt(args[3])));
             } catch (NumberFormatException e) {
@@ -146,7 +255,7 @@ public class CommandRPGPets implements CommandExecutor, TabCompleter {
         if (args.length == 1)
             return subcommands.stream().filter(cmd -> cmd.startsWith(args[0])).collect(Collectors.toList());
 
-        if (args.length >= 2 && args[0].equals("give")) {
+        if (args[0].equals("give")) {
             if (!commandSender.hasPermission(ConfigPermissions.COMMAND_GIVE.get()))
                 return Collections.emptyList();
 

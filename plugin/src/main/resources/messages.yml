@@ -37,6 +37,7 @@ general:
 command:
   noperm: "&4You don't have permission to use this command!"
   syntax: "&cCorrect syntax: {0}" # Usage
+  noconsole: "&cThis command may only be used by players!"
   help:
     hint: "&bSee &6/rpgpets help&b for a list of commands"
     description: "Shows this message"
@@ -50,6 +51,21 @@ command:
     unknown: "&cUnknown item requested!"
     success: "&aSuccessfully gave {0}x {1}&a to {2}!" # 0: Amount, 1: of, 2: to
     pettype: "&cInvalid pet type!"
+  reload:
+    description: "Reloads the configuration files"
+    syntax: "/rpgpets reload"
+  minify:
+    description: "Shrinks pets back into their baby form"
+    syntax: "/rpgpets minify"
+    item: "&cYou're not holding a pet!"
+    minified: "&cThis pet has already been minified!"
+    active: "&cYour pet is currently active!"
+    level: "&cPets need to be at level {0} for minification!"
+    success: "&aYour pet has successfully been minified!"
+  deminify:
+    description: "Restores a pet back into its original state"
+    success: "&aSuccessfully restored your pet!"
+    normal: "&cYour pet is already in its normal state!"
 
 item:
   food:

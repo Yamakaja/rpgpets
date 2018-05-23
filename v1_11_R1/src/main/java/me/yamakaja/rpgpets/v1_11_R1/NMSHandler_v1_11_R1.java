@@ -120,9 +120,10 @@ public class NMSHandler_v1_11_R1 implements NMSHandler {
         petTag.setInt("level", petDescriptor.getLevel());
         petTag.setFloat("exp", petDescriptor.getExperience());
         petTag.setInt("entityId", petDescriptor.getEntityId());
-        petTag.setBoolean("adult", petDescriptor.isAdult());
+        petTag.setBoolean("adult", petDescriptor.hasGrownUp());
         petTag.setString("state", petDescriptor.getState().name());
         petTag.setDouble("random", Math.random());
+        petTag.setBoolean("minified", petDescriptor.isMinified());
 
         NMSUtils.setUnhandledTag(itemMeta, NBT_KEY, petTag);
         item.setItemMeta(itemMeta);
@@ -142,7 +143,8 @@ public class NMSHandler_v1_11_R1 implements NMSHandler {
                 meta.getDisplayName(),
                 tag.getInt("level"),
                 tag.getFloat("exp"),
-                tag.getBoolean("adult"));
+                tag.getBoolean("adult"),
+                tag.getBoolean("minified"));
 
         petDescriptor.setEntityId(tag.getInt("entityId"));
         petDescriptor.setState(PetState.valueOf(tag.getString("state")));

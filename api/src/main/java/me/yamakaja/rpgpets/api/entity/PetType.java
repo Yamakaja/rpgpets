@@ -68,6 +68,9 @@ public enum PetType {
     }
 
     public static void initWeightMap() {
+        weightDistributionMap.clear();
+        sortedWeightList.clear();
+
         int weightSum = Arrays.stream(PetType.values()).mapToInt(type -> type.randomWeight).sum();
         double lastWeight = 0;
 
@@ -96,7 +99,8 @@ public enum PetType {
 
     public static void generateClasses(PetClassGenerator classGen) {
         for (PetType type : PetType.values())
-            type.setEntityClass(classGen.generatePetClass(type));
+            if (type.getEntitySuperClass() != null)
+                type.setEntityClass(classGen.generatePetClass(type));
     }
 
     public Class<?> getEntityClass() {

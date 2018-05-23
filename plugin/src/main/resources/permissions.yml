@@ -1,3 +1,5 @@
 command:
   help: rpgpets.command.help
   give: rpgpets.command.give
+  minify: rpgpets.command.minify
+  deminify: rpgpets.command.deminify

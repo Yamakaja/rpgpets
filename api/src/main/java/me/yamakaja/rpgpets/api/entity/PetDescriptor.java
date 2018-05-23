@@ -29,7 +29,9 @@ public class PetDescriptor {
     private float knockback;
     private float maxHealth;
 
-    public PetDescriptor(PetType petType, Player owner, String name, int level, float experience, boolean grownUp) {
+    private boolean minified = false;
+
+    public PetDescriptor(PetType petType, Player owner, String name, int level, float experience, boolean grownUp, boolean minified) {
         this.petType = petType;
         this.owner = owner;
         this.name = name;
@@ -38,6 +40,7 @@ public class PetDescriptor {
         this.grownUp = grownUp;
 
         this.state = PetState.READY;
+        this.minified = minified;
 
         this.updateStats();
     }
@@ -62,8 +65,12 @@ public class PetDescriptor {
         return entityId != 0;
     }
 
+    public boolean hasGrownUp() {
+        return this.grownUp;
+    }
+
     public boolean isAdult() {
-        return grownUp;
+        return grownUp && !minified;
     }
 
     public void setGrownUp(boolean grownUp) {
@@ -127,6 +134,14 @@ public class PetDescriptor {
         return maxHealth;
     }
 
+    public boolean isMinified() {
+        return minified;
+    }
+
+    public void setMinified(boolean minified) {
+        this.minified = minified;
+    }
+
     private void updateStats() {
         this.experienceRequirement = (float) (this.petType.getBaseExpRequirement() * Math.pow(this.petType.getExpRequirementModifier(), this.level));
 
@@ -159,7 +174,6 @@ public class PetDescriptor {
 
         if (Math.random() < probability)
             this.setGrownUp(true);
-
     }
 
     /**
@@ -197,6 +211,7 @@ public class PetDescriptor {
                 ", name='" + name + '\'' +
                 ", level=" + level +
                 ", state=" + state +
+                ", minified=" + minified +
                 ", entityId=" + entityId +
                 ", experience=" + experience +
                 ", experienceRequirement=" + experienceRequirement +

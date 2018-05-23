@@ -5,6 +5,7 @@ import me.yamakaja.rpgpets.api.entity.PetType;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.Plugin;
 
 import java.io.*;
 import java.util.Objects;
@@ -15,7 +16,7 @@ import java.util.function.Consumer;
  */
 public class ConfigVersionManager {
 
-    private static final int CURRENT_VERSION = 3;
+    private static final int CURRENT_VERSION = 4;
     private RPGPets plugin;
     private int configVersion = 0;
 
@@ -177,71 +178,106 @@ public class ConfigVersionManager {
         VERSION_1_TO_2(it -> {
             // To update:   - Add "command.give.everyone" to messages.yml
 
-            File messageConfigFile = new File(it.plugin.getDataFolder(), "messages.yml");
-            YamlConfiguration messagesConfig = YamlConfiguration.loadConfiguration(messageConfigFile);
-            messagesConfig.set("command.give.everyone", "all online players");
-            try {
-                messagesConfig.save(messageConfigFile);
-            } catch (IOException e) {
-                throw new RuntimeException("Failed to migrate config!", e);
-            }
+            edit(it.plugin, "messages.yml",
+                    config -> config.set("command.give.everyone", "all online players"));
+
         }),
         VERSION_2_TO_3(it -> {
             // To update:   - Add "pet.<pet>: <name>" entries to messages.yml
 
-            File messageConfigFile = new File(it.plugin.getDataFolder(), "messages.yml");
-            YamlConfiguration messagesConfig = YamlConfiguration.loadConfiguration(messageConfigFile);
+            edit(it.plugin, "messages.yml", messagesConfig -> {
+                PetType[] types = new PetType[]{
+                        PetType.CHICKEN,
+                        PetType.COW,
+                        PetType.DONKEY,
+                        PetType.HORSE,
+                        PetType.LLAMA,
+                        PetType.MUSHROOM_COW,
+                        PetType.OCELOT,
+                        PetType.PIG,
+                        PetType.PIG_ZOMBIE,
+                        PetType.POLAR_BEAR,
+                        PetType.RABBIT,
+                        PetType.SHEEP,
+                        PetType.VILLAGER,
+                        PetType.WOLF,
+                        PetType.ZOMBIE};
 
-            PetType[] types = new PetType[]{
-                    PetType.CHICKEN,
-                    PetType.COW,
-                    PetType.DONKEY,
-                    PetType.HORSE,
-                    PetType.LLAMA,
-                    PetType.MUSHROOM_COW,
-                    PetType.OCELOT,
-                    PetType.PIG,
-                    PetType.PIG_ZOMBIE,
-                    PetType.POLAR_BEAR,
-                    PetType.RABBIT,
-                    PetType.SHEEP,
-                    PetType.VILLAGER,
-                    PetType.WOLF,
-                    PetType.ZOMBIE};
+                String[] names = new String[]{
+                        "Chicken",
+                        "Cow",
+                        "Donkey",
+                        "Horse",
+                        "Llama",
+                        "Mushroom Cow",
+                        "Ocelot",
+                        "Pig",
+                        "Zombie Pigman",
+                        "Polar Bear",
+                        "Rabbit",
+                        "Sheep",
+                        "Villager",
+                        "Wolf",
+                        "Zombie"
+                };
 
-            String[] names = new String[]{
-                    "Chicken",
-                    "Cow",
-                    "Donkey",
-                    "Horse",
-                    "Llama",
-                    "Mushroom Cow",
-                    "Ocelot",
-                    "Pig",
-                    "Zombie Pigman",
-                    "Polar Bear",
-                    "Rabbit",
-                    "Sheep",
-                    "Villager",
-                    "Wolf",
-                    "Zombie"
-            };
+                // noinspection ConstantConditions
+                for (int i = 0; i < types.length && i < names.length; i++)
+                    messagesConfig.set("typename." + types[i].name().toLowerCase(), names);
 
-            // noinspection ConstantConditions
-            for (int i = 0; i < types.length && i < names.length; i++)
-                messagesConfig.set("typename." + types[i].name().toLowerCase(), names);
+            });
 
-            try {
-                messagesConfig.save(messageConfigFile);
-            } catch (IOException e) {
-                throw new RuntimeException("Failed to migrate config!", e);
-            }
+        }),
+        VERSION_3_TO_4(it -> {
+            // To update:   - Add command.noconsole to messages.yml
+            //              - Add command.{reload,minify,deminify}.* to messages.yml
+            //              - Add command.{minify,deminify} to permissions.yml
+            //              - Add minify_level to config.yml
+
+            edit(it.plugin, "messages.yml", config -> {
+                config.set("command.noconsole", "&cThis command may only be used by players!");
+
+                config.set("command.reload.description", "Reloads the configuration files");
+                config.set("command.reload.syntax", "/rpgpets reload");
+
+                config.set("command.minify.description", "Shrinks pets back into their baby form");
+                config.set("command.minify.syntax", "/rpgpets minify");
+                config.set("command.minify.item", "&cYou're not holding a pet!");
+                config.set("command.minify.minified", "&cThis pat has already been minified!");
+                config.set("command.minify.active", "&cYour pet is currently active!");
+                config.set("command.minify.level", "&cPets need to be at level {0} for minification!");
+                config.set("command.minify.success", "&aYour pet has successfully been minified!");
+
+                config.set("command.deminify.description", "Restores a pet back into its original state");
+                config.set("command.deminify.success", "&aSuccessfully restored pet to original state!");
+                config.set("command.deminify.normal", "&cYour pet is already in its normal state!");
+            });
+
+            edit(it.plugin, "permissions.yml", config -> {
+               config.set("command.minify", "rpgpets.command.minify");
+               config.set("command.deminify", "rpgpets.command.deminify");
+            });
+
+            edit(it.plugin, "config.yml", config -> config.set("minify_level", 15));
         });
 
         private Consumer<ConfigVersionManager> consumer;
 
         VersionTransformer(Consumer<ConfigVersionManager> consumer) {
             this.consumer = consumer;
+        }
+
+        private static void edit(Plugin plugin, String file, Consumer<YamlConfiguration> consumer) {
+            File configFile = new File(plugin.getDataFolder(), file);
+            YamlConfiguration config = YamlConfiguration.loadConfiguration(configFile);
+
+            consumer.accept(config);
+
+            try {
+                config.save(configFile);
+            } catch (IOException e) {
+                throw new RuntimeException("Failed to save config file: \"" + file + "\"", e);
+            }
         }
 
         @Override
