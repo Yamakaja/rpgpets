@@ -123,7 +123,6 @@ public class EggManager implements Listener, Runnable {
         new BukkitRunnable() {
             @Override
             public void run() {
-
                 if (carryingPlayers.containsKey(player) &&
                         (player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR)) {
                     carryingPlayers.remove(player);
@@ -139,8 +138,7 @@ public class EggManager implements Listener, Runnable {
 
                 ItemMeta meta = stack.getItemMeta();
 
-                if (!meta.hasDisplayName() || !meta.hasLore() ||
-                        !meta.getDisplayName().equals(ConfigMessages.ITEM_EGG_NAME.get())) {
+                if (!meta.hasDisplayName() || !meta.hasLore() || !meta.getDisplayName().equals(ConfigMessages.ITEM_EGG_NAME.get())) {
                     carryingPlayers.remove(player);
                     return;
                 }
@@ -166,7 +164,9 @@ public class EggManager implements Listener, Runnable {
                 + player.getStatistic(Statistic.SPRINT_ONE_CM)
                 + player.getStatistic(Statistic.SWIM_ONE_CM)
                 + player.getStatistic(Statistic.CROUCH_ONE_CM)
-                + player.getStatistic(Statistic.DIVE_ONE_CM);
+                + player.getStatistic(Statistic.DIVE_ONE_CM)
+                + player.getStatistic(Statistic.FLY_ONE_CM)
+                + player.getStatistic(Statistic.FALL_ONE_CM);
     }
 
 }

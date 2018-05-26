@@ -39,8 +39,8 @@ public class PetClassTemplate extends EntityAgeable implements Pet {
 
         NMSUtils.clearGoalsAndTargets(goalSelector, targetSelector);
 
-        this.goalSelector.a(0, new PetPathfinderGoalFollowOwner(this, this.petDescriptor));
-        this.goalSelector.a(1, meleeAttackGoal = new PathfinderGoalMeleeAttack(this, this.petDescriptor.getSpeed(), true)); // flag: hasToSeeTarget
+        this.goalSelector.a(0, meleeAttackGoal = new PathfinderGoalMeleeAttack(this, this.petDescriptor.getSpeed(), true)); // flag: hasToSeeTarget
+        this.goalSelector.a(1, new PetPathfinderGoalFollowOwner(this, this.petDescriptor));
         this.goalSelector.a(2, new PathfinderGoalRandomLookaround(this));
 
         this.targetSelector.a(0, new PathfinderGoalNearestAttackableTarget<>(this, EntityMonster.class, false)); // flag: Calls for help

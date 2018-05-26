@@ -83,5 +83,10 @@
     "version": "1.4.0",
     "release": 1527110347923,
     "changes": "Add minification; Add reload command"
+  },
+  {
+    "version": "1.4.1",
+    "release": 1527330850670,
+    "changes": "Multiple bugfixes and new features"
   }
 ]

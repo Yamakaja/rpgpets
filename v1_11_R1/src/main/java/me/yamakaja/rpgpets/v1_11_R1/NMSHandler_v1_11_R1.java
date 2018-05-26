@@ -7,6 +7,7 @@ import me.yamakaja.rpgpets.api.RPGPets;
 import me.yamakaja.rpgpets.api.classgen.PetClassGenerator;
 import me.yamakaja.rpgpets.api.entity.*;
 import net.minecraft.server.v1_11_R1.*;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_11_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_11_R1.entity.CraftEntity;
@@ -149,7 +150,7 @@ public class NMSHandler_v1_11_R1 implements NMSHandler {
         petDescriptor.setEntityId(tag.getInt("entityId"));
         petDescriptor.setState(PetState.valueOf(tag.getString("state")));
 
-        petDescriptor.setName(meta.getDisplayName());
+        petDescriptor.setName(ChatColor.stripColor(meta.getDisplayName()));
 
         return petDescriptor;
     }

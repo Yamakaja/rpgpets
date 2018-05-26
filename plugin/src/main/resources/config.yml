@@ -37,3 +37,7 @@ disable_farmland_destruction: false
 
 # Controls which level a pet has to reach to be minifiable
 minify_level: 15
+
+# Enabling this option makes pets require min(64, petLevel) pet food items
+# (i.e. the amount of their level capped at 64) for revival
+expensive_revival: false

@@ -13,7 +13,7 @@ import java.util.UUID;
  */
 public abstract class AbstractRevivalManager implements Listener, Runnable {
 
-    private RPGPets plugin;
+    protected RPGPets plugin;
 
     private Map<UUID, Long> cooldowns = new HashMap<>();
 

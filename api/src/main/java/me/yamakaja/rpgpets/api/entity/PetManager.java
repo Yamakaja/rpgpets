@@ -6,6 +6,7 @@ import com.getsentry.raven.event.BreadcrumbBuilder;
 import me.yamakaja.rpgpets.api.RPGPets;
 import me.yamakaja.rpgpets.api.config.ConfigGeneral;
 import me.yamakaja.rpgpets.api.config.ConfigMessages;
+import me.yamakaja.rpgpets.api.config.ConfigPermissions;
 import me.yamakaja.rpgpets.api.event.PetLevelUpEvent;
 import me.yamakaja.rpgpets.api.hook.FeudalHook;
 import me.yamakaja.rpgpets.api.hook.Hooks;
@@ -111,8 +112,10 @@ public class PetManager implements Listener {
         event.setCancelled(true);
 
         if (this.spawnedPets.containsKey(event.getPlayer().getUniqueId())) {
-            if (!petDescriptor.hasEntityId())
+            if (!petDescriptor.hasEntityId()) {
+                event.getPlayer().sendMessage(ConfigMessages.GENERAL_ONEPET.get());
                 return;
+            }
 
             LivingEntity entity = this.spawnedPets.get(event.getPlayer().getUniqueId());
 
@@ -207,8 +210,12 @@ public class PetManager implements Listener {
     @EventHandler
     public void onPetLevelUp(PetLevelUpEvent e) {
         PetDescriptor descriptor = e.getPetDescriptor();
-        descriptor.getOwner().sendMessage(ConfigMessages.GENERAL_LEVELUP.get(descriptor.getName(),
+        Player owner = descriptor.getOwner();
+        owner.sendMessage(ConfigMessages.GENERAL_LEVELUP.get(descriptor.getName(),
                 Integer.toString(descriptor.getLevel())));
+
+        if (descriptor.getLevel() == ConfigGeneral.MINIFY_LEVEL.getAsInt() && owner.hasPermission(ConfigPermissions.COMMAND_MINIFY.get()))
+            owner.sendMessage(ConfigMessages.GENERAL_MINIFIABLE.get());
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -434,7 +441,7 @@ public class PetManager implements Listener {
 
         ItemStack petItem = e.getPlayer().getInventory().getItem(slot);
         ItemMeta petItemMeta = petItem.getItemMeta();
-        petItemMeta.setDisplayName(pet.getName());
+        petItemMeta.setDisplayName(ChatColor.GOLD + pet.getName());
         petItem.setItemMeta(petItemMeta);
         e.getPlayer().getInventory().setItem(slot, petItem);
     }
@@ -494,9 +501,9 @@ public class PetManager implements Listener {
 
             ItemStack stack = event.getCursor();
 
-            if (event.getAction() == InventoryAction.HOTBAR_MOVE_AND_READD || event.getAction() == InventoryAction.HOTBAR_SWAP) {
+            if (event.getAction() == InventoryAction.HOTBAR_MOVE_AND_READD || event.getAction() == InventoryAction.HOTBAR_SWAP)
                 stack = event.getWhoClicked().getInventory().getItem(event.getHotbarButton());
-            }
+
 
             if (stack == null || stack.getType() == Material.AIR)
                 return;
@@ -508,7 +515,7 @@ public class PetManager implements Listener {
         if (petDescriptor == null)
             return;
 
-        if (!petDescriptor.getName().equals(ConfigMessages.ITEM_PET_DEFAULTNAME.get())) {
+        if (!petDescriptor.getName().equals(ChatColor.stripColor(ConfigMessages.ITEM_PET_DEFAULTNAME.get()))) {
             event.getWhoClicked().sendMessage(ConfigMessages.GENERAL_NAMEONCE.get());
             event.setCancelled(true);
             ((Player) event.getWhoClicked()).updateInventory();

@@ -19,7 +19,8 @@ public enum ConfigGeneral {
     ENABLE_CRAFTING_HACK("enable_crafting_hack"),
     ENABLE_ALTERNATIVE_REVIVAL("enable_alternative_revival"),
     DISABLE_FARMLAND_DESTRUCTION("disable_farmland_destruction"),
-    MINIFY_LEVEL("minify_level");
+    MINIFY_LEVEL("minify_level"),
+    EXPENSIVE_REVIVAL("expensive_revival");
 
     private static YamlConfiguration configuration;
     private String path;

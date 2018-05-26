@@ -134,14 +134,16 @@ public enum RPGPetsItem {
         SkullMeta meta = (SkullMeta) head.getItemMeta();
         RPGPetsItem.plugin.getNMSHandler().setHeadSkin(meta, petDescriptor.getPetType().getHead());
 
-        meta.setDisplayName(petDescriptor.getName());
+        meta.setDisplayName(ConfigMessages.ITEM_PET_DEFAULTNAME.get().equals(petDescriptor.getName())
+                ? petDescriptor.getName() : ChatColor.GOLD + petDescriptor.getName());
 
         List<String> lore = new LinkedList<>();
 
         lore.add(ConfigMessages.ITEM_PET_LORE_TYPE.get(petDescriptor.getPetType().getTypeName()));
         lore.add(ConfigMessages.ITEM_PET_LORE_LEVEL.get(Integer.toString(petDescriptor.getLevel())) + (petDescriptor.getPetType().getMaxLevel() == petDescriptor.getLevel() ? " " + ConfigMessages.ITEM_PET_LORE_MAXLEVEL.get() : ""));
         lore.add(ConfigMessages.ITEM_PET_LORE_EXP.get(Float.toString((int) (100 * petDescriptor.getExperience() / petDescriptor.getExperienceRequirement()))));
-        lore.add(ConfigMessages.ITEM_PET_LORE_AGE.get((petDescriptor.isAdult() ? ConfigMessages.ITEM_PET_LORE_ADULT : ConfigMessages.ITEM_PET_LORE_BABY).get()));
+        lore.add(ConfigMessages.ITEM_PET_LORE_AGE.get((petDescriptor.isAdult() ? ConfigMessages.ITEM_PET_LORE_ADULT : ConfigMessages.ITEM_PET_LORE_BABY).get(),
+                petDescriptor.isMinified() ? ConfigMessages.ITEM_PET_LORE_MINIFIED.get() : ""));
         lore.add(ConfigMessages.ITEM_PET_LORE_STATUS.get(petDescriptor.getState() == PetState.DEAD ? ConfigMessages.ITEM_PET_LORE_DEAD.get()
                 : (petDescriptor.getState() == PetState.READY ? ConfigMessages.ITEM_PET_LORE_READY.get() : ConfigMessages.ITEM_PET_LORE_SPAWNED.get())));
         meta.setLore(lore);

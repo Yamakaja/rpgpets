@@ -16,7 +16,7 @@ import java.util.function.Consumer;
  */
 public class ConfigVersionManager {
 
-    private static final int CURRENT_VERSION = 4;
+    private static final int CURRENT_VERSION = 5;
     private RPGPets plugin;
     private int configVersion = 0;
 
@@ -259,6 +259,24 @@ public class ConfigVersionManager {
             });
 
             edit(it.plugin, "config.yml", config -> config.set("minify_level", 15));
+        }),
+        VERSION_4_TO_5(it -> {
+            // To update:   - Add general.{onepet,expensiverevival,minifiable} to messages.yml
+            //              - Add item.pet.lore.minified to messages.yml
+            //              - Add expensive_revival to config.yml
+
+            edit(it.plugin, "messages.yml", config -> {
+                config.set("general.onepet", "&cSorry, you can only have one pet active at a time!");
+                config.set("general.expensiverevival", "&cYou need at least {0} pet food to revive this pet!");
+                config.set("general.minifiable", "&aYou can now minify your pet!");
+
+                config.set("item.pet.lore.minified", "(Minified)");
+                config.set("item.pet.lore.age", config.getString("item.pet.lore.age") + " {1}");
+            });
+
+            edit(it.plugin, "config.yml", config -> {
+                config.set("expensive_revival", false);
+            });
         });
 
         private Consumer<ConfigVersionManager> consumer;

@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 public class CommandRPGPets implements CommandExecutor, TabCompleter {
 
     private RPGPets plugin;
-    private List<String> subcommands = Arrays.asList("give", "help");
+    private List<String> subcommands = Arrays.asList("give", "help", "minify", "deminify", "reload");
 
     public CommandRPGPets(RPGPets plugin) {
         this.plugin = plugin;
@@ -216,10 +216,10 @@ public class CommandRPGPets implements CommandExecutor, TabCompleter {
         if (args.length >= 4) {
             try {
                 if (item == RPGPetsItem.PET)
-                    stack = RPGPetsItem.getPetCarrier(new PetDescriptor(PetType.valueOf(args[3]),
+                    stack = RPGPetsItem.getPetCarrier(new PetDescriptor(PetType.valueOf(args[3].toUpperCase()),
                             null, ConfigMessages.ITEM_PET_DEFAULTNAME.get(), 0, 0, false, false));
                 else
-                    stack.setAmount(Math.min(64, Integer.parseInt(args[3])));
+                    stack.setAmount(Math.min(64, Math.max(0, Integer.parseInt(args[3]))));
             } catch (NumberFormatException e) {
             } catch (IllegalArgumentException e) {
                 sender.sendMessage(ConfigMessages.COMMAND_GIVE_PETTYPE.get());
@@ -259,23 +259,29 @@ public class CommandRPGPets implements CommandExecutor, TabCompleter {
             if (!commandSender.hasPermission(ConfigPermissions.COMMAND_GIVE.get()))
                 return Collections.emptyList();
 
-            if (args.length == 2)
+            if (args.length == 2) {
+                String prefix = args[1].toLowerCase();
                 return Bukkit.getOnlinePlayers().stream()
                         .map(Player::getName)
-                        .filter(player -> player.startsWith(args[1]))
+                        .filter(player -> player.toLowerCase().startsWith(prefix))
                         .collect(Collectors.toList());
+            }
 
-            if (args.length == 3)
+            if (args.length == 3) {
+                String prefix = args[2].toLowerCase();
                 return Arrays.stream(RPGPetsItem.values())
                         .map(Enum::name)
-                        .filter(name -> name.startsWith(args[2]))
+                        .filter(name -> name.toLowerCase().startsWith(prefix))
                         .collect(Collectors.toList());
+            }
 
-            if (args.length == 4 && args[2].equalsIgnoreCase("PET"))
+            if (args.length == 4 && args[2].equalsIgnoreCase("PET")) {
+                String prefix = args[3].toLowerCase();
                 return Arrays.stream(PetType.values())
                         .map(Enum::name)
-                        .filter(name -> name.startsWith(args[3]))
+                        .filter(name -> name.toLowerCase().startsWith(prefix))
                         .collect(Collectors.toList());
+            }
         }
         return Collections.emptyList();
     }
