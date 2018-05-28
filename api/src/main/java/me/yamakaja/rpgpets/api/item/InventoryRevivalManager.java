@@ -26,8 +26,8 @@ public class InventoryRevivalManager extends AbstractRevivalManager {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onInventoryClick(InventoryClickEvent e) {
         ItemStack cursor = e.getCursor();
-        if (cursor.getType() == ConfigItems.FOOD_MATERIAL && cursor.hasItemMeta() && cursor.getItemMeta().hasDisplayName()
-                && cursor.getItemMeta().getDisplayName().equals(ConfigMessages.ITEM_FOOD_NAME.get()))
+        if (!(cursor.getType() == ConfigItems.FOOD_MATERIAL && cursor.hasItemMeta() && cursor.getItemMeta().hasDisplayName()
+                && cursor.getItemMeta().getDisplayName().equals(ConfigMessages.ITEM_FOOD_NAME.get())))
             return;
 
         PetDescriptor descriptor = RPGPetsItem.decode(e.getCurrentItem());
