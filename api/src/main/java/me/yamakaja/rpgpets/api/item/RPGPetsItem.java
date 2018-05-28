@@ -16,6 +16,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Supplier;
@@ -27,7 +28,9 @@ public enum RPGPetsItem {
     FOOD(() -> new ItemBuilder(ConfigItems.FOOD_MATERIAL).setDisplayName(ConfigMessages.ITEM_FOOD_NAME.get())
             .setLore(Arrays.asList((ConfigGeneral.ENABLE_ALTERNATIVE_REVIVAL.getAsBoolean()
                     ? ConfigMessages.ITEM_FOOD_TOOLTIP_ALTERNATIVE : ConfigMessages.ITEM_FOOD_TOOLTIP_DEFAULT).get()
-                    .split("\n")))),
+                    .split("\n")))
+            .addEnchantments(ConfigItems.FOOD_GLOWING ? Collections.singletonMap(EnchantmentGlow.getGlow(), 1)
+                    : Collections.emptyMap(), false)),
     EGG(() -> new ItemBuilder(Material.MONSTER_EGG)
             .setDisplayName(ConfigMessages.ITEM_EGG_NAME.get())
             .setLore(Arrays.asList(

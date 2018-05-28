@@ -1,5 +1,6 @@
 food:
   material: SLIME_BALL
+  glowing: false
   recipe:
     enabled: false
     grid: ["AAA", "ASA", "AAA"]

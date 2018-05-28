@@ -17,6 +17,7 @@ import me.yamakaja.rpgpets.api.item.CraftingRevivalManager;
 import me.yamakaja.rpgpets.api.item.InventoryRevivalManager;
 import me.yamakaja.rpgpets.api.logging.ErrorLogHandler;
 import me.yamakaja.rpgpets.api.logging.SentryManager;
+import me.yamakaja.rpgpets.api.util.EnchantmentGlow;
 import me.yamakaja.rpgpets.plugin.command.CommandRPGPets;
 import me.yamakaja.rpgpets.plugin.command.ReloadPreprocessor;
 import me.yamakaja.rpgpets.plugin.protocol.EntitySpawnPacketTranslator;
@@ -157,6 +158,8 @@ public class RPGPetsImpl extends JavaPlugin implements RPGPets {
         this.sentryManager.clearContext();
 
         this.initialized = true;
+
+        EnchantmentGlow.getGlow();
     }
 
     @Override

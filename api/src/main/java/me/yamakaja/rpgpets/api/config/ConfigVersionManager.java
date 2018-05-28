@@ -16,7 +16,7 @@ import java.util.function.Consumer;
  */
 public class ConfigVersionManager {
 
-    private static final int CURRENT_VERSION = 5;
+    private static final int CURRENT_VERSION = 6;
     private RPGPets plugin;
     private int configVersion = 0;
 
@@ -276,6 +276,13 @@ public class ConfigVersionManager {
 
             edit(it.plugin, "config.yml", config -> {
                 config.set("expensive_revival", false);
+            });
+        }),
+        VERSION_5_TO_6(it -> {
+            // To update:   - Add food.glowing to items.yml
+
+            edit(it.plugin, "items.yml", config -> {
+                config.set("food.glowing", false);
             });
         });
 

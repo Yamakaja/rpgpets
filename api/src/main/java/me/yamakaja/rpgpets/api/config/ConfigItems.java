@@ -13,6 +13,7 @@ import org.bukkit.plugin.Plugin;
 public final class ConfigItems {
 
     public static Material FOOD_MATERIAL;
+    public static boolean FOOD_GLOWING;
 
     private ConfigItems() {
         throw new UnsupportedOperationException("Utility constructor!");
@@ -20,6 +21,7 @@ public final class ConfigItems {
 
     public static void initialize(Plugin plugin, YamlConfiguration config) {
         FOOD_MATERIAL = Material.valueOf(config.getString("food.material"));
+        FOOD_GLOWING = config.getBoolean("food.glowing");
 
         if (config.getBoolean("food.recipe.enabled")) {
             ShapedRecipe shapedRecipe = new ShapedRecipe(RPGPetsItem.FOOD.get());

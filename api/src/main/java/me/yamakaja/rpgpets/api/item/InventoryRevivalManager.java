@@ -1,6 +1,7 @@
 package me.yamakaja.rpgpets.api.item;
 
 import me.yamakaja.rpgpets.api.RPGPets;
+import me.yamakaja.rpgpets.api.config.ConfigItems;
 import me.yamakaja.rpgpets.api.config.ConfigMessages;
 import me.yamakaja.rpgpets.api.entity.PetDescriptor;
 import me.yamakaja.rpgpets.api.entity.PetState;
@@ -25,7 +26,8 @@ public class InventoryRevivalManager extends AbstractRevivalManager {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onInventoryClick(InventoryClickEvent e) {
         ItemStack cursor = e.getCursor();
-        if (!RPGPetsItem.FOOD.get().isSimilar(cursor))
+        if (cursor.getType() == ConfigItems.FOOD_MATERIAL && cursor.hasItemMeta() && cursor.getItemMeta().hasDisplayName()
+                && cursor.getItemMeta().getDisplayName().equals(ConfigMessages.ITEM_FOOD_NAME.get()))
             return;
 
         PetDescriptor descriptor = RPGPetsItem.decode(e.getCurrentItem());
