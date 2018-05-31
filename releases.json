@@ -88,5 +88,10 @@
     "version": "1.4.1",
     "release": 1527330850670,
     "changes": "Multiple bugfixes and new features"
+  },
+  {
+    "version": "1.4.2",
+    "release": 1527522986726,
+    "changes": "Add option for food to glow; Fix glow disappearing after restart"
   }
 ]
