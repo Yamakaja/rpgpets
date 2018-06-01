@@ -36,6 +36,7 @@ general:
   onepet: "&cSorry, you can only have one pet active at a time!"
   expensiverevival: "&cYou need at least {0} pet food to revive this pet!"
   minifiable: "&aYou can now minify your pet!"
+  nocraftperm: "&cYou don't have permission to craft that!"
 
 command:
   noperm: "&4You don't have permission to use this command!"

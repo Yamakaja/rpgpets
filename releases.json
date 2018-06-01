@@ -98,5 +98,10 @@
     "version": "1.4.3",
     "release": 1527759101252,
     "changes": "Fix alternative revival method"
+  },
+  {
+    "version": "1.4.4",
+    "release": 1527866648068,
+    "changes": "Add permission options to items.yml"
   }
 ]

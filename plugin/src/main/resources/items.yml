@@ -2,6 +2,7 @@ food:
   material: SLIME_BALL
   glowing: false
   recipe:
+    permission: ""
     enabled: false
     grid: ["AAA", "ASA", "AAA"]
     items:
@@ -9,6 +10,7 @@ food:
       S: SLIME_BALL
 egg:
   recipe:
+    permission: ""
     enabled: false
     grid: ["DDD", "DED", "DDD"]
     items:

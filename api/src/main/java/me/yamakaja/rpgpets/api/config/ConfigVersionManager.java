@@ -16,7 +16,7 @@ import java.util.function.Consumer;
  */
 public class ConfigVersionManager {
 
-    private static final int CURRENT_VERSION = 6;
+    private static final int CURRENT_VERSION = 7;
     private RPGPets plugin;
     private int configVersion = 0;
 
@@ -254,8 +254,8 @@ public class ConfigVersionManager {
             });
 
             edit(it.plugin, "permissions.yml", config -> {
-               config.set("command.minify", "rpgpets.command.minify");
-               config.set("command.deminify", "rpgpets.command.deminify");
+                config.set("command.minify", "rpgpets.command.minify");
+                config.set("command.deminify", "rpgpets.command.deminify");
             });
 
             edit(it.plugin, "config.yml", config -> config.set("minify_level", 15));
@@ -281,9 +281,19 @@ public class ConfigVersionManager {
         VERSION_5_TO_6(it -> {
             // To update:   - Add food.glowing to items.yml
 
+            edit(it.plugin, "items.yml", config -> config.set("food.glowing", false));
+        }),
+        VERSION_6_TO_7(it -> {
+            // To update:   - Add *.recipe.permission to items.yml
+            //              - Add general.nocraftperm to messages.yml
+
             edit(it.plugin, "items.yml", config -> {
-                config.set("food.glowing", false);
+                config.set("food.recipe.permission", "");
+                config.set("egg.recipe.permission", "");
             });
+
+            edit(it.plugin, "messages.yml",
+                    config -> config.set("general.nocraftperm", "&cYou don't have permission to craft that!"));
         });
 
         private Consumer<ConfigVersionManager> consumer;
