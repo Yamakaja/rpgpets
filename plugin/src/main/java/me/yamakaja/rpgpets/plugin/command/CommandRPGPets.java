@@ -215,11 +215,15 @@ public class CommandRPGPets implements CommandExecutor, TabCompleter {
 
         if (args.length >= 4) {
             try {
-                if (item == RPGPetsItem.PET)
-                    stack = RPGPetsItem.getPetCarrier(new PetDescriptor(PetType.valueOf(args[3].toUpperCase()),
-                            null, ConfigMessages.ITEM_PET_DEFAULTNAME.get(), 0, 0, false, false));
-                else
+                if (item == RPGPetsItem.PET) {
+                    PetType type = PetType.valueOf(args[3].toUpperCase());
+                    int level = args.length >= 5 ? Integer.parseInt(args[4]) : 0;
+                    stack = RPGPetsItem.getPetCarrier(new PetDescriptor(type, null, ConfigMessages.ITEM_PET_DEFAULTNAME.get(),
+                            Math.max(0, Math.min(type.getMaxLevel(), level)), 0,
+                            level >= ConfigGeneral.GROWUP_END.getAsInt(), false));
+                } else
                     stack.setAmount(Math.min(64, Math.max(0, Integer.parseInt(args[3]))));
+
             } catch (NumberFormatException e) {
             } catch (IllegalArgumentException e) {
                 sender.sendMessage(ConfigMessages.COMMAND_GIVE_PETTYPE.get());

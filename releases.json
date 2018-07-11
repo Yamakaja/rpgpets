@@ -103,5 +103,10 @@
     "version": "1.4.4",
     "release": 1527866648068,
     "changes": "Add permission options to items.yml"
+  },
+  {
+    "version": "1.4.5",
+    "release": 1531296753389,
+    "changes": "Add level option to give command"
   }
 ]

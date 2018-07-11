@@ -51,11 +51,9 @@ public class EnchantmentGlow extends EnchantmentWrapper {
     public static Enchantment getGlow() {
         if (glow != null)
             return glow;
-        else {
 
-            if ((glow = Enchantment.getByName("Glow")) != null) return glow;
-
-        }
+        if ((glow = Enchantment.getByName("Glow")) != null)
+            return glow;
 
         try {
             Field f = Enchantment.class.getDeclaredField("acceptingNew");

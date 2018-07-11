@@ -49,7 +49,7 @@ command:
     subcommand: "&e - &6{0}: &f{1}" # 0: Subcommand, 1: Description
   give:
     description: "Gives player RPGPets items"
-    syntax: "/rpgpets give <player> <<food/egg> [amount] | pet [type]>"
+    syntax: "/rpgpets give <player> <<food/egg> [amount] | pet [type] [level]>"
     targetnotfound: "&cInvalid player!"
     everyone: "all online players"
     unknown: "&cUnknown item requested!"
